@@ -1,0 +1,13 @@
+Changes in 0.99.3
+
+- probabilistic factorial analysis model added
+- argument M in fit.dependency.model changed to H and arbitary matrix
+can be given instead of just identity matrix for pSimCCA method with T prior
+- all methods of fit.dependency.model are fixed to give full W and phi 
+matrices with correct dimension names
+- plot.DependencyModel function added
+- z.projection and W.projection functions added.
+- small changes to examples in help pages
+- calculate function name changed to screen.chromosome
+- Collate field added to DESCRIPTION
+- Vignette updatet

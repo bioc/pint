@@ -1,0 +1,65 @@
+setReplaceMethod(f="setLoc", signature("DependencyModel"),
+	definition=(function(model,value) {
+		model@loc <- value
+		return(model)
+	}
+))
+
+setReplaceMethod(f="setGeneName", signature("DependencyModel"),
+	definition=(function(model,value) {
+		model@geneName <- value
+		return(model)
+	}
+))
+
+setMethod("getW","DependencyModel", 
+	function(model) { 
+		return(model@W) 
+	} 
+) 
+
+setMethod("getPhi","DependencyModel", 
+	function(model) { 
+		return(list(Y = model@phi$Y, X = model@phi$X)) 
+	} 
+) 
+
+setMethod("getScore","DependencyModel", 
+	function(model) { 
+		return(model@score) 
+	} 
+) 
+
+setMethod("getLoc","DependencyModel", 
+	function(model) { 
+		return(model@loc) 
+	} 
+) 
+
+setMethod("getGeneName","DependencyModel", 
+	function(model) { 
+		return(model@geneName) 
+	} 
+) 
+
+setMethod("getParams","DependencyModel", 
+	function(model) { 
+		return(model@params) 
+	} 
+) 
+
+setMethod("getModelMethod","DependencyModel", 
+	function(model) { 
+		return(model@method) 
+	} 
+) 
+
+setMethod("getWindowSize","DependencyModel", 
+	function(model) { 
+		return(model@windowSize) 
+	} 
+) 
+
+
+
+

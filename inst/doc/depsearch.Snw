@@ -1,0 +1,210 @@
+\documentclass[a4paper]{article}
+
+\title{pint: Pairwise integration of heterogeneous functional genomics
+  data}
+
+\author{Olli-Pekka Huovilainen and Leo Lahti}
+
+\usepackage{Sweave}
+\usepackage{float}
+\begin{document}
+
+\maketitle
+
+%\VignetteIndexEntry{Finding chromosome areas with strong dependencies between data sets}
+
+\section{Introduction}
+
+%* motivation
+
+Paired genomic observations of related biological processes in the
+same patients are increasingly available, including measurements on
+gene- and miRNA expression, gene copy number, and methylation status.
+By studying the dependencies between such observations it is possible
+to reveal functional mechanisms and interactions that can not be seen
+in the individual data sets. For example, integration of gene
+expression and copy number has been shown to reveal cancer-associated
+chromosomal regions and associated genes with potential diagnostic,
+prognostic and clinical impact \cite{Lahti09mlsp}.
+
+% * canonical correlations, probabilistic models
+
+This package provides tools for discovering statistical dependencies
+between co-occurring data sources. The currently implemented methods
+are based on the probabilistic canonical correlation analysis (pCCA)
+framework \cite{Bach05} and its subsequent extensions
+\cite{Archambeau06,Klami08,Lahti09mlsp}. The package provides also
+tools to guide dependency detection through Bayesian priors, as
+described in \cite{Lahti09mlsp}. Probabilistic formulation deals
+rigorously with uncertainty associated with small sample sizes common
+in biomedical studies. The methods capture the strongest shared signal
+in paired observations, and can indicate the affected genes and
+patients.
+
+%* application
+
+We demonstrate how to integrate gene expression and DNA copy number
+(aCGH) measurements to discover copy number changes with functional
+effects. The framework is potentially applicable for investigating
+dependencies between other types of biomedical data, including miRNA,
+methylation, SNPs, alternative splicing, and transcription factor
+binding, or in other application fields. The models assume
+approximately Gaussian distributed observations, which is feasible for
+many high-throughput bioinformatics data set types.
+
+
+%* references
+
+% \bibliographystyle{IEEEbib}
+% \bibliography{../../doc/mi,../../doc/gene/gene}
+
+\section{Examples}
+
+To show the usage of the package, we use example data that consists of
+paired gene expression and copy number data from a set of gastric
+cancer patients \cite{Myllykangas08}. 
+
+Start by loading the package and example data.
+
+<<>>=
+require(pint)
+data(chromosome17)
+@
+
+Both input data should consist of list with two items: $data$ and $info$. $data$
+is a data matrix with gene expression or gene copy number data. Genes
+are in rows and samples in columns and rows and columns should be named.
+$info$ is a data frame with additional information about genes. It has 
+three columns: $loc$, $chr$ and $arm$. $loc$ is numeric and represents 
+genes location in chromosome in base pairs. $chr$ and $arm$ are 
+factors and represent in which chromosome arm the gene is in.
+The probes in gene expression and gene copy number are assumed to be paired.
+
+The functions provide tools to screen the genome to discover
+chromosomal regions with high statistical dependencies between the
+measurements. We use the default method (pSimCCA; \cite{Lahti09mlsp})
+to screen the chromosome arm 17q for dependencies. The dependency is
+measured in the chromosomal region ('window') around each gene,
+defined with a fixed window size of 10 closest genes. An equal number
+of genes in each chromosomal window quarantees that the dependency
+scores are comparable between the different windows.
+
+
+<<>>=
+model17qpSimCCA <- screen.chromosome(geneExp, geneCopyNum, 
+                             	     windowSize = 10, 
+                                     chr = 17, arm = 'q', 
+                                     method = "pSimCCA") 
+@
+
+
+Regions with strongest dependencies can be seen from a dependency plot:
+
+\begin{figure}[H]
+\begin{center}
+<<fig=true>>=
+plot(model17qpSimCCA, showTop = 10)
+@
+\end{center}
+\caption{A dependency plot indicates chromosomal regions with highly
+  dependent gene expression and copy number measurements.}
+\label{fig:pSimCCA}
+\end{figure}
+
+The highest dependency is seen in the area between 30Mbp and 40Mbp
+This would provide a potential target for further studies, and it is
+in fact a known gastric cancer associated region \cite{Lahti09mlsp}. The top-5
+genes with highest dependency on their chromosomal surroundings can be
+acquired with:
+
+<<>>=
+findHighestGenes(model17qpSimCCA,5)
+@
+
+We can also investigate the contribution of individual patients or
+probes to the overall dependency (Fig.~\ref{fig:z}-~\ref{fig:W}). The
+model parameters \(W\) and \(z\) can be easily retrieved from the
+models (see \cite{Lahti09mlsp} for description of the model
+parameters), and in 1-dimensional case their interpretation is
+straightforward. In higher dimensional case, contribution of each variable
+can be approximated with the first principal component of product of parameters 
+\(W\) and \(z\). Contribution of each sample to the dependency model can be 
+approximated by projectin original data to the first principal component.
+
+\begin{figure}[H]
+\begin{center}
+<<fig=true>>=
+model <- findHighestModels(model17qpSimCCA,1)[[1]]
+plot(model,geneExp,geneCopyNum)
+@
+\end{center}
+\caption{Contribution of samples and variables to dependency model around one gene. This indicates
+patient-wise effects, and highlights the affected patients.}
+\label{fig:modelplot}
+\end{figure}
+
+
+\subsection{Alternative models}
+
+The package provides alternative probabilistic dependency measures.
+For example, dependency could be measured with probabilistic CCA with
+1-dimensional latent variable \(Z\) instead of the default method:
+
+<<eval=FALSE>>=
+model17qpCCA <- screen.chromosome(geneExp, geneCopyNum, windowSize=10, chr=17, arm='q', 
+method="pCCA", params = list("zDimension=1")) 
+@
+
+\subsection*{Acknowledgements}
+
+We would like to thank prof. Sakari Knuutila and Dr. Samuel Myllykangas for providing the gastric cancer data for the
+package examples.
+
+%\section{Dependency modeling framework}
+%
+%FIXME: jos on aikaa, tahan voisi nyt tai myohemmin pistaa mallin
+%yleisen kuvauksen (kaavat ja CCA-mallituskuva), jonka kautta saisi
+%selkeasti esitetyksi yleisidean sek??paketin tarjoamat
+%erikoistapaukset.
+%
+%(tata kuvaa siis tarkoitin, plus W:t yms mukaan)
+%zx  z  zy
+%  \/ \/
+%   X  Y
+%  
+\begin{thebibliography}{1}
+
+\bibitem{Archambeau06}
+C{\'e}dric Archambeau, Nicolas Delannay, and Michel Verleysen.
+\newblock Robust probabilistic projections.
+\newblock In W.W. Cohen and A.~Moore, editors, {\em Proceedings of the 23rd
+  International conference on machine learning}, pages 33--40. ACM, 2006.
+
+\bibitem{Bach05}
+Francis~R. Bach and Michael~I. Jordan.
+\newblock A probabilistic interpretation of canonical correlation analysis.
+\newblock Technical Report 688, Department of Statistics, University of
+  California, Berkeley, 2005.
+
+\bibitem{Klami08}
+Arto Klami and Samuel Kaski.
+\newblock Probabilistic approach to detecting dependencies between data sets.
+\newblock {\em Neurocomputing}, 72(1-3):39--46, 2008.
+
+\bibitem{Lahti09mlsp}
+Leo Lahti, Samuel Myllykangas, Sakari Knuutila, and Samuel Kaski.
+\newblock Dependency detection with similarity constraints.
+\newblock In {\em Proc. MLSP'09 IEEE International Workshop on Machine Learning
+  for Signal Processing}, 2009.
+
+\bibitem{Myllykangas08}
+Samuel Myllykangas, Siina Junnila, Arto Kokkola, Reija Autio, Ilari Scheinin, Tuula Kiviluoto, Marja-Liisa Karjalainen-Lindsberg, Jaakko Hollm??, Sakari Knuutila, Pauli Puolakkainen, Outi Monni
+\newblock Integrated gene copy number and expression microarray analysis of gastric cancer highlights potential target genes
+\newblock {\em International Journal of Cancer}, 123(4):817-25, 2008.
+
+
+\end{thebibliography}
+
+
+
+\end{document}

@@ -1,0 +1,14 @@
+Package: pint
+Type: Package
+Title: Pairwise INTegration of functional genomics data
+Version: 0.99.3
+Date: 2010-02-01
+Author: Olli-Pekka Huovilainen <ohuovila@gmail.com> and Leo Lahti <leo.lahti@iki.fi>
+Maintainer: Olli-Pekka Huovilainen <ohuovila@gmail.com>
+Description: Probabilistic dependency modeling tools for paired (microarray) data. Particular functions for integrating gene expression and copy number from the same patients to detect genomic regions with functionally active mutations.
+License: GPL (>= 2)
+Collate: AllClasses.R AllGenerics.R DependencyModel-accessors.R ChromosomeArmModels-accessors.R ChromosomeModels-accessors.R GenomeModels-accessors.R show-methods.R plot-methods.R screen.chromosome.R calculate.genome.R calculate.chr.R calculate.arm.R pick.chr.arm.R fixed.window.R iterative.window.R z.projection.R W.projection.R z.expectation.R fit.dependency.model.R centerData.R dependency.score.R check.score3.R pcca.R  solve.w.R pfa.R initialize2.R  pcca.with.isotropic.margins.R W.cca.EM.R set.M.isotropic.R update.phi.isotropic.R set.M.full.R set.beta.fullcov.R ppca.R ppca.calculate.R matrix.sqrt.R simCCA.optimize.fullcov.EM.R optimize.fullcov.R update.phi.EM.R cost5.R simCCA.optimize.R optimize.W.R set.M.R set.beta.R get.W.R update.phi.R cost.W.R 
+LazyLoad: yes
+Depends: mvtnorm, methods, graphics
+biocViews: aCGH, GeneExpression, Genetics, DifferentialExpression, Microarray
+Packaged: 2010-02-23 16:19:29 UTC; ohuovila
