@@ -1,13 +1,48 @@
-Changes in 0.99.3
+CHANGES IN VERSION 0.99.3 (2010-02-23)
 
-- probabilistic factorial analysis model added
-- argument M in fit.dependency.model changed to H and arbitary matrix
-can be given instead of just identity matrix for pSimCCA method with T prior
-- all methods of fit.dependency.model are fixed to give full W and phi 
-matrices with correct dimension names
-- plot.DependencyModel function added
-- z.projection and W.projection functions added.
-- small changes to examples in help pages
-- calculate function name changed to screen.chromosome
-- Collate field added to DESCRIPTION
-- Vignette updatet
+SIGNIFICANT USER-VISIBLE CHANGES
+
+  o calculate function name changed to screen.chromosome
+
+NEW FEATURES
+
+  o probabilistic factorial analysis model added
+  o argument M in fit.dependency.model changed to H and arbitary matrix
+  can be given instead of just identity matrix for pSimCCA method with T prior
+  o plot.DependencyModel function added
+  o z.projection and W.projection functions added.
+
+HELP & Rd FILE CHANGES
+
+  o changes to examples in help pages
+
+DOCUMENTATION
+
+  o Vignette updatet
+  o Collate field added to DESCRIPTION
+
+BUG FIXES
+
+  o all methods of fit.dependency.model are fixed to give full W and phi 
+  matrices with correct dimension names
+
+CHANGES IN VERSION 0.99.4 (2010-03-08)
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+  o default method of screen.chromosome() changed to pSimCCA
+
+NEW FEATURES
+
+  o psimCCA method now accepts data matrices of a different size
+  o used method in screen.chromosome() can be determined by parameters only
+  o annotation types can be given to plot.DependencyModel() function
+  o samples can be ordered in plot.DependencyModel() function according to their
+  contribution to dependency model
+  o dimension of latent variable z can be given with psimCCA method
+
+BUG FIXES
+
+  o bug fixed that prevented screening the whole genome 
+  o show methods now print the used method when only parameters given to screen.chromosome()
+  o incorrect gene name in DependencyModel objects corrected

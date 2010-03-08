@@ -17,12 +17,12 @@ pcca = function (X, Y, zDimension=NULL) {
 	Dcov$Y = cov(t(Y))
 
 	# Solve W
-	W = solve.w(X,Y)
+	W = solve.w(t(X),t(Y),Dcov$X,Dcov$Y,zDimension)
 
         # Then take only the zDimension first components if defined
-        ifelse(is.null(zDimension), zDimension <- ncol(W$X), zDimension <- zDimension)
-	W$X = as.matrix(W$X[,1:zDimension])
-	W$Y = as.matrix(W$Y[,1:zDimension])
+        #ifelse(is.null(zDimension), zDimension <- ncol(W$X), zDimension <- zDimension)
+	W$X = as.matrix(W$X)
+	W$Y = as.matrix(W$Y)
 	W$total = rbind(W$X,W$Y)
         
 	# estimate

@@ -31,14 +31,14 @@ Returned by \code{\link{fit.dependency.model}} function.
 }
 \section{Slots}{
 	 \describe{
-		\item{W}{List of X and Y components which contain the relationship between two data sets}	    
-		\item{phi}{List of X and Y components which contain the data set specific covariances}		 
-		\item{score}{Score for fitness of model}
+		\item{W}{a list of X and Y components which contain the relationship between two data sets}	    
+		\item{phi}{a list of X and Y components which contain the data set specific covariances}		 
+		\item{score}{score for fitness of model}
 		\item{loc}{middle location of the window in base pairs}   
 		\item{geneName}{name of the gene in the middle of the window}
-		\item{windowSize}{Size of the window}
-		\item{method}{Name of the used method}
-		\item{params}{List of parameters used in dependency model}
+		\item{windowSize}{size of the window}
+		\item{method}{name of the used method}
+		\item{params}{list of parameters used in dependency model}
 	}
 }
 \section{Methods}{

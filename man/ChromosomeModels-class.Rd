@@ -15,7 +15,7 @@
 \alias{findHighestGenes,ChromosomeModels-method}
 \alias{findHighestModels,ChromosomeModels-method}
 
-\title{Class "ChromosomeModels", for dependency models in chromosome}
+\title{Class "ChromosomeModels"}
 \description{Collection of dependency models fitting two data sets in particular chromosome. The dependency models are in two 
 \linkS4class{ChromosomeArmModels} objects which represents q and p arms.
 }
@@ -26,11 +26,10 @@ Function \code{\link{screen.chromosome}} returns an object of this class.
 }
 \section{Slots}{
 	 \describe{
-    \item{pArmModels}{\linkS4class{ChromosomeArmModels}; dependency models in p arm}
- \item{qArmModels}{\linkS4class{ChromosomeArmModels}; dependency models in q arm}
-    \item{chromosome}{Factor; chromosome}
-    \item{method}{String; name of the method used in dependency model}
-    \item{params}{List of parameters of the method}
+    \item{pArmModels, qArmModels}{an \linkS4class{ChromosomeArmModels} object, dependency models in p or q arm}
+     \item{chromosome}{a factor of chromosome}
+    \item{method}{a string with name of the method used in dependency models}
+    \item{params}{a list of parameters of the used method}
   }
 }
 \section{Methods}{

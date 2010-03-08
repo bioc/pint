@@ -15,7 +15,7 @@ pcca.with.isotropic.margins <- function (X, Y, dz = 1, epsilon = 1e-6, delta = 1
 
   dx <- nrow(X)
   dy <- nrow(Y)
-  if (dz >= min(dx,dy)) {stop("dz < min(nrow(X),nrow(Y)) required!")}
+  if (dz > min(dx,dy)) {stop("dz < min(nrow(X),nrow(Y)) required!")}
   
   #  Dependency model
   #  X ~ N(Wx*z, sigmax*I)

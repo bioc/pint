@@ -34,10 +34,10 @@ Data of both data sets is normalised so that each genes data has zero mean.
 }
 \value{
 List of data in the window
-\item{X}{Window of the first data set}
-\item{Y}{Window of the second data set}
-\item{loc}{Location of gene}
-\item{geneName}{Name of the gene}
+\item{X}{window of the first data set}
+\item{Y}{window of the second data set}
+\item{loc}{location of gene}
+\item{geneName}{name of the gene}
 \item{edge}{logical; TRUE if iteration to one direction has stopped because edge of data in chromosomal arm has been found}
 \item{fail}{logical; TRUE if chromosomal arm contains less than windowSize genes.}
 }

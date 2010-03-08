@@ -30,7 +30,7 @@
 \alias{getModelNumbers,ChromosomeArmModels-method}
 
 \title{Class "ChromosomeArmModels", for dependency models in chromosomal arm}
-\description{Collection of dependency models fitting two data sets in particular chromosomal arm.}
+\description{Collection of dependency models fitting two data sets in particular chromosome arm.}
 
 \section{Objects from the Class}{
 Function \code{\link{screen.chromosome}} returns an object of this class.
@@ -38,12 +38,12 @@ Function \code{\link{screen.chromosome}} returns an object of this class.
 }
 \section{Slots}{
 	 \describe{
-    \item{models}{List; link{dependencyModel}s}
-    \item{chromosome}{Factor; chromosome}
-    \item{arm}{Factor; arm of the chromosome}
-    \item{method}{String; name of the method used in dependency model}
-    \item{params}{List of parameters of the method}
-    \item{windowSize}{Number of genes in dependecy models windows}
+    \item{models}{a list of \linkS4class{DependencyModel}s}
+    \item{chromosome}{factor of chromosome}
+    \item{arm}{factor of arm of the chromosome}
+    \item{method}{a string with name of the method used in dependency models}
+    \item{params}{a list of parameters of the method}
+    \item{windowSize}{number of genes in dependecy models windows}
   }
 }
 \section{Methods}{
@@ -68,20 +68,20 @@ Function \code{\link{screen.chromosome}} returns an object of this class.
 
 \seealso{
 For calculation of dependency models for chromosomal arm: \code{\link{screen.chromosome}}. This class holds a number of 
-\linkS4class{DependencyModel}. For plotting dependency scores see \link{dependency score plotting}. Dependency 
+\linkS4class{DependencyModel}s. For plotting dependency scores see \code{\link{dependency score plotting}}. Dependency 
 models for whole chromosomal arm: \linkS4class{ChromosomeModels}. Dependency models for whole genome: \linkS4class{GenomeModels}.
 }
 
 \examples{
 data(chromosome17)
-#Calculation of dependency models for chromosomal arm
+## Calculation of dependency models for chromosomal arm
 model17p <- screen.chromosome(geneExp,geneCopyNum,windowSize=10,chr=17,arm='p')
 model17p
 
-#Seeing information of the dependency model which has the highesst dependency score
+## Information of the dependency model which has the highesst dependency score
 findHighestGenes(model17p,1)
 
-#Seeing information of the first dependency model
+## Information of the first dependency model
 model17p[[1]]
 
 #Plotting

@@ -13,7 +13,8 @@ Plots contribution of variables and samples to dependency model or dependency mo
 fitting scores of chromosomal arm, chromosome or genome.
 }
 \usage{
-plot.DependencyModel(x, X, Y, ...)
+plot.DependencyModel(x, X, Y, ann.types = NULL, ann.cols = NULL, legend.x = 0, 
+        legend.y = 1, legend.xjust = 0, legend.yjust = 1, order = FALSE, ...)
 plot.ChromosomeArmModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
 	type = 'l', xlab = 'gene location (Mbp)', ylab = 'dependency score',
 	main = paste('Dependency score for chromosome ', chr, arm, sep = ''),
@@ -33,37 +34,57 @@ plot.GenomeModels(x, hilightGenes = NULL, showDensity = FALSE,
 		\code{\link{ChromosomeModels-class}}, \code{\link{GenomeModels-class}}; models to be plotted. 
 	}
 	\item{X, Y}{
-		Data sets used in dependency model.
+		data sets used in dependency model.
+	}
+	\item{ann.types}{
+		a factor for annotation types for samples. Each value corresponds one sample in 
+		datasets. Colors are used to indicate different types.
+	}
+	\item{ann.cols}{
+		colors used to indicate different annotation types. Gray scale is used if 'NULL' given.
+	}
+	\item{legend.x, legend.y}{
+		the x and y co-ordinates to be used to position the legend for annotation types.
+	}
+	\item{legend.xjust, legend.yjust}{
+		how the legend is to be justified relative to the legend x and y location.
+		A value of 0 means left or top justified, 0.5 means centered and 1 means 
+  		right or bottom justified.
+	}
+	\item{order}{
+		logical; if 'TRUE', values for sample contributions are ordered according
+ 		to their values.
 	}
 	\item{hilightGenes}{
-		Vector of strings; Name of genes to be hilighted with dots.
+		vector of strings; Name of genes to be hilighted with dots.
 	}
 	\item{showDensity}{
-		logical; if TRUE small vertical lines are drwan in the bottom of the plot under each gene.
+		logical; if 'TRUE' small vertical lines are drwan in the bottom of 
+		the plot under each gene.
 	}
 	\item{showTop}{
 		numerical; Number of models to be hilighted. A horizontal dashed line is drawn to show threshold value. 
 		Hilighted models are numbered according to their ranking in dependency score. With \code{0} no line is drawn.
 	}
 	\item{type, xlab, ylab, main}{
-		Plot type and labels. See \code{\link{plot}} for details.
+		plot type and labels. See \code{\link{plot}} for details.
 	}
 	\item{pch, cex}{
-		Symbol type and size for hilightGenes. See \code{\link{points}} for details.
+		symbol type and size for hilightGenes. See \code{\link{points}} for details.
 	}
 	\item{tpch, tcex}{
-		Symbol type and size for genes with highest scores. See \code{\link{points}} for details.
+		symbol type and size for genes with highest scores. See \code{\link{points}} for details.
 	}
 	\item{ylim, xlim}{
-		Axis limits. Default values are calculated from data. Lower limit for y is 0
+		axis limits. Default values are calculated from data. Lower limit for y is 0
 		and upper limit is either 1 or maximum score value. X limits are gene location
 		range. See \code{\link{plot}} for details.
 	}
 	\item{mfrow, mar, ps, mgp}{
-		Chromosome plots' layout, marginals, text size and margin line. See \code{\link{par}} for details.
+		chromosome plots' layout, marginals, text size and margin line. See \code{\link{par}} for details.
 	}
 	\item{...}{
-		Optional extra parameters passed to normal plot function.
+		optional extra parameters passed to normal plot function.
 	}
 }
 \details{
@@ -94,7 +115,9 @@ data(chromosome17)
 ## Dependency model around 150th gene
 window <- fixed.window(geneExp,geneCopyNum,150,10)
 model <- fit.dependency.model(window$X,window$Y)
-plot(model,geneExp,geneCopyNum)
+## example annnotation types
+ann.types = factor(c(rep("Samples 1 - 10",10),rep("Samples 11 - 51",41)))
+plot(model,geneExp,geneCopyNum, ann.types,legend.x=40,legend.y=-4,order=TRUE)
 
 ## pSimCCA model fittings to chromosome 17p
 models17ppSimCCA <- screen.chromosome(geneExp, geneCopyNum, 10, 17, 'p')

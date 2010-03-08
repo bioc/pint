@@ -8,7 +8,7 @@ Fits dependency model for two data sets
 Fits chosen model for two data sets. Function \code{fixed.window} can be used to window data before modeling.
 Depending on arguments, function uses probabilistic canonical correlation analysis (pCCA; \cite{Bach & Jordan 2005}), probabilistic
 principal component (pPCA; \cite{Tipping & Bishop 1999}) analysis, probabilistic factorial analysis 
-(pFAM; \cite{Rubin & Thayer 1982} or similarity constrained canonical correlation analysis 
+(pFA; \cite{Rubin & Thayer 1982}) or similarity constrained canonical correlation analysis 
 (pSimCCA; \cite{Lahti et al. 2009})
 }
 \usage{
@@ -30,7 +30,7 @@ Priori for transformation matrix T. Must be a matrix of size (variables in first
 If value is \code{1}, H will be made identity matrix of appropriate size.
 }
   \item{sigmas}{
-Value for T prior.
+Deviation of transformation matrix T from H. 
 }
   \item{covLimit}{
 Convergence limit. default value depends on chosen model type.
@@ -42,19 +42,21 @@ Seed for randomize.
 \details{
 The dependency models considered in \cite{Lahti et al. 2009} are obtained as follows:
 \describe{
-\item{pPCA}{ \code{M=NA, marginalCovariances = "identical isotropic"}  (\cite{Tipping & Bishop 1999}) 
+\item{pPCA}{ \code{H=NA, marginalCovariances = "identical isotropic"}  (\cite{Tipping & Bishop 1999}) 
 }
-\item{pFA}{ \code{M=NA, marginalCovariances = "diagonal"} (\cite{Rubin & Thayer 1982})      
+\item{pFA}{ \code{H=NA, marginalCovariances = "diagonal"} (\cite{Rubin & Thayer 1982})      
 }
-\item{pCCA}{ \code{M=NA, marginalCovariances = "full"} or \code{"isotropic"} (\cite{Bach & Jordan 2005})      
+\item{pCCA}{ \code{H=NA, marginalCovariances = "full"} or \code{"isotropic"} (\cite{Bach & Jordan 2005})      
 }
-\item{pSimCCA}{ \code{M = I, sigmas=0, marginaCovariances = "full"} This is the default method.  (\cite{Lahti et al. 2009})        		
+\item{pSimCCA}{ \code{H = I, sigmas=0, marginaCovariances = "full"} This is the default method.  (\cite{Lahti et al. 2009})        		
 }
-\item{pSimCCA with T prior}{ \code{M = I, marginalCovariances = "isotropic"} (\cite{Lahti et al. 2009})        		
+\item{pSimCCA with T prior}{ \code{H = I, marginalCovariances = "isotropic"} (\cite{Lahti et al. 2009})        		
 }
 }
 Resulting \linkS4class{DependencyModel} object doesn't have location or z variable. Location can be set with 
 \code{setLoc} method (see examples) and latent variable z can be calculated with \code{link{z.expectation}}.
+
+To avoid computational singularities, the covariance matrix phi is regularised by adding a small constant to the diagonal
 }
 \value{
 \linkS4class{DependencyModel}

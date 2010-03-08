@@ -16,9 +16,23 @@ screen.chromosome <- function(X, Y, windowSize, chromosome, arm, method = "", pa
 	else if (method == "pSimCCA") {
                 params$H <- diag(1,windowSize,windowSize)
 	}
+	else if (method == "pPCA" || method == "pCCA" || method == "pFA") {
+	        params$H <- NA
+	}
 	else {
 		if(is.null(params$H))
-			params$H <- NA
+			params$H <- diag(1,windowSize,windowSize)
+	}
+
+	# sigmas
+	if (method == "TPriorpSimCCA") {
+		if (is.null(params$sigmas)) {
+			params$sigmas <- 1
+		}
+	}
+	else {
+		if(is.null(params$sigmas))
+			params$sigmas <- 0
 	}
 
 	# Marginal covariances
@@ -32,27 +46,24 @@ screen.chromosome <- function(X, Y, windowSize, chromosome, arm, method = "", pa
 		params$marginalCovariances <- "isotropic"
 	}
 	else if (method == "pCCA") {
-	     	params$marginalCovariances <- "full"
+	     	if (is.null(params$marginalCovariances)) {
+			params$marginalCovariances <- "full"
+		}
 	}
 	else {
-		if(is.null(params$marginalCovariances)) 
-			params$marginalCovariances <- "full"
+		if (is.null(params$marginalCovariances)) {			
+			if (params$sigmas == 0) {
+				params$marginalCovariances <- "full"
+			}
+			else {
+				params$marginalCovariances <- "isotropic"
+			}
+		}
 	}
 
 	# Dimension of z
 	if (is.null(params$zDimension)) 
 		params$zDimension <- 1
-
-	# sigmas
-	if (method == "TPriorpSimCCA") {
-		if (is.null(params$sigmas)) {
-			params$sigmas <- 1
-		}
-	}
-	else {
-		if(is.null(params$sigmas))
-			params$sigmas <- 0
-	}
 
 	# Limit for convergence
 	if (is.null(params$covLimit)) 
@@ -60,6 +71,23 @@ screen.chromosome <- function(X, Y, windowSize, chromosome, arm, method = "", pa
 	if (is.null(params$mySeed)) 
 		params$mySeed <- 566
 
+	# Set method name
+	if (any(is.na(params$H))){
+	      	if (params$marginalCovariances == "full")
+		   	method = "pCCA"
+		if (params$marginalCovariances == "isotropic")
+		   	method = "pCCA"
+		if (params$marginalCovariances == "diagonal")
+		   	method = "pFA"
+		if (params$marginalCovariances == "identical isotropic")
+		   	method = "pPCA"
+	}	
+	else {
+		if (params$sigmas == 0)
+		   	method = "pSimCCA"
+		else
+			method = "TpriorpSimCCA"
+	}
 
 	# Calculate dependency models
 	if (missing(chromosome))
@@ -71,5 +99,6 @@ screen.chromosome <- function(X, Y, windowSize, chromosome, arm, method = "", pa
 	else
 		models <- calculate.arm(X, Y, windowSize, chromosome, arm, method, params)
 		
+	
 	return(models)
 }

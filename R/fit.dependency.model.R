@@ -59,7 +59,7 @@ function (X, Y, zDimension = 1,
 			H <- diag(1,nrow(X),nrow(Y))			
 			if (covLimit == 0) 
 				covLimit <- 1e-3		
-			res <- simCCA.optimize.fullcov.EM(X, Y, mySeed=mySeed, epsilon=covLimit)
+			res <- simCCA.optimize.fullcov.EM(X, Y, zDimension, mySeed=mySeed, epsilon=covLimit)
 		}
 		else if (marginalCovariances == 'isotropic' && sigmas != 0) {
 		        # Make H indetity matrix if scalar is given
@@ -90,7 +90,9 @@ function (X, Y, zDimension = 1,
 		       	       zDimension = zDimension, covLimit = covLimit)
 		score <- dependency.score(res)
 		
-		geneName <- dimnames(X)[[1]][ trunc(nrow(X)/2) ]
+		geneName <- dimnames(X)[[1]][ trunc((nrow(X)+1)/2) ]
+		if(is.null(geneName))
+			geneName = ""
 
 		model <- new("DependencyModel", W = res$W, phi = res$phi, score = score, 
 					windowSize = dim(X)[1], method = method, params = params, geneName = geneName)	

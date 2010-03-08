@@ -3,8 +3,11 @@ function (Dcov, W.new, phi.inv, W.old, M,nullmat) {
 
   # From BachJordan sec. 4.1	
 
-  mat = phi.inv$total%*%W.old$total%*%M%*%t(W.new$total)
-  mat2 = Dcov$total - Dcov$total%*%mat
+  mat <- W.old$X%*%M%*%t(W.new$X)
+  mat.x <- phi.inv$X%*%mat
+  mat.y <- phi.inv$Y%*%mat
+  foo <- rbind(cbind(mat.x, mat.x), cbind(mat.y, mat.y))
+  mat2 <- Dcov$total - Dcov$total%*%foo
 
   # ensure that diagonals are nonnegative by adding a small positive constant
   dd = diag(mat2)

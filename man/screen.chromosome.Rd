@@ -51,7 +51,7 @@ screen.chromosome(X, Y, windowSize, chromosome, arm, method = "", params = list(
 	\item{params}{
 		List of parameters to dependency model.
 		\describe{
-			\item{sigmas}{T prior to pSimCCA method}
+			\item{sigmas}{Deviation of T from H}
 			\item{H}{Priori for transformation matrix T}
 			\item{zDimension}{Dimension of the latent variable}
 			\item{mySeed}{Seed for randomization.}

@@ -1,36 +1,40 @@
-solve.w <-
-function (X,Y) {
+solve.w <- function (Xc, Yc, Cxx, Cyy, dz = NULL) {
 
-	# Solve W for CCA case using Archambeau06 equations
+  # assumes Xc, Yc : samples x features, zero-mean features
+  # Cxx and Cyy are covariances from cov(Xc) and cov(Yc)
+  # dz shows the desired rank of latent Z
 
-	cca <- cancor(t(X),t(Y))
 
-	# center row means to zero
-	# source("matrixOperations.R")
-	X = t(centerData(t(X))) 
-	Y = t(centerData(t(Y))) 
+  # NOTE: here the dimensions of Xc and Yc do not need to match
+  # Note: in previous solve.w the input data was features x samples
 
-	Cxx = cov(t(X))
-	Cyy = cov(t(Y))
-	
-	Ux = cca$xcoef
-	Uy = cca$ycoef
-	
-	#Qx = diag(nrow(X)) # Note: only requirement is that
-	#Qy = diag(cca$cor) # Qx%*%t(Qy) = canonical correlations
-	
-	if (nrow(X)>nrow(Y)) {
-		Qx <- diag(1,nrow(X),nrow(Y))
-		Qy <- diag(cca$cor)
-	} else {
-		Qx <- diag(cca$cor)
-		Qy <- diag(1,nrow(Y),nrow(X))
-	}
+  # Traditional CCA solution (modified from cancor function):
+  nr <- nrow(Xc)
 
-	# ML estimates for model W:
-	Wx = as.matrix(Cxx%*%Ux%*%Qx)
-	Wy = as.matrix(Cyy%*%Uy%*%Qy)
+  qx <- qr(Xc)
+  qy <- qr(Yc)
+  dx <- qx$rank
+  dy <- qy$rank
 
-	list(X = Wx, Y = Wy)
+  z <- svd(qr.qty(qx, qr.qy(qy, diag(1, nr, dy)))[1L:dx, , drop = FALSE], dx, dy)
+
+  xcoef <- backsolve((qx$qr)[1L:dx, 1L:dx, drop = FALSE], z$u)
+  ycoef <- backsolve((qy$qr)[1L:dy, 1L:dy, drop = FALSE], z$v)
+
+  #rownames(xcoef) <- colnames(Xc)[qx$pivot][1L:dx]
+  #rownames(ycoef) <- colnames(Yc)[qy$pivot][1L:dy]
+  #cca <- list(cor = z$d, xcoef = xcoef, ycoef = ycoef)
+
+  # Solve W using Archambeau06 equations
+  # Note: only requirement for Q is that Qx%*%t(Qy) = canonical correlations
+  # Q corresponds to M (dz x dz) in Bach-Jordan 2005, p.8 (before sec 4.1)
+  Qx <- diag(z$d[1:dz],dz,dz) # dz x dz matrix
+  #Qy <- diag(1, nrow(Qx)) # also a dz x dz matrix: identity matrix -> omit
+
+  # ML estimates for the prob. model W:
+  dz <- ifelse(is.null(dz), length(z$d), dz)
+  Wx <- Cxx%*%xcoef[,1:dz]%*%Qx
+  Wy <- Cyy%*%ycoef[,1:dz]#%*%Qy # Qy is identity matrix -> omit
+
+  list(X = Wx, Y = Wy)
 }
-
