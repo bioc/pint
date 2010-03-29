@@ -3,11 +3,9 @@
 \alias{z.expectation}
 \alias{z.projection}
 \alias{W.projection}
-\title{
-The model parameters z and W
-}
+\title{The model parameters z and W}
 \description{
-The expectation of latent variable z, contribution of each sample
+  Expectation of the latent variable z,  contribution of each sample
 to a dependency model, and contribution of each variable.
 }
 \usage{
@@ -18,25 +16,38 @@ W.projection(model, X, Y)
 
 \arguments{
 	\item{X, Y}{
-		Data sets used in \code{\link{screen.chromosome}} or \code{link{fit.dependency.model}} functions. 
-		Must be in the same order.
+
+	  Data sets used in fitting the dependency modeling functions
+	  (\code{\link{screen.chromosome}} or
+	  \code{link{fit.dependency.model}}). Note: Samples must be in
+	  the same order in both sets (paired rows).
+
 	}
 	\item{model}{
-		Dependency model
+		The fitted dependency model.
 	}
 }
 \details{
-Original data is retrieved by locating the row in \code{X} which has the same gene name than
-\code{model}.
 
-The contribution of each sample is approximated by projecting original data to first principal 
-component of \code{Wz}
+  \code{z.expectation} gives ML estimate of the shared latent variable
+  Z, given data X, Y and the model parameters in \code{model}.
 
-The contribution of each variable is approximated with first principal component of \code{Wz}
+  \code{z.projection} gives the contribution of each sample to the
+  dependency score. This is approximated by projecting original data to
+  first principal component of \code{Wz}.
+
+  \code{W.projection} gives the contribution of each variable to the
+  observed dependency. This is approximated with the loadings of the
+  first principal component of \code{Wz}
+
+  Original data can be retrieved by locating the row in \code{X} (or
+  \code{Y}) which has the same variable (gene) name than \code{model}.
+
 }
 
 \value{
-\code{z.expectation} gives the matrix z and \code{z.projection} gives the vector of each samples projection.
+\code{z.expectation} gives the matrix z and \code{z.projection} gives
+a projection vector over the samples.
 }
 \references{
 Dependency Detection with Similarity Constraints,
@@ -62,22 +73,25 @@ Olli-Pekka Huovilainen \email{ohuovila@gmail.com} and Leo Lahti \email{leo.lahti
 \code{\link{DependencyModel-class}}, 
 \code{\link{screen.chromosome}},
 \code{\link{z.projection}}
+\code{\link{W.projection}}
 }
 \examples{
 data(chromosome17)
-window <- fixed.window(geneExp,geneCopyNum,150,10)
+window <- fixed.window(geneExp, geneCopyNum, 150, 10)
 
-## pSimCCA model fitting around one gene
-depmodel2 <- fit.dependency.model(window$X,window$Y)
-barplot(z.projection(depmodel2,geneExp,geneCopyNum))
-## Plot of contribution of genes to model. Only X component is plotted
-## because Wx = Wy 
-barplot(W.projection(depmodel2,geneExp,geneCopyNum)$X)
+## pSimCCA model around one gene
+depmodel2 <- fit.dependency.model(window$X, window$Y)
+barplot(z.projection(depmodel2, geneExp, geneCopyNum))
 
-## pCCA model fitting around one gene
+## Plot the contribution of each genes to the model. Only the X component is plotted
+## here since Wx = Wy (in SimCCA) 
+barplot(W.projection(depmodel2, geneExp, geneCopyNum)$X)
+
+## Fit pCCA around one gene
 depmodel <- fit.dependency.model(window$X, window$Y, zDimension = 1,
 	                         marginalCovariances = "full", H = NA)
 
-z.expectation(depmodel,geneExp,geneCopyNum)
+## Retrieve the shared latent variable Z between data sets
+z.expectation(depmodel, geneExp, geneCopyNum)
 }
 \keyword{math}

@@ -9,23 +9,29 @@
 Dependency score plotting
 }
 \description{
-Plots contribution of variables and samples to dependency model or dependency model 
-fitting scores of chromosomal arm, chromosome or genome.
+Plot the contribution of the samples and variables to the dependency
+model or dependency model fitting scores of chromosomal arm, chromosome
+or genome.
 }
 \usage{
 plot.DependencyModel(x, X, Y, ann.types = NULL, ann.cols = NULL, legend.x = 0, 
         legend.y = 1, legend.xjust = 0, legend.yjust = 1, order = FALSE, ...)
+
 plot.ChromosomeArmModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
-	type = 'l', xlab = 'gene location (Mbp)', ylab = 'dependency score',
-	main = paste('Dependency score for chromosome ', chr, arm, sep = ''),
-	pch = 20, cex = 0.75, tpch = 3, tcex = 1, ylim = NA, ...)
+	topName = FALSE, type = 'l', xlab = 'gene location (Mbp)', 
+	ylab = 'dependency score', main = paste('Dependency score for chromosome ', 
+	chr, arm, sep = ''), pch = 20, cex = 0.75, tpch = 3, tcex = 1, ylim = NA, ...)
+
 plot.ChromosomeModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
-	type = 'l', xlab = 'gene location (Mbp)', ylab = 'dependency score',
+	topName = FALSE, type = 'l', xlab = 'gene location (Mbp)', ylab = 'dependency score',
 	main = paste('Dependency score for chromosome ', chr, sep = ''),
 	pch = 20, cex = 0.75, tpch = 3, tcex = 1, xlim = NA, ylim = NA,...)
-plot.GenomeModels(x, hilightGenes = NULL, showDensity = FALSE,
-        mfrow = c(5,5), mar = c(3,2.5,1.3,0.5), ps = 5, mgp = c(1.5,0.5,0),...)
 
+plot.GenomeModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, 
+	topName = FALSE, onePlot = FALSE, type = 'l', ylab = "Dependency Scores", 
+	xlab = "Gene location (chromosome)", main = "Dependency Scores in All Chromosomes",
+	pch = 20, cex = 0.75, tpch = 20, tcex = 0.7, mfrow = c(5,5), mar = c(3,2.5,1.3,0.5), 
+	ps = 5, mgp = c(1.5,0.5,0),ylim=NA,...)
 }
 
 \arguments{
@@ -34,7 +40,7 @@ plot.GenomeModels(x, hilightGenes = NULL, showDensity = FALSE,
 		\code{\link{ChromosomeModels-class}}, \code{\link{GenomeModels-class}}; models to be plotted. 
 	}
 	\item{X, Y}{
-		data sets used in dependency model.
+		data sets used in dependency modeling.
 	}
 	\item{ann.types}{
 		a factor for annotation types for samples. Each value corresponds one sample in 
@@ -63,39 +69,61 @@ plot.GenomeModels(x, hilightGenes = NULL, showDensity = FALSE,
 		the plot under each gene.
 	}
 	\item{showTop}{
-		numerical; Number of models to be hilighted. A horizontal dashed line is drawn to show threshold value. 
-		Hilighted models are numbered according to their ranking in dependency score. With \code{0} no line is drawn.
-	}
-	\item{type, xlab, ylab, main}{
-		plot type and labels. See \code{\link{plot}} for details.
-	}
-	\item{pch, cex}{
-		symbol type and size for hilightGenes. See \code{\link{points}} for details.
-	}
-	\item{tpch, tcex}{
-		symbol type and size for genes with highest scores. See \code{\link{points}} for details.
-	}
-	\item{ylim, xlim}{
-		axis limits. Default values are calculated from data. Lower limit for y is 0
-		and upper limit is either 1 or maximum score value. X limits are gene location
-		range. See \code{\link{plot}} for details.
-	}
-	\item{mfrow, mar, ps, mgp}{
-		chromosome plots' layout, marginals, text size and margin line. See \code{\link{par}} for details.
-	}
-	\item{...}{
-		optional extra parameters passed to normal plot function.
-	}
+	  numeric; Number of models with highest dependencies to be
+	hilighted. A horizontal dashed line is drawn to show threshold
+	value. With \code{0} no line is drawn.
+      }
+      \item{topName}{
+	logical; If \code{TRUE}, gene names are printed to hilighted
+	models with highest dependecies. Otherwise hilighted models are
+	numbered according to their rank in dependency score.
+      }
+
+      \item{type, xlab, ylab, main}{
+	plot type and labels. See \code{\link{plot}} for details. In
+	\code{plot.GenomeModels} these affet only if \code{onePlot} is
+	\code{TRUE}.
+      }
+      
+      \item{onePlot}{
+	If \code{TRUE}, all dependency scores are plotted in one plot
+	window. Otherwise one plot window is used for each chromosome.
+      }
+
+      \item{pch, cex}{
+	symbol type and size for hilightGenes. See \code{\link{points}}
+	for details.
+      }
+      
+      \item{tpch, tcex}{
+	symbol type and size for genes with highest scores. See
+	\code{\link{points}} for details.
+      }
+      
+      \item{ylim, xlim}{
+	axis limits. Default values are calculated from
+	data. Lower limit for y is 0 and upper limit is either 1
+	or maximum score value. X limits are gene location
+	range. See \code{\link{plot}} for details.
+      }
+
+      \item{mfrow, mar, ps, mgp}{
+	chromosome plots' layout, marginals, text size and margin
+	line. See \code{\link{par}} for details.
+      }
+      \item{...}{
+	optional plotting parameters
+      }
 }
 \details{
-Function plots scores of each dependency model of a gene for the whole chromosomal arm, chromosome or genome 
-according to used method. \code{plot(x, cancerGenes = NULL, showDensity = FALSE, ...)} is also useable and
-chosen according to class of \code{models}.
-
+Function plots scores of each dependency model of a gene for the whole
+chromosomal arm, chromosome or genome according to used
+method. \code{plot(x, cancerGenes = NULL, showDensity = FALSE, ...)} is
+also usable and chosen according to class of \code{models}.
 }
 \references{
-Dependency Detection with Similarity Constraints
-Lahti et al., MLSP'09, to appear. See
+Dependency Detection with Similarity Constraints Lahti et al.,
+MLSP'09. See
 \url{http://www.cis.hut.fi/lmlahti/publications/mlsp09_preprint.pdf}
 }
 \author{
@@ -111,20 +139,22 @@ Olli-Pekka Huovilainen \email{ohuovila@gmail.com}
 \code{\link{screen.chromosome}}
 }
 \examples{
+
 data(chromosome17)
+
 ## Dependency model around 150th gene
-window <- fixed.window(geneExp,geneCopyNum,150,10)
-model <- fit.dependency.model(window$X,window$Y)
+window <- fixed.window(geneExp, geneCopyNum, 150, 10)
+model <- fit.dependency.model(window$X, window$Y)
+
 ## example annnotation types
-ann.types = factor(c(rep("Samples 1 - 10",10),rep("Samples 11 - 51",41)))
-plot(model,geneExp,geneCopyNum, ann.types,legend.x=40,legend.y=-4,order=TRUE)
+ann.types <- factor(c(rep("Samples 1 - 10", 10), rep("Samples 11 - 51", 41)))
+plot(model, geneExp, geneCopyNum, ann.types, legend.x = 40, legend.y = -4,
+     order = TRUE)
 
-## pSimCCA model fittings to chromosome 17p
+## pSimCCA model on chromosome 17p
 models17ppSimCCA <- screen.chromosome(geneExp, geneCopyNum, 10, 17, 'p')
-plot(models17ppSimCCA,hilightGenes=c("ENSG00000108342","ENSG00000108298"),showDensity=TRUE)
+plot(models17ppSimCCA,
+     hilightGenes=c("ENSG00000108342", "ENSG00000108298"), showDensity = TRUE)
 
-## pCCA model fittings to chromosome 17p
-models17qpCCA <- screen.chromosome(geneExp, geneCopyNum, 10, 17, 'p', method="pCCA")
-plot(models17qpCCA,showTop=10)
 }
 \keyword{hplot}
