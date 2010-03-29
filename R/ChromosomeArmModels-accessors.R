@@ -77,6 +77,12 @@ setMethod("getWindowSize","ChromosomeArmModels",
 	} 
 )
 
+setMethod("isEmpty","ChromosomeArmModels",
+	function(model) {
+		return(length(model@models) == 0)
+	}
+)
+
 setMethod("findHighestGenes","ChromosomeArmModels",
 	function(model,num = 1) {
 		scores <- getScore(model)

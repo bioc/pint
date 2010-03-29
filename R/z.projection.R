@@ -2,7 +2,12 @@ z.projection <- function(model,X,Y){
 
    # Find original data
    index <- which(dimnames(X$data)[[1]] == getGeneName(model))
-   window <- fixed.window(X, Y, index, getWindowSize(model))
+
+   # Check if model has only 1 variable from X data
+   if (nrow(getW(model)$X) == 1)
+     window <- sparse.window(X, Y, index, getWindowSize(model))
+   else
+     window <- fixed.window(X, Y, index, getWindowSize(model))
 
    z <- z.expectation(model,X,Y)
    W <- getW(model)$total

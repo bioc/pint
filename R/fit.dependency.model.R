@@ -4,8 +4,10 @@ function (X, Y, zDimension = 1,
           sigmas = 0, covLimit = 0, mySeed = 123){
 
 	# Center data
-	X <- t(centerData(t(X)))
-	Y <- t(centerData(t(Y)))
+	if (ncol(X) > 1)
+		X <- t(centerData(t(X)))
+	if (ncol(Y) > 1)
+		Y <- t(centerData(t(Y)))
 
 	# Check if dimensionality is too big
 	if(zDimension > ncol(X) || zDimension > ncol(Y))
@@ -95,7 +97,7 @@ function (X, Y, zDimension = 1,
 			geneName = ""
 
 		model <- new("DependencyModel", W = res$W, phi = res$phi, score = score, 
-					windowSize = dim(X)[1], method = method, params = params, geneName = geneName)	
+					windowSize = dim(Y)[1], method = method, params = params, geneName = geneName)	
 	}
 	model
 }

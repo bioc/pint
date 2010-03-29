@@ -2,6 +2,8 @@ setClass("DependencyModel", representation(W = "list", phi = "list", score = "nu
 		geneName = "character", windowSize = "numeric", 
 		method = "character", params = "list"))
 
+#setClass("SparseDependencyModel", contains = "DependencyModel")
+
 setClass("ChromosomeArmModels", representation(models = "list", chromosome = "factor", arm = "factor", 
 			windowSize = "numeric", method = "character", params = "list"))
 

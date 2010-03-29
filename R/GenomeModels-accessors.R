@@ -54,3 +54,40 @@ setMethod("findHighestGenes",signature("GenomeModels"),
 		return(as.character(data[order(scores,decreasing=TRUE),]$genes[1:num]))
 	}
 )
+
+setMethod("findHighestModels","GenomeModels",
+        function(model,num = 1) {
+
+		scores <- vector()
+		arm <- vector()
+		chr <- vector()
+		indices <- vector()
+		for(i in 1:24){
+		        armpscores <- getScore(getPArm(model[[i]]))
+			if (length(armpscores > 0)){
+				arm <- c(arm,rep('p',length(armpscores)))
+				indices <- c(indices,1:length(armpscores))
+				chr <- c(chr, rep(i,length(armpscores)))
+			}		
+		        armqscores <- getScore(getQArm(model[[i]]))
+			if (length(armqscores > 0)){
+				arm <- c(arm,rep('q',length(armqscores)))
+				indices <- c(indices,1:length(armqscores))
+				chr <- c(chr, rep(i,length(armqscores)))
+			}
+			scores <- c(scores, armpscores, armqscores)
+		}
+
+                data <- data.frame(scores,indices,arm,chr)
+                #Order dataframe
+                data <- data[order(scores,decreasing=TRUE),]
+                returnList = list()
+                for (i in 1:num) {
+                        if (data$arm[i] == 'p')
+                                returnList = c(returnList,getPArm(model[[data$chr[i]]])[[data$indices[i]]])
+                        else
+                                returnList = c(returnList,getQArm(model[[data$chr[i]]])[[data$indices[i]]])               
+		}
+                return(returnList)
+        }
+)

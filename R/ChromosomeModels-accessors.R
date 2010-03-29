@@ -33,6 +33,11 @@ setMethod("getWindowSize","ChromosomeModels",
 		return(getWindowSize(getPArm(model))) 
 	} 
 ) 
+setMethod("isEmpty","ChromosomeModels",
+	function(model) {
+		return(isEmpty(getPArm(model)) && isEmpty(getQArm(model)))
+	}
+)
 
 setMethod("findHighestGenes","ChromosomeModels",
 	function(model,num = 1) {
