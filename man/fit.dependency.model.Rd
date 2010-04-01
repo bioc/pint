@@ -1,6 +1,10 @@
 \name{fit.dependency.model}
 %\Rdversion{1.1}
 \alias{fit.dependency.model}
+\alias{ppca}
+\alias{pcca}
+\alias{pcca.isotropic}
+\alias{pfa}
 \title{Fit dependency model between two data sets.}
 
 \description{ Fits a selected dependency model between two data
@@ -9,16 +13,23 @@
   component (pPCA; \cite{Tipping & Bishop 1999}) analysis, probabilistic
   factorial analysis (pFA; \cite{Rubin & Thayer 1982}) or similarity
   constrained canonical correlation analysis (pSimCCA; \cite{Lahti et
-  al. 2009}). These correspond to different choices of the model
-  structure and parameters.  }
+  al. 2009}). These correspond to \code{ppca},
+  \code{pcca}, \code{pcca.isotropic} and \code{pfa} as well as different choices of the model
+  structure and parameters in \code{fit.dependency.model}. }
 
 \usage{
 fit.dependency.model(X, Y, zDimension = 1, marginalCovariances = "full", 
 	H = 1, sigmas = 0, covLimit = 0, mySeed = 123)
+
+ppca(X, Y, zDimension = 1)
+pcca(X, Y, zDimension = 1)
+pcca.isotropic(X, Y, zDimension = 1, covLimit = 1e-6)
+pfa(X, Y = NULL, zDimension = 1)
+
 }
 \arguments{
   \item{X, Y}{
-The data sets. 'Variables x samples'.
+The data sets. 'Variables x samples'. If \code{NULL} is given, model is calculated for only one data set.
 }
   \item{zDimension}{
 Dimensionality of the shared latent variable.
@@ -45,6 +56,7 @@ Dimensionality of the shared latent variable.
 }
 
 \details{
+
   The dependency models considered in \cite{Lahti et al. 2009} are
   obtained as follows:
 
@@ -109,7 +121,7 @@ D. 1982. \emph{Psychometrika}, \bold{vol. 47}, no. 1.
 \seealso{ For windowing data: \code{\link{fixed.window}}. Reults from
 this function: \linkS4class{DependencyModel}. Calculating dependency
 models to chromosomal arm, chromosome or genome
-\code{\link{screen.chromosome}}. For calculation of latent variable z:
+\code{\link{screen.cgh.mrna}}. For calculation of latent variable z:
 \code{link{z.expectation}}.  }
 
 

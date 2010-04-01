@@ -39,7 +39,7 @@ setMethod("isEmpty","ChromosomeModels",
 	}
 )
 
-setMethod("findHighestGenes","ChromosomeModels",
+setMethod("topGenes","ChromosomeModels",
 	function(model,num = 1) {
 		pscores <- getScore(getPArm(model))
 		qscores <- getScore(getQArm(model))
@@ -55,7 +55,7 @@ setMethod("findHighestGenes","ChromosomeModels",
 	}
 )
 
-setMethod("findHighestModels","ChromosomeModels",
+setMethod("topModels","ChromosomeModels",
 	function(model,num = 1) {
 		pscores <- getScore(getPArm(model))
 		qscores <- getScore(getQArm(model))
@@ -75,4 +75,33 @@ setMethod("findHighestModels","ChromosomeModels",
 		}
 		return(returnList)
 	}
+)
+
+setMethod("orderGenes","GenomeModels",
+  function(model){
+
+    scores <- vector()
+    genes <- vector()
+    scores <- c(scores, getScore(getQArm(model)))
+    scores <- c(scores, getScore(getPArm(model)))
+    genes <- c(genes, getGeneName(getQArm(model)))
+    genes <- c(genes, getGeneName(getPArm(model)))
+   
+    data <- data.frame(scores,genes,stringsAsFactors=FALSE)
+    return(data[order(scores,decreasing=TRUE),])
+  }	
+)
+
+setMethod("findModel","ChromosomeModels",
+  function(model, name){
+
+   pIndex <- which(getGeneName(getPArm(model)) == name)
+   if(length(pIndex) > 0) 
+     return(getPArm(model)[[pIndex]])
+   qIndex <- which(getGeneName(getQArm(model)) == name)
+   if(length(qIndex) > 0) 
+     return(getQArm(model)[[qIndex]])
+   
+   stop("No model found")
+  }
 )

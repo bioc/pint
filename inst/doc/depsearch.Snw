@@ -87,7 +87,7 @@ dependencies between the measurements (gene expression and copy number
 in our example). 
 
 <<>>=
-model17qpSimCCA <- screen.chromosome(geneExp, geneCopyNum, 
+model17qpSimCCA <- screen.cgh.mrna(geneExp, geneCopyNum, 
                              	     windowSize = 10, 
                                      chr = 17, arm = 'q', 
                                      method = "pSimCCA") 
@@ -122,14 +122,14 @@ e.g. \cite{Lahti09mlsp}). The top-5 genes with the highest dependency
 in their chromosomal neighborghood can be retrieved with:
 
 <<>>=
-findHighestGenes(model17qpSimCCA, 5)
+topGenes(model17qpSimCCA, 5)
 @
 
 We can also investigate the contribution of individual patients or
-probes on the overall dependency (Fig.~\ref{fig:z}-~\ref{fig:W}). The
+probes on the overall dependency (Fig. ~\ref{fig:modelplot}). The
 model parameters \(W\) and \(z\) are easily retrieved from the models
 (see \cite{Lahti09mlsp} for description of the model parameters).  In
-1-dimensional case their interpretation is straightforward; \(z\)
+1-dimensional, case their interpretation is straightforward; \(z\)
 indicates the strength of shared signal in each sample (patient), and
 \(W\) describes how the signal is captured by each probe. \(Wz\)
 describes how the shared signal is manifested in each data set. With
@@ -142,7 +142,7 @@ projection scores corresponding of the first principal component of
 \begin{figure}[H]
 \begin{center}
 <<fig=true>>=
-model <- findHighestModels(model17qpSimCCA, 1)[[1]]
+model <- topModels(model17qpSimCCA, 1)[[1]]
 plot(model, geneExp, geneCopyNum)
 @
 \end{center}
@@ -176,7 +176,7 @@ guides the dependency search with priors on \(W\).
 For example, use probabilistic CCA with 1-dimensional \(Z\):
 
 <<eval = FALSE>>=
-model17qpCCA <- screen.chromosome(geneExp, geneCopyNum, windowSize = 10, chr = 17, arm = 'q', method = "pCCA", params = list("zDimension = 1")) 
+model17qpCCA <- screen.cgh.mrna(geneExp, geneCopyNum, windowSize = 10, chr = 17, arm = 'q', method = "pCCA", params = list("zDimension = 1")) 
 @
 
 \subsection*{Acknowledgements}
@@ -184,7 +184,64 @@ model17qpCCA <- screen.chromosome(geneExp, geneCopyNum, windowSize = 10, chr = 1
 We would like to thank prof. Sakari Knuutila (University of Helsinki)
 for providing the example data set for the package.
 
-%\section{Dependency modeling framework}
+\section{Dependency modeling framework}
+
+Dependencies between two datasets are calculated by fitting a ML solution
+to probabilistic latent variable model. Samples from the data 
+sets are assumed to be generated from a common shared latent variable $\mathbf{z}$ 
+and projected by $W_x$ and $W_y$. 
+
+\begin{figure}[htb]
+\centering \includegraphics[height=3.5cm, keepaspectratio=TRUE]{cca2}
+\caption{Graphical description of the shared latent variable model showing
+generation of data sets $X$ and $Y$ from latent shared variable $\mathbf{z}$ 
+through $W_x$ and $W_y$}
+\label{modelpic}
+\end{figure}
+
+\begin{equation}\label{eq:model}             
+X \sim \mathcal{N}(W_x\mathbf{z}, \Psi_x)   
+\end{equation}
+\begin{equation}\label{eq:model2}             
+Y \sim \mathcal{N}(W_y\mathbf{z}, \Psi_y)                                                 
+\end{equation}
+
+Shared latent variable $z$ and projection matrices $W_x$ and $W_y$ capture 
+the dependency between data sets and covariance matrcies $\Psi_x$ 
+and $\Psi_y$ characterize the data set-specific effects. 
+
+The implemented methods in this package differ in assumptions about the model.
+pPCA assumes isotropic error model with both covariance matrices identical:
+
+\begin{equation}\label{eq:pPCA}
+\Psi_x = \Psi_y = \sigma I
+\end{equation}
+
+pFA assumes diagonal error model. pCCA assumes full diagonal matrix. 
+Package also implements a special case of pCCA with isotropic covariance 
+matrices which aren't necessarily equal (in pPCA they are identical).
+psimCCA places an additional constraint to relation between $W_x$ and $W_y$
+through transformation matrix $T$. 
+
+\begin{equation}\label{psimCCA}
+W_y = TW_x
+\end{equation}
+
+By default $T$ is identical matrix and $W_y = W_x$. This constraint can be 
+loosened in which case mean $H$ and variance $sigma^2_T$ of the matrix normal prior 
+distribution for $T$ can be given.
+
+\begin{equation}\label{T}
+P(T) = N_m(H,I,\sigma^2_TI)
+\end{equation}
+
+Fitness of the model is determined by dependency score:
+
+\begin{equation}\label{depscore}
+\frac{Tr(WW^T)}{Tr(\Psi)}
+\end{equation}
+
+
 %
 %FIXME: jos on aikaa, tahan voisi nyt tai myohemmin pistaa mallin
 %yleisen kuvauksen (kaavat ja CCA-mallituskuva), jonka kautta saisi

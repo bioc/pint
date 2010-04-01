@@ -24,7 +24,6 @@ setMethod(f="show",signature("ChromosomeArmModels"),
 				}
 			}
 		}
-		
 		#Summary of score
 		cat("Summary of dependency scores: \n")
 		print(summary(getScore(object)))
@@ -108,60 +107,53 @@ setMethod(f="show",signature("GenomeModels"),
 
 
 setMethod(f="show",signature("DependencyModel"),
-	function(object){
-		cat("***", object@method, "dependency model for window size:",object@windowSize,"*** \n")
-		#Gene name and location
-		cat("Gene:",object@geneName)
-		if(length(object@loc) > 0){
-			cat("  Location: ")
-			loc <- format((object@loc/1e6),digits=5)
-			cat(loc,"Mbp",sep="")
-		}
-		cat("\n")
+  function(object){
+    cat("***", object@method, "dependency model for window size:",object@windowSize,"*** \n")
+    #Gene name and location
+    if (object@geneName != "" | length(object@loc) > 0){   
+      cat("Gene:",object@geneName)
+      if(length(object@loc) > 0){
+        cat("  Location: ")
+        if (object@arm != "" && object@chromosome != ""){
+          cat(object@chromosome,object@arm,", ",sep="")
+        }
+        loc <- format((object@loc/1e6),digits=5)
+        cat(loc,"Mbp",sep="")
+      }
+      cat("\n")
+    }
+    
+    #Score
+    cat("Dependency score:", object@score,"\n")
 
-		#Score
-		cat("Dependency score:", object@score,"\n")
+    if (is.null(object@W$X)){
+      #W print
+      cat("- ")
+      cat(matrix.print(object@W$total,"W"),"\n", sep="")
 
-		#WX print
-		cat("- ")
-		cat(matrix.print(object@W$X,"WX"),"\n", sep="")
-		#string1 <- paste("WX: [1:", dim(object@W$X)[1], ", 1:",  dim(object@W$X)[2] ,"] ", sep = "") 
-		#values <- format(object@W$X[1:min(4,length(object@W$X))],digits=3)
-		#string2 <- ""
-		#if(length(object@W$X) > 4) string2 <- "..."
-		#cat(string1,values,string2,"\n")
-		
-		#WY print
-		cat("- ")
-		cat(matrix.print(object@W$Y,"WY"),"\n", sep="")
-		#string1 <- paste("WY: [1:", dim(object@W$Y)[1], ", 1:",  dim(object@W$Y)[2] ,"] ", sep = "") 
-		#values <- format(object@W$Y[1:min(4,length(object@W$Y))],digits=3)
-		#string2 <- ""
-		#if(length(object@W$Y) > 4) string2 <- "..."
-		#cat(string1,values,string2,"\n")
-		
-		#Phi X
-		cat("- ")
-		cat(matrix.print(object@phi$X,"phiX"),"\n", sep="")
-		#cat("phiX:",object@phi$X,"  phiY:",object@phi$Y,"\n")		
-		#string1 <- paste("phiX: [1:", dim(object@phi$X)[1], ", 1:",  dim(object@phi$X)[2] ,"] ", sep = "") 
-		#values <- format(object@phi$X[1:min(4,length(object@phi$X))],digits=3)
-		#string2 <- ""
-		#if(length(object@phi$X) > 4) string2 <- "..."
-		#cat(string1,values,string2,"\n")
-		
-		#Phi Y
-		cat("- ")
-		cat(matrix.print(object@phi$Y,"phiY"),"\n", sep="")
-		#cat("phiX:",object@phi$X,"  phiY:",object@phi$Y,"\n")		
-		#string1 <- paste("phiY: [1:", dim(object@phi$Y)[1], ", 1:",  dim(object@phi$Y)[2] ,"] ", sep = "") 
-		#values <- format(object@phi$Y[1:min(4,length(object@phi$Y))],digits=3)
-		#string2 <- ""
-		#if(length(object@phi$Y) > 4) string2 <- "..."
-		#cat(string1,values,string2,"\n")
-		
-		cat("************************************************\n")
+      #Phi
+      cat("- ")
+      cat(matrix.print(object@phi$total,"phi"),"\n", sep="")
+    }
+    else {
+      #WX print
+      cat("- ")
+      cat(matrix.print(object@W$X,"WX"),"\n", sep="")
+
+      #WY print
+      cat("- ")
+      cat(matrix.print(object@W$Y,"WY"),"\n", sep="")
+	
+      #Phi X
+      cat("- ")
+      cat(matrix.print(object@phi$X,"phiX"),"\n", sep="")
+    
+      #Phi Y
+      cat("- ")
+      cat(matrix.print(object@phi$Y,"phiY"),"\n", sep="")
 	}
+    cat("************************************************\n")
+  }
 )
 
 

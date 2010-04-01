@@ -10,10 +10,12 @@
 \alias{getModelMethod}
 \alias{getParams}
 \alias{getWindowSize}
-\alias{findHighestGenes}
-\alias{findHighestModels}
+\alias{topGenes}
+\alias{topModels}
 \alias{getModelNumbers}
 \alias{isEmpty}
+\alias{orderGenes}
+\alias{findModel}
 
 \alias{[[,ChromosomeArmModels-method}
 \alias{[[<-,ChromosomeArmModels-method}
@@ -26,10 +28,12 @@
 \alias{getParams,ChromosomeArmModels-method}
 \alias{getModelNumbers,ChromosomeArmModels-method}
 \alias{getWindowSize,ChromosomeArmModels-method}
-\alias{findHighestGenes,ChromosomeArmModels-method}
-\alias{findHighestModels,ChromosomeArmModels-method}
+\alias{topGenes,ChromosomeArmModels-method}
+\alias{topModels,ChromosomeArmModels-method}
 \alias{getModelNumbers,ChromosomeArmModels-method}
 \alias{isEmpty,ChromosomeArmModels-method}
+\alias{orderGenes,ChromosomeArmModels-method}
+\alias{findModel,ChromosomeArmModels-method}
 
 \title{Class "ChromosomeArmModels", for dependency models in chromosomal arm}
 
@@ -37,7 +41,7 @@
 particular chromosome arm.}
 
 \section{Objects from the Class}{ Function
-\code{\link{screen.chromosome}} returns an object of this class.
+\code{\link{screen.cgh.mrna}} and \code{\link{screen.cgh.mir}} returns an object of this class.
  
 }
 \section{Slots}{
@@ -97,25 +101,30 @@ particular chromosome arm.}
     dependencymodels.}
 
  
-    \item{findHighestGenes}{\code{signature(model =
+    \item{topGenes}{\code{signature(model =
     "ChromosomeArmModels", num = "numeric")}: Returns a vector of given
     number of names of the genes which have the highest dependency
     score}
 
-    \item{findHighestModels}{\code{signature(model =
+    \item{topModels}{\code{signature(model =
     "ChromosomeArmModels", num = "numeric")}: Returns a list with given
     number of dependency models which have the highest dependency score}
 
     \item{isEmpty}{\code{signature(model = "ChromosomeArmModels")}:
     Returns TRUE if \code{model} has no dependency models}
 
+	\item{orderGenes}{\code{signature(model = "ChromosomeArmModels")}:
+	Returns a data frame with gene names and their model scores sorted}
+	
+	\item{findModel}{\code{signature(model = "ChromosomeArmModels")}:
+	Finds a dependency model by gene name and returns it.}
   }
 }
 
 \author{Olli-Pekka Huovilainen \email{ohuovila@gmail.com}}
 
 \seealso{ To calculate dependency models for chromosomal arm:
-\code{\link{screen.chromosome}}. This class holds a number of
+\code{\link{screen.cgh.mrna}}. This class holds a number of
 \linkS4class{DependencyModel}s. To plot dependency scores see
 \code{\link{dependency score plotting}}. Dependency models for whole
 chromosomal arm: \linkS4class{ChromosomeModels}. Dependency models for
@@ -125,13 +134,16 @@ whole genome: \linkS4class{GenomeModels}.  }
 data(chromosome17)
 
 ## Calculation of dependency models for chromosomal arm
-model17p <- screen.chromosome(geneExp, geneCopyNum, windowSize = 10, chr
+model17p <- screen.cgh.mrna(geneExp, geneCopyNum, windowSize = 10, chr
 = 17, arm = 'p')
 
 model17p
 
 ## Information of the dependency model which has the highesst dependency score
-findHighestGenes(model17p, 1)
+topGenes(model17p, 1)
+
+## Finding a dependency model by its name
+findModel(model17p, "ENSG00000129250")
 
 ## Information of the first dependency model
 model17p[[1]]

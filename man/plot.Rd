@@ -15,7 +15,8 @@ or genome.
 }
 \usage{
 plot.DependencyModel(x, X, Y, ann.types = NULL, ann.cols = NULL, legend.x = 0, 
-        legend.y = 1, legend.xjust = 0, legend.yjust = 1, order = FALSE, ...)
+        legend.y = 1, legend.xjust = 0, legend.yjust = 1, order = FALSE, 
+        cex.z = 0.6, cex.WX = 0.6, cex.WY = 0.6, ...)
 
 plot.ChromosomeArmModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
 	topName = FALSE, type = 'l', xlab = 'gene location (Mbp)', 
@@ -60,6 +61,9 @@ plot.GenomeModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
 	\item{order}{
 		logical; if 'TRUE', values for sample contributions are ordered according
  		to their values.
+	}
+	\item{cex.z, cex.WX, cex.WY}{
+		Text size for variable names.
 	}
 	\item{hilightGenes}{
 		vector of strings; Name of genes to be hilighted with dots.
@@ -136,7 +140,8 @@ Olli-Pekka Huovilainen \email{ohuovila@gmail.com}
 \code{\link{ChromosomeArmModels-class}}, 
 \code{\link{ChromosomeModels-class}}, 
 \code{\link{GenomeModels-class}}, 
-\code{\link{screen.chromosome}}
+\code{\link{screen.cgh.mrna}},
+\code{\link{screen.cgh.mir}}
 }
 \examples{
 
@@ -152,7 +157,7 @@ plot(model, geneExp, geneCopyNum, ann.types, legend.x = 40, legend.y = -4,
      order = TRUE)
 
 ## pSimCCA model on chromosome 17p
-models17ppSimCCA <- screen.chromosome(geneExp, geneCopyNum, 10, 17, 'p')
+models17ppSimCCA <- screen.cgh.mrna(geneExp, geneCopyNum, 10, 17, 'p')
 plot(models17ppSimCCA,
      hilightGenes=c("ENSG00000108342", "ENSG00000108298"), showDensity = TRUE)
 

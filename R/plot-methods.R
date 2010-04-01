@@ -1,11 +1,23 @@
-plot.DependencyModel <- function(x, X, Y, ann.types = NULL, ann.cols = NULL, legend.x = 0, legend.y = 1, legend.xjust = 0, legend.yjust = 1, order=FALSE, ...){
+plot.DependencyModel <- function(x, X, Y = NULL, ann.types = NULL, ann.cols = NULL, legend.x = 0, legend.y = 1, 
+                                 legend.xjust = 0, legend.yjust = 1, order=FALSE, cex.z = 0.6, 
+                                 cex.WX = 0.6, cex.WY = 0.6,...){
 
   model <- x
-  if(missing(X) || missing(Y)) {
-    stop("Original data needed")
+  
+  # Check that both data sets are given for models from 2 data sets
+  if (!is.null(getW(model)$X)){
+    if (missing(X) || missing(Y)) {
+      stop("Original data needed as 'X' and 'Y' arguments")
+    }
   }
-  z <- z.projection(model,X,Y)[,1]
-  W <- W.projection(model,X,Y)
+  # Check that data set is given for models from 1 data set
+  else {
+    if (missing(X)) {
+      stop("Original data needed as 'X' argument")
+    }
+  }
+  z <- z.effects(model,X,Y)[,1]
+  W <- W.effects(model,X,Y)
 
   if (order){
     z.order <- order(z)
@@ -42,13 +54,26 @@ plot.DependencyModel <- function(x, X, Y, ann.types = NULL, ann.cols = NULL, leg
 
   # Outer margins and layout
   par(oma = c(0.5,0.5,2.5,0.5))
-  layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE), c(2,2),c(8,6))
+
+  # For models from 2 data sets
+  if (!is.null(Y)){
+    if (length(W$X) == 1){
+      layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE), c(1,3),c(8,6))
+    }
+    else {
+      layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE), c(2,2),c(8,6))
+    }
+  }
+  # For models from 1 data set
+  else {
+    layout(matrix(c(1,2),2,1,byrow = TRUE), 1,c(8,6))
+  }
 
   # Inner margins
   par(mar = c(3.1,4.1,3.1,0),cex.main = 1,cex.axis = 1)
 
   # Barplots for z
-  barplot(z,main="Sample effects",col = cols,xlab = "Sample", ylab = "Weight",las = 2,cex.names=0.5)  
+  barplot(z,main="Sample effects",col = cols,xlab = "Sample", ylab = "Weight",las = 2,cex.names=cex.z)  
 
   # Put legend 
   if(!is.null(ann.types)){
@@ -57,9 +82,20 @@ plot.DependencyModel <- function(x, X, Y, ann.types = NULL, ann.cols = NULL, leg
 
   par(mar = c(5.1,4.1,3.1,0.5),cex.main = 1,cex.axis = 1)
   # Barplots for Ws
-  barplot(t(W$X),main="Variable effects (first data set)",ylab="Weight",las=2,cex.names=0.5)
-  barplot(t(W$Y),main="Variable effects (second data set)",ylab="Weight",las=2,cex.names=0.5)
-
+  # For models from 2 data sets
+  if (!is.null(Y)){
+    if(length(W$X) == 1){
+      barplot(t(W$X),main="Variable effects,\n(first data set)",ylab="Weight",las=2,cex.names=cex.WX)
+    }
+    else {
+      barplot(t(W$X),main="Variable effects (first data set)",ylab="Weight",las=2,cex.names=cex.WX)
+    }
+    barplot(t(W$Y),main="Variable effects (second data set)",ylab="Weight",las=2,cex.names=cex.WY)
+  }
+  # For models from 1 data set
+  else {
+    barplot(t(W$total),main="Variable effects",ylab="Weight",las=2,cex.names=cex.WX)
+  }
 
   #Title
   title <- paste(getModelMethod(model),"model around gene",getGeneName(model))
@@ -78,57 +114,57 @@ function (x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FA
 	pch = 20, cex = 0.75, tpch = 3, tcex = 1, ylim = NA, ...){
 	models <- x
 	
-	#No printing without any models
-	if(getModelNumbers(models) == 0) return()
+  #No printing without any models
+  if(getModelNumbers(models) == 0) return()
 	
-	scores <- getScore(models)
-	locs <- getLoc(models)
-	chr <- getChromosome(models)
-	arm <- getArm(models)
-	geneNames <- getGeneName(models)
+  scores <- getScore(models)
+  locs <- getLoc(models)
+  chr <- getChromosome(models)
+  arm <- getArm(models)
+  geneNames <- getGeneName(models)
 
-	if(all(is.na(ylim))){
-		ylim <- c(0,max(scores))
-	}
+  if(all(is.na(ylim))){
+    ylim <- c(0,max(scores))
+  }
 
-	plot((locs/1e6), scores, type = type, xlab=xlab, 
-		ylab=ylab, main=main, ylim = ylim,...)
+  plot((locs/1e6), scores, type = type, xlab=xlab, 
+       ylab=ylab, main=main, ylim = ylim,...)
 	
-	if(showTop > 0){
-		topModels <- findHighestModels(models,showTop)
+  if(showTop > 0){
 		
-		d <- data.frame(scores,locs)
-		d <- d[order(scores,decreasing=TRUE),]
+    d <- data.frame(scores,locs)
+    d <- d[order(scores,decreasing=TRUE),]
 		
-		#Put vertical dashed line in the middle of showTop highest and showTop+1 highest scores
-		limit = (d$score[showTop]+d$score[showTop+1])/2
-		abline(h=limit,lty=2)
-		#Draw points and add ranking number
-		for(i in 1:showTop){
-			points(d$locs[i]/1e6,d$scores[i],pch=tpch,cex = tcex) 
-			if(topName)
-				text(d$locs[i]/1e6,d$scores[i],getGeneName(topModels[[i]]),pos=4,cex=tcex)
-			else
-				text(d$locs[i]/1e6,d$scores[i],as.character(i),pos=2)
-		}
-	}
+    #Put vertical dashed line in the middle of showTop highest and showTop+1 highest scores
+    limit = (d$score[showTop]+d$score[showTop+1])/2
+    abline(h=limit,lty=2)
+    topMods <- topModels(models,showTop) 
+    #Draw points and add ranking number
+    for(i in 1:showTop){
+      points(d$locs[i]/1e6,d$scores[i],pch=tpch,cex = tcex) 
+      if(topName)
+        text(d$locs[i]/1e6,d$scores[i],getGeneName(topMods[[i]]),pos=4,cex=tcex)
+      else
+        text(d$locs[i]/1e6,d$scores[i],as.character(i),pos=2)
+    }
+  }
 	
-	if (!is.null(hilightGenes)){
+  if (!is.null(hilightGenes)){
 
-		#indices of cancer genes
-		matches <- match(hilightGenes, geneNames)
-		#print(matches)
-		points(locs[matches]/1e6,scores[matches],pch=pch,cex=cex)
+    #indices of cancer genes
+    matches <- match(hilightGenes, geneNames)
+    #print(matches)
+    points(locs[matches]/1e6,scores[matches],pch=pch,cex=cex)
 
-	}
+  }
 
-	#lines to bottom to show gene density
-	if(showDensity){
-		heightCoefficient <- 100
-		for(i in 1:length(locs)){
-			lines( c((locs[i]/1e6) , (locs[i]/1e6)) , c(0,ylim[2]/heightCoefficient))
-		}
-	}
+  #lines to bottom to show gene density
+  if(showDensity){
+    heightCoefficient <- 100
+    for(i in 1:length(locs)){
+      lines( c((locs[i]/1e6) , (locs[i]/1e6)) , c(0,ylim[2]/heightCoefficient))
+    }
+  }
 }
 
 
@@ -199,7 +235,6 @@ function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FAL
   pl <- par(new = FALSE)
 	
   if(showTop > 0){
-    topModels <- findHighestModels(models,showTop)
 		
     scores=c(pscores,qscores)
     locs=c(plocs,qlocs)
@@ -209,11 +244,12 @@ function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FAL
     #Put vertical dashed line in the middle of showTop highest and showTop+1 highest scores
     limit = (d$score[showTop]+d$score[showTop+1])/2
     abline(h=limit,lty=2)
+    topMods <- topModels(models,showTop) 
     #Draw points and add ranking number
     for(i in 1:showTop){
       points(d$locs[i]/1e6,d$scores[i],pch=tpch,cex = tcex) 
       if(topName)
-        text(d$locs[i]/1e6,d$scores[i],getGeneName(topModels[[i]]),pos=4,cex=tcex)
+        text(d$locs[i]/1e6,d$scores[i],getGeneName(topMods[[i]]),pos=4,cex=tcex)
       else
         text(d$locs[i]/1e6,d$scores[i],as.character(i),pos=2)
     }
@@ -252,21 +288,65 @@ function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FAL
 	 mfrow = c(5,5), mar = c(3,2.5,1.3,0.5), ps = 5, mgp = c(1.5,0.5,0),ylim=NA,...){
 
   models <- x
-	
-  if (is.na(ylim)) {
-    ylim = c(0,getScore(findHighestModels(x,1)[[1]]))
+  
+  # Save default pars
+  op <- par(no.readonly = TRUE)
+  
+  if (any(is.na(ylim))) {
+    ylim = c(0,getScore(topModels(x,1)[[1]]))
   }
 
   if (!onePlot) {
+      if (showTop > 0){
+   
+
+      scores <- vector()
+      locs <- vector()
+      chrs <- vector()
+      genes <- vector()
+      for (i in 1:24){
+        if (isEmpty(x[[i]]))
+          next   
+        scores <- c(scores, getScore(getPArm(x[[i]])), getScore(getQArm(x[[i]])))
+        locs <- c(locs, getLoc(getPArm(x[[i]])), getLoc(getQArm(x[[i]])))
+        chrs <- c(chrs, rep(i,length( getModelNumbers(getPArm(x[[i]])) + getModelNumbers(getQArm(x[[i]])) )))
+        genes <- c(genes, getGeneName(getPArm(x[[i]])), getGeneName(getQArm(x[[i]])))
+      }
+
+      d <- data.frame(scores,locs,chrs,genes)
+      d <- d[order(scores,decreasing=TRUE),]
+      # Put vertical dashed line in the middle of showTop highest and showTop+1 highest scores
+      limit = (d$scores[showTop]+d$scores[showTop+1])/2
+    }
+    
     pl <- par(mfrow = mfrow, mar = mar, ps = ps, mgp = mgp)
     for(i in 1:24){
       pl <- plot.ChromosomeModels(models[[i]], hilightGenes, showDensity, ylim=ylim, type=type,
-                                  showTop=showTop,hilightGenes=hilightGenes, showDensity=showDensity,...)
+                                  showTop=FALSE,hilightGenes=hilightGenes, showDensity=showDensity,
+                                  ylab = ylab, xlab = xlab, main = main, pch = pch, cex = cex, ...)
+
+      if (showTop > 0){
+        if(length(which(d$chrs == i)) == 0)
+          next
+        abline(h=limit,lty=2)
+        for (j in which(d$chrs == i)){
+          if(j > showTop)
+            next
+          points(d$locs[j]/1e6,d$scores[j],pch=tpch,cex = tcex)
+          if (topName)
+            text(d$locs[j]/1e6,d$scores[j],d$genes[j],pos=4,cex=tcex)
+          else
+            text(d$locs[j]/1e6,d$scores[j],as.character(j),pos=2,cex=tcex)
+        }
+      }
     }
   }
+
   else {     
-    locs <- list()
-    scores <- list()
+    plocs <- list()
+    pscores <- list()
+    qlocs <- list()
+    qscores <- list()
     drawLoc <- vector()
     locStart <- 0
     drawScore <- vector()
@@ -278,16 +358,18 @@ function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FAL
 
     for (i in 1:24){
       if (isEmpty(x[[i]]))
-        break;
-      locs[[i]] <- c(getLoc(getPArm(x[[i]])),getLoc(getQArm(x[[i]])))
-      scores[[i]] <- c(getScore(getPArm(x[[i]])),getScore(getQArm(x[[i]])))
-      drawLoc <- c(drawLoc, locStart+locs[[i]])
-      drawScore <- c(drawScore, scores[[i]])
+        next
+      plocs[[i]] <- getLoc(getPArm(x[[i]]))
+      pscores[[i]] <- getScore(getPArm(x[[i]]))
+      qlocs[[i]] <- getLoc(getQArm(x[[i]]))
+      qscores[[i]] <- getScore(getQArm(x[[i]]))
+      drawLoc <- c(drawLoc, locStart+plocs[[i]], locStart+qlocs[[i]])
+      drawScore <- c(drawScore, pscores[[i]], qscores[[i]])
       geneNames <- c(geneNames, getGeneName(getPArm(x[[i]])), getGeneName(getQArm(x[[i]])))
       lineLocs <- c(lineLocs, (locStart)/1e6)
       tickLocs <- c(tickLocs, (locStart+max(drawLoc))/2e6)
       tickMarks <- c(tickMarks, i)
-      locStart <- locStart + max(locs[[i]])
+      locStart <- locStart + max(plocs[[i]], qlocs[[i]])
     }
     lineLocs <- c(lineLocs, (locStart)/1e6)
 
@@ -297,9 +379,10 @@ function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FAL
     locStart <- 0
     for(i in 1:24){
       if (isEmpty(x[[i]]))
-        break
-      lines((locStart+ locs[[i]])/1e6, scores[[i]], type=type) 
-      locStart <- locStart + max(locs[[i]])
+        next
+      lines((locStart+ plocs[[i]])/1e6, pscores[[i]], type=type) 
+      lines((locStart+ qlocs[[i]])/1e6, qscores[[i]], type=type) 
+      locStart <- locStart + max(plocs[[i]], qlocs[[i]])
       abline(v=lineLocs[i+1])
     }
     #plot((drawLoc/1e6), drawScore, type = type, xlab=xlab,
@@ -308,19 +391,20 @@ function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FAL
     axis(1,at=tickLocs,label=tickMarks,cex.axis=0.7,tick=FALSE)
   
     if(showTop > 0){
-      topModels <- findHighestModels(models,showTop)
+   
       d <- data.frame(drawScore,drawLoc)
       d <- d[order(drawScore,decreasing=TRUE),]
 
       # Put vertical dashed line in the middle of showTop highest and showTop+1 highest scores
       limit = (d$drawScore[showTop]+d$drawScore[showTop+1])/2
       abline(h=limit,lty=2)
+      topMods <- topModels(models,showTop) 
       # Draw points and add ranking number
       for(i in 1:showTop){
         points(d$drawLoc[i]/1e6,d$drawScore[i],pch=tpch,cex = tcex)
-	if(topName)
-	  text(d$drawLoc[i]/1e6,d$drawScore[i],getGeneName(topModels[[i]]),pos=4,cex=tcex)
-	else
+	  if(topName)
+	    text(d$drawLoc[i]/1e6,d$drawScore[i],getGeneName(topMods[[i]]),pos=4,cex=tcex)
+	  else
           text(d$drawLoc[i]/1e6,d$drawScore[i],as.character(i),pos=2,cex=tcex)
       }
     }
@@ -340,6 +424,8 @@ function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FAL
       }
     }
   }
+  # Reset default pars
+  par(op)
 }
 
 

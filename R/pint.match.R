@@ -1,19 +1,31 @@
-pint.match <- function(X,Y){
-  # Match X probes with closest from Y
-  inds <- vector()
-  chr <- 0
-  for(i in 1:length(X$info$loc)){
-    chrinds <- which(as.character(Y$info$chr) == as.character(X$info$chr[i]))
-    if (length(chrinds > 0)){
-      inds[i] <- min(chrinds) - 1 + which.min(abs(X$info$loc[i] - Y$info$loc[chrinds]))
+pint.match <- function(X,Y,max.dist = 1e7){
+
+  chrs = c(1:22,'X','Y')
+  xindices <- vector()
+  yindices <- vector()
+  for (i in chrs){
+    for (k in c('p','q')){
+      ychrinds <- which(as.character(Y$info$chr) == i & Y$info$arm == k)
+      xchrinds <- which(as.character(X$info$chr) == i & X$info$arm == k)
+	  if(length(xchrinds) > 0 && length(ychrinds) > 0){
+	    # Find indices of closest probe from Y for each from X
+        inds = sapply(X$info$loc[xchrinds],closest,vec=Y$info$loc[ychrinds])
+        # Indices to X and Y with duplicates deleted
+        yinds <- min(ychrinds-1) + unique(inds)
+	    xinds <- min(xchrinds-1) + (1:length(inds))[!duplicated(inds)]
+        # delete indices which are further from each other than threshold
+        near <- (abs(X$info$loc[xinds] - Y$info$loc[yinds]) < max.dist)      
+        xindices <- c(xindices, xinds[near])
+        yindices <- c(yindices, yinds[near])
+      }
     }
   }
-  yinds <- unique(inds)
-  xinds <- (1:length(inds))[!duplicated(inds)]
 
-  newY <- list(data = Y$data[unique(inds),], info = Y$info[unique(inds),])
-  newX <- list(data = Y$data[unique(inds),], info = Y$info[unique(inds),])
-  list(X=newX,Y=newY)
-  #list(inds=inds,xinds=xinds,yinds=yinds)
-  #inds
+  newY <- list(data = Y$data[yindices,], info = Y$info[yindices,])
+  newX <- list(data = X$data[xindices,], info = X$info[xindices,])
+  return(list(X=newX,Y=newY))
+}
+
+closest = function(a,vec){
+  which.min(abs(a-vec))
 }

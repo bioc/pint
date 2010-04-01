@@ -13,7 +13,6 @@ calculate.arm.sparse <- function(X, Y, windowSize, chromosome, arm, method = "pS
 
 	# method name
 	methodName <- method
-	if (method == 'TPriorpSimCCA') methodName = 'pSimCCA with T prior'
 	message(paste("Calculating dependency models for ",chromosome,arm," with method ",methodName, 
 		", window size:",windowSize,sep=""))
 	
@@ -35,6 +34,8 @@ calculate.arm.sparse <- function(X, Y, windowSize, chromosome, arm, method = "pS
 					marginalCovariances = params$marginalCovariances, H = params$H, sigmas = params$sigmas, 
 					covLimit = params$covLimit, mySeed=params$mySeed)
 				setLoc(model) <- window$loc
+				setChromosome(model) <- chromosome
+				setArm(model) <- arm
 				#setGeneName(res) <- window$geneName
 				modelList[[k]] <- model
 				k <- k+1

@@ -23,13 +23,13 @@ function (X, Y, zDimension = 1,
 			
 			# ML solution for CCA
 			# Analytical solution!
-			res <- pcca(X, Y, zDimension)
+			res <- calc.pcca(X, Y, zDimension)
 		}
 		else if (marginalCovariances == "diagonal"){
  		        # Probabilistic factorial analysis model as proposed in
      			# EM Algorithms for ML Factoral Analysis, Rubin D. and
      			# Thayer D. 1982
-			res <- pfa(X, Y, zDimension)			
+			res <- calc.pfa(X, Y, zDimension)			
 			method <- "pFA"
 		}
 		else if (marginalCovariances == "isotropic") {
@@ -37,12 +37,12 @@ function (X, Y, zDimension = 1,
 				covLimit <- 1e-6
 			# pCCA assuming isotropic margins
 			# with phiX != phiY
-			res <- pcca.with.isotropic.margins(X, Y, zDimension, epsilon=covLimit)
+			res <- calc.pcca.with.isotropic.margins(X, Y, zDimension, epsilon=covLimit)
 		}
 		else if(marginalCovariances == "identical isotropic"){
 			method <- "pPCA"
 			#pPCA
-			res <- ppca(X, Y, zDimension) 
+			res <- calc.ppca(X, Y, zDimension) 
 		}
 	}
 
@@ -91,14 +91,74 @@ function (X, Y, zDimension = 1,
 		params <- list(marginalCovariances = marginalCovariances, sigmas = sigmas, H = H, 
 		       	       zDimension = zDimension, covLimit = covLimit)
 		score <- dependency.score(res)
-		
-		geneName <- dimnames(X)[[1]][ trunc((nrow(X)+1)/2) ]
-		if(is.null(geneName))
-			geneName = ""
-
-		model <- new("DependencyModel", W = res$W, phi = res$phi, score = score, 
+        geneName <- dimnames(X)[[1]][ trunc((nrow(X)+1)/2) ]
+        if(is.null(geneName))
+          geneName = ""
+        model <- new("DependencyModel", W = res$W, phi = res$phi, score = score, chromosome = "", arm = "",
 					windowSize = dim(Y)[1], method = method, params = params, geneName = geneName)	
 	}
 	model
 }
 
+
+ppca <- function(X, Y = NULL, zDimension = 1){
+  if (!is.null(Y)) {
+    fit.dependency.model(X,Y,zDimension,marginalCovariances = "identical isotropic", H = NA, sigmas = 0)
+  }
+  else {
+    if (ncol(X) > 1)
+      X <- t(centerData(t(X)))
+
+    # Check if dimensionality is too big
+    if(zDimension > ncol(X))
+      stop("Dimension of latent variable too big")
+    
+    res <- calc.ppca(X, Y, zDimension)			
+	method <- "pPCA"
+
+    params <- list(marginalCovariances = "isotropic", sigmas = 0, H = NA, 
+		           zDimension = zDimension, covLimit = 0)
+    score <- dependency.score(res)		
+    geneName = ""
+    model <- new("DependencyModel", W = res$W, phi = res$phi, score = score, chromosome = "", arm = "",
+                 windowSize = dim(X)[1], method = method, params = params, geneName = geneName)	
+    model
+  }
+
+}
+
+
+pfa <- function(X, Y = NULL, zDimension = 1){
+  if (!is.null(Y)) {
+    fit.dependency.model(X,Y,zDimension,marginalCovariances = "diagonal", H = NA, sigmas = 0)
+  }
+  else {
+    if (ncol(X) > 1)
+      X <- t(centerData(t(X)))
+
+    # Check if dimensionality is too big
+    if(zDimension > ncol(X))
+      stop("Dimension of latent variable too big")
+    
+    res <- calc.pfa(X, Y, zDimension)			
+	method <- "pFA"
+
+    params <- list(marginalCovariances = "diagonal", sigmas = 0, H = NA, 
+		           zDimension = zDimension, covLimit = 0)
+    score <- dependency.score(res)
+    geneName = ""
+    model <- new("DependencyModel", W = res$W, phi = res$phi, score = score, chromosome = "", arm = "",
+                 windowSize = dim(X)[1], method = method, params = params, geneName = geneName)	
+
+  }
+}
+
+
+pcca.isotropic <- function(X, Y, zDimension = 1, covLimit = 1e-6){
+  fit.dependency.model(X,Y,zDimension,marginalCovariances = "isotropic", H = NA, sigmas = 0, covLimit = 1e-6)
+}
+
+
+pcca <- function(X, Y, zDimension = 1){
+  fit.dependency.model(X,Y,zDimension,marginalCovariances = "full", H = NA, sigmas = 0)
+}

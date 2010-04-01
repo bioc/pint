@@ -39,7 +39,7 @@ setMethod("getWindowSize","GenomeModels",
 	} 
 ) 
 
-setMethod("findHighestGenes",signature("GenomeModels"),
+setMethod("topGenes",signature("GenomeModels"),
 	function(model,num = 1) {
 		scores <- vector()
 		genes <- vector()
@@ -55,7 +55,7 @@ setMethod("findHighestGenes",signature("GenomeModels"),
 	}
 )
 
-setMethod("findHighestModels","GenomeModels",
+setMethod("topModels","GenomeModels",
         function(model,num = 1) {
 
 		scores <- vector()
@@ -90,4 +90,35 @@ setMethod("findHighestModels","GenomeModels",
 		}
                 return(returnList)
         }
+)
+
+setMethod("orderGenes","GenomeModels",
+  function(model){
+
+    scores <- vector()
+    genes <- vector()
+    for(i in 1:24){
+      scores <- c(scores, getScore(getQArm(model[[i]])))
+      scores <- c(scores, getScore(getPArm(model[[i]])))
+      genes <- c(genes, getGeneName(getQArm(model[[i]])))
+      genes <- c(genes, getGeneName(getPArm(model[[i]])))
+    }
+    data <- data.frame(scores,genes,stringsAsFactors=FALSE)
+    return(data[order(scores,decreasing=TRUE),])
+  }	
+)
+
+setMethod("findModel","GenomeModels",
+  function(model, name){
+
+   for (i in 1:24){
+     pIndex <- which(getGeneName(getPArm(model[[i]])) == name)
+     if(length(pIndex) > 0) 
+       return(getPArm(model[[i]])[[pIndex]])
+     qIndex <- which(getGeneName(getQArm(model[[i]])) == name)
+     if(length(qIndex) > 0) 
+       return(getQArm(model[[i]])[[qIndex]])
+   }   
+   stop("No model found")
+  }
 )

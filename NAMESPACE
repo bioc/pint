@@ -1,14 +1,23 @@
 export(iterative.window,
 fixed.window,
 fit.dependency.model,
+ppca,
+pcca,
+pcca.isotropic,
+pfa,
+fit.cgh.mrna.byname,
+fit.cgh.mir.byname,
 plot.DependencyModel,
 plot.ChromosomeArmModels,
 plot.ChromosomeModels,
 plot.GenomeModels,
-screen.chromosome,
+screen.cgh.mrna,
+screen.cgh.mir,
 z.expectation,
-z.projection,
-W.projection)
+z.effects,
+W.effects,
+pint.data,
+pint.match)
 
 exportClasses("DependencyModel",
 "ChromosomeArmModels",
@@ -20,6 +29,8 @@ exportMethods(
 "[[<-",
 "setLoc<-",
 "setGeneName<-",
+"setArm<-",
+"setChromosome<-",
 getW,
 getPhi,
 getScore,
@@ -33,8 +44,10 @@ getPArm,
 getQArm,
 getWindowSize,
 getModelNumbers,
-findHighestGenes,
-findHighestModels
+topGenes,
+topModels,
+orderGenes,
+findModel
 )
 
 importFrom(graphics, plot)

@@ -83,7 +83,7 @@ setMethod("isEmpty","ChromosomeArmModels",
 	}
 )
 
-setMethod("findHighestGenes","ChromosomeArmModels",
+setMethod("topGenes","ChromosomeArmModels",
 	function(model,num = 1) {
 		scores <- getScore(model)
 		genes <- getGeneName(model)
@@ -93,7 +93,7 @@ setMethod("findHighestGenes","ChromosomeArmModels",
 	}
 )
 
-setMethod("findHighestModels","ChromosomeArmModels",
+setMethod("topModels","ChromosomeArmModels",
 	function(model,num = 1) {
 		scores <- getScore(model)
 		indices <- 1:length(scores)
@@ -107,3 +107,24 @@ setMethod("findHighestModels","ChromosomeArmModels",
 		return(returnList)
 	}
 )
+
+setMethod("orderGenes","ChromosomeArmModels",
+  function(model){
+
+    scores <- getScore(model)
+    genes <- getGeneName(model)
+    data <- data.frame(scores,genes)
+    data <- data[order(scores,decreasing=TRUE),]
+    return(as.character(data$genes))
+  }	
+)
+
+setMethod("findModel","ChromosomeArmModels",
+  function(model, name){
+    index = which(getGeneName(model) == name)
+    if (length(index) > 0)
+      return(model[[which(getGeneName(model) == name)]])
+    stop("No model found")
+  }
+)
+    

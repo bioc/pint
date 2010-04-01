@@ -1,8 +1,29 @@
 CHANGES IN VERSION 0.99.5 (2010-03-28)
 
+SIGNIFICANT USER-VISIBLE CHANGES
+
+  o screen.chromosome function name changed to scree.cgh.mrna
+  o methods findHighestGenes and findHighestModels changed to topGenes and topModels 
+  o z.projection and W.projection changed to z.effects and W.effects
+  o method name 'TPriorpSimCCA' removed and added to 'psimCCA'
+
+NEW FEATURES
+
+  o screening between mirna and cgh added
+  o ability to show gene names with highest dependency scores added to plots
+  o model can be searched by gene name from output from screen functions
+  o model can be calculated around gene by its name
+  o order.results methods added which return genes and their dependency scores
+  o size of variable name texts can be changed in plot.DependencyModel
+  o aliases added to methods (pfa, pcca, pcca.isotropic and ppca)
+  o function to format data for packages dependency model calculation added (pint.data)
+  o function to pair data sets added (pint.match)
+
 HELP & Rd FILE CHANGES
   o clarified the documentation
 
+DOCUMENTATION
+  o model description added to Vignette
 
 CHANGES IN VERSION 0.99.3 (2010-02-23)
 

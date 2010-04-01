@@ -8,8 +8,10 @@
 \alias{getModelMethod,GenomeModels-method}
 \alias{getParams,GenomeModels-method}
 \alias{getWindowSize,GenomeModels-method}
-\alias{findHighestGenes,GenomeModels-method}
-\alias{findHighestModels,GenomeModels-method}
+\alias{topGenes,GenomeModels-method}
+\alias{topModels,GenomeModels-method}
+\alias{orderGenes,GenomeModels-method}
+\alias{findModel,GenomeModels-method}
 
 \title{Class "GenomeModels"}
 
@@ -21,7 +23,7 @@ and p arms) that have a list of dependency models in that chromosomal
 arm. }
 
 \section{Objects from the Class}{ Function
-\code{\link{screen.chromosome}} returns an object of this class.
+\code{\link{screen.cgh.mrna}} and \code{\link{screen.cgh.mir}} returns an object of this class.
  }
 \section{Slots}{
 	 \describe{
@@ -54,21 +56,26 @@ arm. }
     \item{getWindowSize}{\code{signature(model = "GenomeModels")}:
     Returns the size of the window used in the dependency models.}
 
-    \item{findHighestGenes}{\code{signature(model = "GenomeModels", num
+    \item{topGenes}{\code{signature(model = "GenomeModels", num
     = "numeric")}: Returns a vector of given number of names of the
     genes which have the highest dependency score}
 
-    \item{findHighestModels}{\code{signature(model = "GenomeModels", num
+    \item{topModels}{\code{signature(model = "GenomeModels", num
     = "numeric")}: Returns a list with given number of dependency models
     which have the highest dependency score}
 
+	\item{orderGenes}{\code{signature(model = "GenomeModels")}:
+	Returns a data frame with gene names and their model scores sorted}
+	
+	\item{findModel}{\code{signature(model = "ChromosomeArmModels")}:
+	Finds a dependency model by gene name and returns it.}
   }
 }
 
 \author{Olli-Pekka Huovilainen}
 
 \seealso{ For calculation of dependency models for chromosomal arm:
-\code{\link{screen.chromosome}}. This class holds a number of
+\code{\link{screen.cgh.mrna}}. This class holds a number of
 \linkS4class{DependencyModel} in two \linkS4class{ChromosomeModels}
 objects in each \linkS4class{ChromosomeArmModels}.  For plotting
 dependency scores see \code{\link{dependency score plotting}}.  }

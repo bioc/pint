@@ -12,6 +12,20 @@ setReplaceMethod(f="setGeneName", signature("DependencyModel"),
 	}
 ))
 
+setReplaceMethod("setChromosome","DependencyModel", 
+	function(model, value) { 
+		model@chromosome <- as.character(value) 
+		return(model)
+	} 
+) 
+
+setReplaceMethod("setArm","DependencyModel", 
+	function(model, value) { 
+		model@arm <- as.character(value)
+		return(model)
+	} 
+) 
+
 setMethod("getW","DependencyModel", 
 	function(model) { 
 		return(model@W) 
@@ -20,7 +34,7 @@ setMethod("getW","DependencyModel",
 
 setMethod("getPhi","DependencyModel", 
 	function(model) { 
-		return(list(Y = model@phi$Y, X = model@phi$X)) 
+		return(model@phi) 
 	} 
 ) 
 
@@ -60,6 +74,14 @@ setMethod("getWindowSize","DependencyModel",
 	} 
 ) 
 
+setMethod("getChromosome","DependencyModel", 
+	function(model) { 
+		return(model@chromosome) 
+	} 
+) 
 
-
-
+setMethod("getArm","DependencyModel", 
+	function(model) { 
+		return(model@arm) 
+	} 
+) 
