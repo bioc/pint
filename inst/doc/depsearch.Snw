@@ -104,7 +104,7 @@ The following example screens chromosome arm 17q for dependendent
 regions.
 
 <<>>=
-model <- screen.cgh.mrna(geneExp, geneCopyNum, windowSize = 10, chr = 17, arm = 'q')
+models <- screen.cgh.mrna(geneExp, geneCopyNum, windowSize = 10, chr = 17, arm = 'q')
 @
 
 The dependency is measured separately for each gene within a
@@ -124,7 +124,7 @@ dependency between gene expression and copy number:
 \begin{figure}[H]
 \begin{center}
 <<fig = true>>=
-plot(model, showTop = 10)
+plot(models, showTop = 10)
 @
 \end{center}
 \caption{The dependency plot reveals chromosomal regions with the strongest
@@ -137,7 +137,7 @@ gastric cancer-associated region. The top-5 genes with the highest
 dependency in their chromosomal neighborghood can be retrieved with:
 
 <<>>=
-topGenes(model, 5)
+topGenes(models, 5)
 @
 
 It is possible investigate the contribution of individual patients or
@@ -169,7 +169,7 @@ model17qpCCA <- screen.cgh.mrna(geneExp, geneCopyNum, windowSize = 10, chr = 17,
 \begin{figure}[H]
 \begin{center}
 <<fig=true>>=
-model <- topModels(model, 1)[[1]]
+model <- topModels(models, 1)[[1]]
 plot(model, geneExp, geneCopyNum)
 @
 \end{center}
