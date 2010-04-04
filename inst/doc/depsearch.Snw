@@ -262,7 +262,7 @@ concatenated data set.
 \subsubsection{Probabilistic factor analysis}
 
 Probabilistic factor analysis (pFA) assumes a diagonal model for
-\(\Psi_x\), \(\Psi_y\). Note that in general, \(\Psi_x \isnot
+\(\Psi_x\), \(\Psi_y\). Note that in general, \(\Psi_x \neq
 \Psi_y\). The package also implements a special case with isotropic
 but not necessarily identical (as in pPCA) covariance matrices.
 
