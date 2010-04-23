@@ -11,4 +11,3 @@ Collate: AllClasses.R AllGenerics.R DependencyModel-accessors.R ChromosomeArmMod
 LazyLoad: yes
 Depends: mvtnorm, methods, graphics
 biocViews: aCGH, GeneExpression, Genetics, DifferentialExpression, Microarray
-Packaged: 2010-03-28 21:56:39 UTC; lmlahti
