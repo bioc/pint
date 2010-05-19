@@ -1,3 +1,5 @@
+%\VignetteIndexEntry{netresponse}
+%The above line is needed to remove a warning in R CMD check
 \documentclass[a4paper]{article}
 
 \title{pint:\\Pairwise integration of functional genomics data}
@@ -8,6 +10,15 @@
 
 \usepackage{Sweave}
 \usepackage{float}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage[authoryear,round]{natbib}
+
+\usepackage{hyperref}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+
 \begin{document}
 
 \maketitle
