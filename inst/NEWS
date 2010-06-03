@@ -1,3 +1,11 @@
+CHANGES IN VERSION 1.1.x (2010-mm-dd)
+
+NEW FEATURES
+
+  o matches the samples between cgh and mrna data automatically based on sample names
+  o added robustness towards missing values
+
+
 CHANGES IN VERSION 0.99.5 (2010-03-28)
 
 SIGNIFICANT USER-VISIBLE CHANGES
