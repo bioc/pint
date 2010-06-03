@@ -1,4 +1,6 @@
-screen.cgh.mrna <- function(X, Y, windowSize, chromosome, arm, method = "", params = list(), max.dist = 1e7){
+screen.cgh.mrna <- function(X, Y, windowSize, chromosome, arm, method = "", params = list(), max.dist = 1e7)
+{
+
 
   # Check ordering of samples
   if (any(colnames(X$data) != colnames(Y$data))) {
@@ -13,7 +15,6 @@ screen.cgh.mrna <- function(X, Y, windowSize, chromosome, arm, method = "", para
     }
   }
 
-
   ## Check probes. We should have observations in each data set for the probes.
 
   # Match probes by location
@@ -24,32 +25,29 @@ screen.cgh.mrna <- function(X, Y, windowSize, chromosome, arm, method = "", para
   # Remove probes where observations are not available in either data set
   # TODO
 
-  
-  ### Check parameters and put defaults where needed ###
 
-  # H (priori for T in Wy = T*Wx)
-  else if (method == "pSimCCA") {
+  ############################################################################
+  
+  if (method == "pSimCCA") {
     if (is.null(params$H)) {
       params$H <- diag(1, windowSize, windowSize)
     }
   }
-  else if (method == "pPCA" || method == "pCCA" || method == "pFA") {
+  else if (method == "pPCA" || method == "pCCA" || method ==
+           "pFA") {
     params$H <- NA
   }
   else {
-    if(is.null(params$H))
+    if (is.null(params$H))
       params$H <- diag(1, windowSize, windowSize)
   }
 
-  # sigmas
-  if(is.null(params$sigmas))
+  if (is.null(params$sigmas))
     params$sigmas <- 0
-
-  # Marginal covariances
-  if (method == "pPCA") {		
+  if (method == "pPCA") {
     params$marginalCovariances <- "identical isotropic"
   }
-  else if (method == "pFA") {		
+  else if (method == "pFA") {
     params$marginalCovariances <- "diagonal"
   }
   else if (method == "pCCA") {
@@ -58,7 +56,7 @@ screen.cgh.mrna <- function(X, Y, windowSize, chromosome, arm, method = "", para
     }
   }
   else {
-    if (is.null(params$marginalCovariances)) {			
+    if (is.null(params$marginalCovariances)) {
       if (params$sigmas == 0) {
         params$marginalCovariances <- "full"
       }
@@ -67,41 +65,33 @@ screen.cgh.mrna <- function(X, Y, windowSize, chromosome, arm, method = "", para
       }
     }
   }
-  
-  # Dimension of z
-  if (is.null(params$zDimension)) 
+  if (is.null(params$zDimension))
     params$zDimension <- 1
-
-  # Limit for convergence
-  if (is.null(params$covLimit)) 
+  if (is.null(params$covLimit))
     params$covLimit <- 0
-  if (is.null(params$mySeed)) 
+  if (is.null(params$mySeed))
     params$mySeed <- 566
-  
-  # Set method name
-  if (any(is.na(params$H))){
+  if (any(is.na(params$H))) {
     if (params$marginalCovariances == "full")
-      method <- "pCCA"
+      method = "pCCA"
     if (params$marginalCovariances == "isotropic")
-      method <- "pCCA"
+      method = "pCCA"
     if (params$marginalCovariances == "diagonal")
-      method <- "pFA"
+      method = "pFA"
     if (params$marginalCovariances == "identical isotropic")
-      method <- "pPCA"
-  }	
-  else {
-    method <- "pSimCCA"
+      method = "pPCA"
   }
-
-  # Calculate dependency models
+  else {
+    method = "pSimCCA"
+  }
   if (missing(chromosome))
-    models <- calculate.genome(X, Y, windowSize, method, params)
-  
+    models <- calculate.genome(X, Y, windowSize, method,
+                               params)
   else if (missing(arm))
-    models <- calculate.chr(X, Y, windowSize, chromosome, method, params)
-  
-  else
-    models <- calculate.arm(X, Y, windowSize, chromosome, arm, method, params)
-  	
+    models <- calculate.chr(X, Y, windowSize, chromosome,
+                            method, params)
+  else models <- calculate.arm(X, Y, windowSize, chromosome,
+                               arm, method, params)
   return(models)
 }
+
