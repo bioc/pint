@@ -27,12 +27,13 @@ calculate.arm <- function(X, Y, windowSize, chromosome, arm, method = "pSimCCA",
     for (n in seq_along(Xm$info$loc)) {
 
       # Get window fo dependency modeling
-      window <- fixed.window(Xm,Ym,n,windowSize)
+      window <- fixed.window(Xm, Ym, n, windowSize)
 		
-        # Skip windows that overlaps chromosome arms
+      # Skip windows that overlaps chromosome arms
       if (!window$fail){
         
-        model <- fit.dependency.model(window$X, window$Y,zDimension = params$zDimension, 
+        model <- fit.dependency.model(window$X, window$Y,
+                                      zDimension = params$zDimension, 
                                       marginalCovariances = params$marginalCovariances,
                                       H = params$H,
                                       sigmas = params$sigmas, 

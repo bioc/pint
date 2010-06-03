@@ -11,9 +11,9 @@ function (X, Y,
 
   # Center data
   if (ncol(X) > 1)
-    X <- t(centerData(t(X)))
+    X <- t(centerData(t(X), rm.na = TRUE))
   if (ncol(Y) > 1)
-    Y <- t(centerData(t(Y)))
+    Y <- t(centerData(t(Y), rm.na = TRUE))
 
   # Check if dimensionality is too big
   if(zDimension > ncol(X) || zDimension > ncol(Y))
@@ -66,7 +66,7 @@ function (X, Y,
       H <- diag(1,nrow(X),nrow(Y))			
       if (covLimit == 0) 
         covLimit <- 1e-3		
-      res <- simCCA.optimize.fullcov.EM(X, Y, zDimension, mySeed=mySeed, epsilon=covLimit)
+      res <- simCCA.optimize.fullcov.EM(X, Y, zDimension, mySeed = mySeed, epsilon = covLimit)
     }
     else if (marginalCovariances == 'isotropic' && sigmas != 0) {
       # Make H indetity matrix if scalar is given                                       

@@ -18,7 +18,7 @@ function (X, Y) {
   Dcov$Y <- cov(t(Y), use = "pairwise.complete.obs")
   Dcov$xy <- cov(t(X), t(Y), use = "pairwise.complete.obs")
   Dcov$yx <- cov(t(Y), t(X), use = "pairwise.complete.obs")
-  Dcov$total <- cov(t(rbind(X,Y)))
+  Dcov$total <- cov(t(rbind(X, Y)), use = "pairwise.complete.obs")
   Dcov$sum <- cov(t(X+Y), use = "pairwise.complete.obs")
   
   # Initialize 

@@ -1,5 +1,5 @@
 simCCA.optimize.fullcov.EM <-
-function (X, Y, zDimension = NULL, mySeed=123, epsilon = 1e-6) {
+function (X, Y, zDimension = NULL, mySeed = 123, epsilon = 1e-6) {
 
   set.seed(mySeed)
 
@@ -7,7 +7,7 @@ function (X, Y, zDimension = NULL, mySeed=123, epsilon = 1e-6) {
   # Initialize
   #################################################
 
-  inits <- initialize2(X,Y)
+  inits <- initialize2(X, Y)
   phi.init <- inits$phi
   W.init <- inits$W
   Dcov <- inits$Dcov
