@@ -10,7 +10,9 @@ Fits dependency models for whole chromosomal arm, chromosome or genome
 depending on arguments with chosen window size between two data sets.
 }
 \usage{
-screen.cgh.mrna(X, Y, windowSize, chromosome, arm, method = "", params = list())
+screen.cgh.mrna(X, Y, windowSize, chromosome, arm, method = "", params =
+list(), max.dist = 1e7)
+
 screen.cgh.mir(X, Y, windowSize, chromosome, arm, method = "", params = list())
 }
 
@@ -77,6 +79,11 @@ screen.cgh.mir(X, Y, windowSize, chromosome, arm, method = "", params = list())
 	for pSimCCA in other cases.}
     }
   }
+
+  \item{max.dist}{Maximum allowed distance between probes. Used in
+    automated matching of the probes between the two data sets based on
+    chromosomal location information.}
+  
 }
 \details{
 Function \code{screen.cgh.mrna} assumes that data is already paired. This can be 
