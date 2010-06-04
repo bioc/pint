@@ -1,7 +1,6 @@
 screen.cgh.mrna <- function(X, Y, windowSize, chromosome, arm, method = "", params = list(), max.dist = 1e7)
 {
 
-
   # Check ordering of samples
   if (any(colnames(X$data) != colnames(Y$data))) {
     warning("Samples not in the same order in the two data sets. Using samples that are found in both data sets and reordering the samples..")
@@ -32,12 +31,9 @@ screen.cgh.mrna <- function(X, Y, windowSize, chromosome, arm, method = "", para
     if (is.null(params$H)) {
       params$H <- diag(1, windowSize, windowSize)
     }
-  }
-  else if (method == "pPCA" || method == "pCCA" || method ==
-           "pFA") {
+  } else if (method == "pPCA" || method == "pCCA" || method == "pFA") {
     params$H <- NA
-  }
-  else {
+  } else {
     if (is.null(params$H))
       params$H <- diag(1, windowSize, windowSize)
   }
@@ -46,21 +42,17 @@ screen.cgh.mrna <- function(X, Y, windowSize, chromosome, arm, method = "", para
     params$sigmas <- 0
   if (method == "pPCA") {
     params$marginalCovariances <- "identical isotropic"
-  }
-  else if (method == "pFA") {
+  } else if (method == "pFA") {
     params$marginalCovariances <- "diagonal"
-  }
-  else if (method == "pCCA") {
+  } else if (method == "pCCA") {
     if (is.null(params$marginalCovariances)) {
       params$marginalCovariances <- "full"
     }
-  }
-  else {
+  } else {
     if (is.null(params$marginalCovariances)) {
       if (params$sigmas == 0) {
         params$marginalCovariances <- "full"
-      }
-      else {
+      } else {
         params$marginalCovariances <- "isotropic"
       }
     }
@@ -80,18 +72,19 @@ screen.cgh.mrna <- function(X, Y, windowSize, chromosome, arm, method = "", para
       method = "pFA"
     if (params$marginalCovariances == "identical isotropic")
       method = "pPCA"
-  }
-  else {
+  } else {
     method = "pSimCCA"
   }
-  if (missing(chromosome))
-    models <- calculate.genome(X, Y, windowSize, method,
-                               params)
-  else if (missing(arm))
-    models <- calculate.chr(X, Y, windowSize, chromosome,
-                            method, params)
-  else models <- calculate.arm(X, Y, windowSize, chromosome,
-                               arm, method, params)
+
+  if (missing(chromosome)) {
+    models <- calculate.genome(X, Y, windowSize, method, params)
+  } else if (missing(arm)) {
+    models <- calculate.chr(X, Y, windowSize, chromosome, method, params)
+  } else {
+    models <- calculate.arm(X, Y, windowSize, chromosome, arm, method, params)
+  }
+
+
   return(models)
 }
 

@@ -39,21 +39,25 @@ setMethod("isEmpty","ChromosomeModels",
 	}
 )
 
-setMethod("topGenes","ChromosomeModels",
-	function(model,num = 1) {
-		pscores <- getScore(getPArm(model))
-		qscores <- getScore(getQArm(model))
-		scores <- c(pscores,qscores)
-		
-		pgenes <- getGeneName(getPArm(model))
-		qgenes <- getGeneName(getQArm(model))
-		genes <- c(pgenes,qgenes)
+setMethod("topGenes", "ChromosomeModels",
+          function(model, num = 1) {
 
-		data <- data.frame(scores,genes)
-		#order dataframe and take num names of genes with highest scores 
-		return(as.character(data[order(scores,decreasing=TRUE),]$genes[1:num]))
-	}
-)
+            pscores <- getScore(getPArm(model))
+            qscores <- getScore(getQArm(model))
+            scores <- c(pscores, qscores)
+            
+            pgenes <- getGeneName(getPArm(model))
+            qgenes <- getGeneName(getQArm(model))
+            genes <- c(pgenes,qgenes)
+            
+            data <- data.frame(scores, genes)
+
+            #order dataframe and take num names of genes with highest scores 
+            return(as.character(data[order(scores, decreasing = TRUE),]$genes[1:num]))
+
+          }
+          )
+
 
 setMethod("topModels","ChromosomeModels",
 	function(model,num = 1) {

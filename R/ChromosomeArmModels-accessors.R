@@ -33,11 +33,11 @@ setMethod("getLoc","ChromosomeArmModels",
 
 setMethod("getGeneName","ChromosomeArmModels", 
 	function(model) {
-		geneNames = vector()
-		for (i in seq_along(model@models)){
-			geneNames[i] <- getGeneName(model[[i]])
-		}
-		return(geneNames) 
+          geneNames <- vector()
+          for (i in seq_along(model@models)){
+            geneNames[i] <- getGeneName(model[[i]])
+          }
+          return(geneNames) 
 	} 
 )	
 
@@ -84,13 +84,14 @@ setMethod("isEmpty","ChromosomeArmModels",
 )
 
 setMethod("topGenes","ChromosomeArmModels",
-	function(model,num = 1) {
-		scores <- getScore(model)
-		genes <- getGeneName(model)
-		data <- data.frame(scores,genes)
-		# order dataframe and take num names of genes with highest scores 
-		return(as.character(data[order(scores,decreasing=TRUE),]$genes[1:num]))	
+	function(model, num = 1) {
+          scores <- getScore(model)
+          genes <- getGeneName(model)
+          data <- data.frame(scores,genes)
+          # order dataframe and take num names of genes with highest scores 
+          return(as.character(data[order(scores,decreasing=TRUE),]$genes[1:num]))	
 	}
+          
 )
 
 setMethod("topModels","ChromosomeArmModels",

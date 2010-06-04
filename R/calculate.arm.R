@@ -44,7 +44,7 @@ calculate.arm <- function(X, Y, windowSize, chromosome, arm, method = "pSimCCA",
         setArm(model) <- arm
 	#setGeneName(res) <- window$geneName
         modelList[[k]] <- model
-        k <- k+1
+        k <- k + 1
       }
     }
   }

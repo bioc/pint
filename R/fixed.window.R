@@ -5,9 +5,8 @@ function (X, Y, middleIndex, windowSize){
   chr <- X$info$chr[middleIndex]
   arm <- X$info$arm[middleIndex]
 
-  # Location and name of the gene
+  # Location
   loc <- X$info$loc[middleIndex]
-  geneName <- rownames(X$data)[middleIndex]
 	
   # Indices for the window
   inds <- (middleIndex - (trunc((windowSize - 1)/2))) : (middleIndex + (trunc(windowSize/2)))	
@@ -22,9 +21,12 @@ function (X, Y, middleIndex, windowSize){
   if(!indsOutBounds && sameArm){
 
     # TODO: check if rm.na is needed elsewhere in the code with centerData
-    Xm <- t(matrix(centerData(t(X$data), rm.na = TRUE)[, inds], ncol = length(inds)))
-    Ym <- t(matrix(centerData(t(Y$data), rm.na = TRUE)[, inds], ncol = length(inds)))
-    
+    Xm <- t(centerData(t(X$data), rm.na = TRUE)[, inds])
+    Ym <- t(centerData(t(Y$data), rm.na = TRUE)[, inds])
+
+    #name of the gene
+    geneName <- rownames(X$data)[[middleIndex]]
+
     res <- list(X = Xm, Y = Ym, loc = loc, geneName = geneName, fail = FALSE)
   }
   else {

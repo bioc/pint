@@ -1,8 +1,10 @@
+# TODO: move application-specific functions to other classes, keep only model-specific stuff
+
 setReplaceMethod(f="setLoc", signature("DependencyModel"),
-	definition=(function(model,value) {
-		model@loc <- value
-		return(model)
-	}
+                 definition=(function(model,value) {
+                   model@loc <- value
+                   return(model)
+                 }
 ))
 
 setReplaceMethod(f="setGeneName", signature("DependencyModel"),
@@ -51,9 +53,9 @@ setMethod("getLoc","DependencyModel",
 ) 
 
 setMethod("getGeneName","DependencyModel", 
-	function(model) { 
-		return(model@geneName) 
-	} 
+          function(model) { 
+            return(model@geneName) 
+          } 
 ) 
 
 setMethod("getParams","DependencyModel", 

@@ -32,9 +32,9 @@ function (X, Y,
       res <- calc.pcca(X, Y, zDimension)
     }
     else if (marginalCovariances == "diagonal"){
- 		        # Probabilistic factorial analysis model as proposed in
-     			# EM Algorithms for ML Factoral Analysis, Rubin D. and
-     			# Thayer D. 1982
+      # Probabilistic factor analysis model as proposed in
+      # EM Algorithms for ML Factoral Analysis, Rubin D. and
+      # Thayer D. 1982
       res <- calc.pfa(X, Y, zDimension)			
       method <- "pFA"
     }
@@ -49,9 +49,7 @@ function (X, Y,
       method <- "pPCA"
       res <- calc.ppca(X, Y, zDimension) 
     }
-  }
-
-  else {
+  } else {
 
     method <- "pSimCCA"
     if (sigmas == 0 && marginalCovariances == "full") {
@@ -63,13 +61,14 @@ function (X, Y,
 			#  Denoting Wy = T*Wx = TW; W=Wx this fits the case T = I with
 			#  full-rank Wx, Wy, Sigmax, Sigmay: (dxd-matrices where d equals to
 			#  number of features in X and Y)
-      H <- diag(1,nrow(X),nrow(Y))			
+      H <- diag(1, nrow(X), nrow(Y))			
       if (covLimit == 0) 
         covLimit <- 1e-3		
       res <- simCCA.optimize.fullcov.EM(X, Y, zDimension, mySeed = mySeed, epsilon = covLimit)
-    }
-    else if (marginalCovariances == 'isotropic' && sigmas != 0) {
+
+    } else if (marginalCovariances == 'isotropic' && sigmas != 0) {
       # Make H indetity matrix if scalar is given                                       
+
       if(length(H) == 1){
         H <- diag(1, nrow(X), nrow(Y))			
       }
@@ -77,6 +76,7 @@ function (X, Y,
       if(ncol(H) != nrow(X)){
         stop("columns of H must match rows of X")
       }
+
       if(nrow(H) != nrow(Y)){
         stop("rows of H must match rows of Y")
       }
@@ -102,11 +102,11 @@ function (X, Y,
     params <- list(marginalCovariances = marginalCovariances, sigmas = sigmas, H = H, 
                    zDimension = zDimension, covLimit = covLimit)
     score <- dependency.score(res)
-    geneName <- rownames(X)[ trunc((nrow(X) + 1)/2) ]
+    geneName <- rownames(X)[[ trunc((nrow(X) + 1)/2) ]]
     if(is.null(geneName))
       geneName <- ""
     model <- new("DependencyModel", W = res$W, phi = res$phi, score = score, chromosome = "", arm = "",
-                 windowSize = dim(Y)[1], method = method, params = params, geneName = geneName)	
+                 windowSize = nrow(Y), method = method, params = params, geneName = geneName)	
   }
   model
 }
@@ -118,7 +118,7 @@ ppca <- function(X, Y = NULL, zDimension = 1){
   }
   else {
     if (ncol(X) > 1)
-      X <- t(centerData(t(X)))
+      X <- t(centerData(t(X), rm.na = TRUE))
 
     # Check if dimensionality is too big
     if(zDimension > ncol(X))
@@ -130,7 +130,7 @@ ppca <- function(X, Y = NULL, zDimension = 1){
     params <- list(marginalCovariances = "isotropic", sigmas = 0, H = NA, 
 		           zDimension = zDimension, covLimit = 0)
     score <- dependency.score(res)		
-    geneName = ""
+    geneName <- ""
     model <- new("DependencyModel", W = res$W, phi = res$phi, score = score, chromosome = "", arm = "",
                  windowSize = dim(X)[1], method = method, params = params, geneName = geneName)	
     model
@@ -157,7 +157,7 @@ pfa <- function(X, Y = NULL, zDimension = 1){
     params <- list(marginalCovariances = "diagonal", sigmas = 0, H = NA, 
 		           zDimension = zDimension, covLimit = 0)
     score <- dependency.score(res)
-    geneName = ""
+    geneName <- ""
     model <- new("DependencyModel", W = res$W, phi = res$phi, score = score, chromosome = "", arm = "",
                  windowSize = dim(X)[1], method = method, params = params, geneName = geneName)	
 
