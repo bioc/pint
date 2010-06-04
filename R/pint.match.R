@@ -30,8 +30,11 @@ pint.match <- function(X, Y, max.dist = 1e7){
     }
   }
 
-  newY <- list(data = Y$data[yindices,], info = Y$info[yindices,])
-  newX <- list(data = X$data[xindices,], info = X$info[xindices,])
+  # TODO: remove duplicates in the data matrix, unless segmented data is used
+  # (which should be explicitly indicated: add the option to function call)
+  
+  newY <- list(data = as.matrix(Y$data[yindices,]), info = Y$info[yindices,])
+  newX <- list(data = as.matrix(X$data[xindices,]), info = X$info[xindices,])
 
   return(list(X = newX, Y = newY))
 
