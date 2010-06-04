@@ -29,7 +29,7 @@ function (X, Y) {
   # Check this. If not pos.sem.def, then replace with the closest
   # pos. semidefinite matrix
   if (any(eigen(Dcov$total)$values < 0)) {
-    message("Covariance approximation used to avoid numerical instabilities.")
+    message("Covariance approximation used to avoid numerical instability.")
     Dcov$X  <- as.matrix(nearPD(Dcov$X)$mat)
     Dcov$Y  <- as.matrix(nearPD(Dcov$Y)$mat)
     Dcov$total <- rbind(cbind(Dcov$X, Dcov$xy), cbind(Dcov$yx, Dcov$Y))
