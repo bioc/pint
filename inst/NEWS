@@ -2,7 +2,14 @@ CHANGES IN VERSION 1.1.1 (2010-06-04)
 
 NEW FEATURES
 
-  o matches the samples between cgh and mrna data automatically based on sample names
+  o matches the samples between cgh and mrna data (screen.cgh.mrna
+    function) automatically based on sample names
+  o matches genes between cgh and mrna data (screen.cgh.mrna function)
+    based on chromosomal locations. User-defined distance threshold
+    can be given.
+
+BUG FIXES
+
   o added robustness towards missing values
 
 
