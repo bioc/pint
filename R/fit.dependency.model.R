@@ -145,7 +145,7 @@ pfa <- function(X, Y = NULL, zDimension = 1){
   }
   else {
     if (ncol(X) > 1)
-      X <- t(centerData(t(X)))
+      X <- t(centerData(t(X), rm.na = TRUE))
 
     # Check if dimensionality is too big
     if(zDimension > ncol(X))

@@ -20,7 +20,6 @@ function (X, Y, middleIndex, windowSize){
 
   if(!indsOutBounds && sameArm){
 
-    # TODO: check if rm.na is needed elsewhere in the code with centerData
     Xm <- t(centerData(t(X$data), rm.na = TRUE)[, inds])
     Ym <- t(centerData(t(Y$data), rm.na = TRUE)[, inds])
 

@@ -1,5 +1,5 @@
 centerData <-
-function (X, rm.na = FALSE, meanvalue = NULL) {
+function (X, rm.na = TRUE, meanvalue = NULL) {
 
   #remove col means from matrix X
 
