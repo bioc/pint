@@ -1,11 +1,11 @@
 cost5 <-
 function (W, phi, Dcov) {
 
-        # SimCCA - just use identical Wx = Wy
-        wtw = W%*%t(W)
+  # SimCCA - just use identical Wx = Wy
+  wtw <- W%*%t(W)
 
-        Sigma = rbind(cbind(wtw + phi$X, wtw),
-                      cbind(wtw,wtw + phi$Y))
+  Sigma <- rbind(cbind(wtw + phi$X, wtw),
+          cbind(wtw,wtw + phi$Y))
 
         # Marginal cost for the whole data set
         # integrated over z
@@ -14,12 +14,11 @@ function (W, phi, Dcov) {
         # We report -logP here
 
         # restrict solutions to cases where det(Sigma)>=0
-        detsigma = det(Sigma)
-        if (detsigma>0) {
+  detsigma <- det( Sigma )
+  if (detsigma > 0) {
                 #print(detsigma)
-                log(detsigma) + sum(diag(solve(Sigma)%*%Dcov$total))
-        } else {Inf}
-
+    log(detsigma) + sum(diag(solve(Sigma)%*%Dcov$total))
+  } else { Inf }
 
 }
 

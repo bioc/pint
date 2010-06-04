@@ -17,10 +17,10 @@ pint.match <- function(X, Y, max.dist = 1e7){
         # Indices to X and Y with duplicates deleted
         yinds <- min(ychrinds-1) + unique(inds)
 
-        if (any(duplicated(inds))) {message("Probes with identical location observed. Removing duplicates.")}
+        if (any(duplicated(inds))) {message(paste("Probes with identical location observed. Removing duplicates in chromosome", i, ", arm", k))}
 
         # Remove duplicates
-        xinds <- min(xchrinds-1) + (1:length(inds))[!duplicated(inds)]
+        xinds <- min(xchrinds - 1) + (1:length(inds))[!duplicated(inds)]
 
         # delete indices which are further from each other than threshold
         near <- (abs(X$info$loc[xinds] - Y$info$loc[yinds]) < max.dist)      

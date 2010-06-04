@@ -8,7 +8,6 @@ function (X, Y,
           mySeed = 123)
 {
 
-
   # Center data
   if (ncol(X) > 1)
     X <- t(centerData(t(X), rm.na = TRUE))

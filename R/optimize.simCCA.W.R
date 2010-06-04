@@ -1,4 +1,5 @@
-optimize.simCCA.W <- function (w, phi, Dim, Dcov, nullmat, epsilon = 1e-3, par.change = 1e6, cost.old = 1e6, mySeed=123, dz = NULL) { 
+optimize.simCCA.W <- function (w, phi, Dim, Dcov, nullmat, epsilon = 1e-3,
+                               par.change = 1e6, cost.old = 1e6, mySeed=123, dz = NULL) { 
 
 #optimize.simCCA.W(
 #w <- W.init$X; phi <- phi.init; epsilon <- 1e-3; par.change = 1e6; cost.old = 1e6; mySeed=124; dz = zDimension
