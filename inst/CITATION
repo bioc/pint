@@ -1,7 +1,7 @@
 citHeader("To cite pint in publications use:")
 
 
-citEntry(entry="inproceedings",
+citEntry(entry="misc",
          title = "Dependency detection with similarity constraints",
          author = personList(
 	 	person(first ="Leo", last="Lahti", email = "leo.lahti@iki.fi"),
