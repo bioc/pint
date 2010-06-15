@@ -1,5 +1,16 @@
 pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
 
+  # Match genes/probes/clones in X/Y data sets based on location information
+
+  # First, provide information in a form that has corresponding rows in
+  # data and info matrices (only take those available in both)
+  coms <- intersect(rownames(X$data), rownames(X$info))
+  X$data <- X$data[coms,]
+  X$info <- X$info[coms,]
+  coms <- intersect(rownames(Y$data), rownames(Y$info))
+  Y$data <- Y$data[coms,]
+  Y$info <- Y$info[coms,]
+
   X$info[["chr"]] <- as.character(X$info[["chr"]])
   Y$info[["chr"]] <- as.character(Y$info[["chr"]])
   X$info[X$info[["chr"]] == "X", "chr"] <- "23"
@@ -8,7 +19,11 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
   Y$info[Y$info[["chr"]] == "Y", "chr"] <- "24"
 
   # First order chromosomes 1...22, X, Y, then chromosomes with other names
-  if (is.null(chrs)) {chrs <- c(as.character(1:24), sort(setdiff(unique(X$info[["chr"]]), as.character(1:24))))}
+  if (is.null(chrs)) {
+    chrs <- c(as.character(1:24), sort(setdiff(unique(X$info[["chr"]]), as.character(1:24))))
+  } else {
+    chrs <- as.character(chrs)
+  }
 
   message("Matching probes between the data sets..")
   
@@ -36,7 +51,6 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
 
   # TODO: remove duplicates in the data matrix, unless segmented data is used
   # (which should be explicitly indicated: add the option to function call)
-  
   newY <- list(data = as.matrix(Y$data[yindices,]), info = Y$info[yindices,])
   newX <- list(data = as.matrix(X$data[xindices,]), info = X$info[xindices,])
 
