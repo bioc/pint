@@ -1,3 +1,15 @@
+CHANGES IN VERSION 1.1.12 (2010-06-16)
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+  o updates to pint.match function. Now confirms that 'data' and
+  'info' fields in the input data matrices are converted to have
+  matching elements (corresponding to geneids, for example). Also an
+  option to include only selected chromosomes was added. Works now
+  with both X/Y or 23/24 annotation for the chromosomes; characters
+  and numerics are both ok. Changes affect also the screen.mrna.cgh
+  function which calls pint.match (and other functions that call it)
+
 CHANGES IN VERSION 1.1.1 (2010-06-04)
 
 NEW FEATURES
