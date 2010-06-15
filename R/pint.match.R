@@ -1,13 +1,17 @@
 pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
 
   # Match genes/probes/clones in X/Y data sets based on location information
+  #X <- geneExp; Y <- geneCopyNum
 
   # First, provide information in a form that has corresponding rows in
   # data and info matrices (only take those available in both)
   coms <- intersect(rownames(X$data), rownames(X$info))
+  coms <- setdiff(coms, c(""))
   X$data <- X$data[coms,]
   X$info <- X$info[coms,]
+
   coms <- intersect(rownames(Y$data), rownames(Y$info))
+  coms <- setdiff(coms, c(""))
   Y$data <- Y$data[coms,]
   Y$info <- Y$info[coms,]
 
@@ -25,10 +29,6 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
     chrs <- as.character(chrs)
   }
 
-  message("Matching probes between the data sets..")
-  
-  xindices <- yindices <- vector()
-
   # If location information ('loc') for the probe is missing
   # but start and end positions are available, use them to calculate
   # probe middle bp location
@@ -42,6 +42,9 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
     #X$info[["loc"]] <- rowMeans(X$info[, c("start","end")])
   }
   
+
+  message("Matching probes between the data sets..")
+  xindices <- yindices <- vector()
   for (chr in chrs){
     # Note: chromosome arm information is used in the matching if it is available
     tmp <- get.neighboring.probes(X, Y, chr, max.dist)
@@ -62,24 +65,30 @@ closest <- function(a, vec){which.min(abs(a - vec))}
 
 get.neighboring.probes <- function (X, Y, chr, max.dist, control.arms = TRUE) {
 
+  xinds <- yinds <- c()
+  
   # Use arm information if it is available and not blocked
-  if (("arm" %in% names(X$info)) && ("arm" %in% names(Y$info)) && control.arms) {
-    
+  if (("arm" %in% names(X$info)) && ("arm" %in% names(Y$info)) && control.arms) {    
+
     for (arm in c('p', 'q')){      
       # Investigate specified arm
       xchrinds <- which(as.character(X$info$chr) == chr & X$info$arm == arm)
       ychrinds <- which(as.character(Y$info$chr) == chr & Y$info$arm == arm)
-      inds <- get.neighs(X, Y, xchrinds, ychrinds, max.dist) 
+      inds <- get.neighs(X, Y, xchrinds, ychrinds, max.dist)
+      xinds <- c(xinds, inds$xinds)
+      yinds <- c(yinds, inds$yinds)
     }
   } else {
     # Investigate the whole chromosome
     xchrinds <- which(as.character(X$info$chr) == chr)
     ychrinds <- which(as.character(Y$info$chr) == chr)
     inds <- get.neighs(X, Y, xchrinds, ychrinds, max.dist)
+    xinds <- c(xinds, inds$xinds)
+    yinds <- c(yinds, inds$yinds)
   }
 
   # return the indices
-  list(xinds = inds$xinds, yinds = inds$yinds)
+  list(xinds = xinds, yinds = yinds)
   
 }
 
