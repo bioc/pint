@@ -22,6 +22,26 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
   Y$info[Y$info[["chr"]] == "X", "chr"] <- "23"
   Y$info[Y$info[["chr"]] == "Y", "chr"] <- "24"
 
+
+  # Quarantee that there are no duplicated rows (probes) in the data
+  # TODO: unless segmented data is used
+  # (which should be explicitly indicated: add the option to function call)
+  dupl <- duplicated(X$data)
+  if (any(dupl)) {
+    cat("Removing duplicate probe signals on X data..\n")
+    X$data <- X$data[!dupl, ]
+    X$info <- X$info[!dupl, ]
+  }
+
+  dupl <- duplicated(Y$data)
+  if (any(dupl)) {
+    cat("Removing duplicate probe signals on Y data..\n")
+    Y$data <- Y$data[!dupl, ]
+    Y$info <- Y$info[!dupl, ]
+  }
+
+
+  
   # First order chromosomes 1...22, X, Y, then chromosomes with other names
   if (is.null(chrs)) {
     chrs <- c(as.character(1:24), sort(setdiff(unique(X$info[["chr"]]), as.character(1:24))))
@@ -52,10 +72,20 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
     yindices <- c(yindices, tmp$yinds)
   }
 
-  # TODO: remove duplicates in the data matrix, unless segmented data is used
-  # (which should be explicitly indicated: add the option to function call)
-  newY <- list(data = as.matrix(Y$data[yindices,]), info = Y$info[yindices,])
-  newX <- list(data = as.matrix(X$data[xindices,]), info = X$info[xindices,])
+  xdat <- as.matrix(X$data[xindices,])
+  ydat <- as.matrix(Y$data[yindices,])
+
+  # Sometimes file reading (with csv at least) leads to situation where the last column is NA.
+  # To avoid this and other cases, remove 'NA samples'.
+  nainds <- (colMeans(is.na(xdat)) == 1 | colMeans(is.na(ydat)) == 1)
+  if (sum(nainds)>0) {
+    xdat <- xdat[, !nainds]
+    ydat <- ydat[, !nainds]
+    warning(paste("Samples ", colnames(X$data)[nainds], " contained exclusively NA's; removed."))
+  }
+    
+  newX <- list(data = xdat, info = X$info[xindices,])
+  newY <- list(data = ydat, info = Y$info[yindices,])
 
   return(list(X = newX, Y = newY))
 

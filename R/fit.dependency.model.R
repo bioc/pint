@@ -8,6 +8,8 @@ function (X, Y,
           mySeed = 123)
 {
 
+  # X <- window$X; Y <- window$Y; zDimension = params$zDimension; marginalCovariances = params$marginalCovariances; H = params$H; sigmas = params$sigmas; covLimit = params$covLimit; mySeed = params$mySeed
+                                      
   # Center data
   if (ncol(X) > 1)
     X <- t(centerData(t(X), rm.na = TRUE))

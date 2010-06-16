@@ -39,6 +39,7 @@ calculate.arm <- function(X, Y, windowSize, chromosome, arm, method = "pSimCCA",
                                       sigmas = params$sigmas, 
                                       covLimit = params$covLimit,
                                       mySeed = params$mySeed)
+
         setLoc(model) <- window$loc
         setChromosome(model) <- chromosome
         setArm(model) <- arm

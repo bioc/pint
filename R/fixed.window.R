@@ -3,8 +3,14 @@ function (X, Y, middleIndex, windowSize){
 		
   # chromosome and arm of window
   chr <- X$info$chr[middleIndex]
-  arm <- X$info$arm[middleIndex]
 
+  if ("arm" %in% colnames(X$info)) {
+    arm <- X$info$arm[middleIndex]
+  } else if ("arm" %in% colnames(Y$info)) {
+    arm <- Y$info$arm[middleIndex]
+  } else {arm = NULL}
+  
+  
   # Location
   loc <- X$info$loc[middleIndex]
 	
@@ -15,9 +21,13 @@ function (X, Y, middleIndex, windowSize){
   indsOutBounds <- (min(inds) < 0 || max(inds) > length(X$info$chr))
 
   # Check that chromosome and arm are the same
-  sameArm <- (identical(X$info$chr[min(inds)], X$info$chr[max(inds)]) && 
-              identical(X$info$arm[min(inds)], X$info$arm[max(inds)]))
-
+  if (!is.null(arm)) {
+    sameArm <- (identical(X$info$chr[min(inds)], X$info$chr[max(inds)]) && 
+                identical(X$info$arm[min(inds)], X$info$arm[max(inds)]))
+  } else {
+    sameArm <- (identical(X$info$chr[min(inds)], X$info$chr[max(inds)]))
+  }
+ 
   if(!indsOutBounds && sameArm){
 
     Xm <- t(centerData(t(X$data), rm.na = TRUE)[, inds])

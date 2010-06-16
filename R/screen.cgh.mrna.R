@@ -1,6 +1,15 @@
-screen.cgh.mrna <- function(X, Y, windowSize, chromosome, arm, method = "", params = list(), max.dist = 1e7)
+screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "pSimCCA", params = list(), max.dist = 1e7)
 {
 
+  if (is.null(windowSize)) {
+    cat("Chromosomal window (windowSize) not specified. Using default ratio of 1/3 between features and samples.")
+    windowSize <- floor(ncol(X$data)/3)
+  }
+
+
+  #source("~/local/Rpackages/pint/R/screen.cgh.mrna.R"); X <- ge.pint; Y <- cn.pint; windowSize = 10; method = ""; params = list(); max.dist = 1e7
+
+  
   # Check ordering of samples
   if (any(colnames(X$data) != colnames(Y$data))) {
     warning("Samples not in the same order in the two data sets. Using samples that are found in both data sets and reordering the samples..")
