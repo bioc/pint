@@ -85,10 +85,19 @@ screen.cgh.mir(X, Y, windowSize, chromosome, arm, method = "", params = list())
     chromosomal location information.}
   
 }
-\details{
-Function \code{screen.cgh.mrna} assumes that data is already paired. This can be 
-done with \code{\link{pint.match}}. It takes sliding gene windows with \code{\link{fixed.window}} and
-fits dependency models to each window with \code{\link{fit.dependency.model}} function.
+
+\details{Function \code{screen.cgh.mrna} assumes that data is already
+paired. This can be done with \code{\link{pint.match}}. It takes sliding
+gene windows with \code{\link{fixed.window}} and fits dependency models
+to each window with \code{\link{fit.dependency.model}} function. If the
+window exceeds start or end location (last probe) in the chromosome in
+the \code{\link{fixed.window}} function, the last window containing the
+given probe and not exceeding the chromosomal boundaries is used. In
+practice, this means that dependency score for the last n/2 probes in
+each end of the chromosome (arm) will be calculated with an identical
+window, which gives identical scores for these end position probes. This
+is necessary since the window size has to be fixed to allow direct
+comparability of the dependency scores across chromosomal windows.
 
 Function \code{screen.cgh.mir} calculates dependencies
 around a chromosomal window in each sample in \code{X}; only one sample

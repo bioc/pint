@@ -1,6 +1,8 @@
 screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "pSimCCA", params = list(), max.dist = 1e7)
 {
 
+  #X <- geneExp; Y <- geneCopyNum; windowSize = 10; chr = 17; arm = 'q'; params = list(); max.dist = 1e7
+  
   if (is.null(windowSize)) {
     cat("Chromosomal window (windowSize) not specified. Using default ratio of 1/3 between features and samples.")
     windowSize <- floor(ncol(X$data)/3)
@@ -32,7 +34,6 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
 
   # Remove probes where observations are not available in either data set
   # TODO
-
 
   ############################################################################
   
@@ -72,7 +73,7 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
     params$covLimit <- 0
   if (is.null(params$mySeed))
     params$mySeed <- 566
-  if (any(is.na(params$H))) {
+  if (!is.null(params$H) && any(is.na(params$H))) {
     if (params$marginalCovariances == "full")
       method = "pCCA"
     if (params$marginalCovariances == "isotropic")

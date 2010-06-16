@@ -10,15 +10,22 @@ function (X, Y, middleIndex, windowSize){
     arm <- Y$info$arm[middleIndex]
   } else {arm = NULL}
   
-  
   # Location
   loc <- X$info$loc[middleIndex]
 	
-  # Indices for the window
-  inds <- (middleIndex - (trunc((windowSize - 1)/2))) : (middleIndex + (trunc(windowSize/2)))	
-	
+  # Indices for the window. If indices exceed the limits, then use the
+  # last window that fits (all windows must have same size, and it is
+  # safer not to exclude any gene since it is in the ends of the arms)  
+  #inds <- (middleIndex - (trunc((windowSize - 1)/2))) : (middleIndex + (trunc(windowSize/2)))	
+  nmax <- length(X$info$chr)
+  wstart <- middleIndex - trunc((windowSize - 1)/2)
+  wstop  <- middleIndex + trunc(windowSize/2)
+  if (wstart < 1)   {wstart <- 1; wstop <- wstart + windowSize - 1}
+  if (wstop > nmax) {wstop <- nmax; wstart <- wstop - windowSize + 1}
+  inds <- wstart:wstop
+  
   # Check that indices don't get out of bounds
-  indsOutBounds <- (min(inds) < 0 || max(inds) > length(X$info$chr))
+  #indsOutBounds <- (min(inds) < 1 || max(inds) > length(X$info$chr))
 
   # Check that chromosome and arm are the same
   if (!is.null(arm)) {
@@ -28,7 +35,8 @@ function (X, Y, middleIndex, windowSize){
     sameArm <- (identical(X$info$chr[min(inds)], X$info$chr[max(inds)]))
   }
  
-  if(!indsOutBounds && sameArm){
+  #if(!indsOutBounds && sameArm){
+  if( sameArm ) {
 
     Xm <- t(centerData(t(X$data), rm.na = TRUE)[, inds])
     Ym <- t(centerData(t(Y$data), rm.na = TRUE)[, inds])

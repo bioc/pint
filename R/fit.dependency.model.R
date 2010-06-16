@@ -11,10 +11,8 @@ function (X, Y,
   # X <- window$X; Y <- window$Y; zDimension = params$zDimension; marginalCovariances = params$marginalCovariances; H = params$H; sigmas = params$sigmas; covLimit = params$covLimit; mySeed = params$mySeed
                                       
   # Center data
-  if (ncol(X) > 1)
-    X <- t(centerData(t(X), rm.na = TRUE))
-  if (ncol(Y) > 1)
-    Y <- t(centerData(t(Y), rm.na = TRUE))
+  X <- t(centerData(t(X), rm.na = TRUE))
+  Y <- t(centerData(t(Y), rm.na = TRUE))
 
   # Check if dimensionality is too big
   if(zDimension > ncol(X) || zDimension > ncol(Y))
@@ -24,7 +22,7 @@ function (X, Y,
   res <- NA	
   method <- ""
 
-  if (any(is.na(H))) {
+  if (!is.null(H) && any(is.na(H))) {
     method <- "pCCA"
     if (marginalCovariances == "full") {
       

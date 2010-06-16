@@ -1,7 +1,19 @@
 pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
 
+  if (all(is.na(X$data))) {stop("X data is empty/NA.")}
+  if (all(is.na(Y$data))) {stop("Y data is empty/NA.")}
+  
   # Match genes/probes/clones in X/Y data sets based on location information
   #X <- geneExp; Y <- geneCopyNum
+
+  # If same number of rows and columns, assume that they match between data and info fields
+  # if the names are completely non-overlapping (as in our example data set)
+  if (nrow(X$data) == nrow(X$info) && length(intersect(rownames(X$info), rownames(X$data)))==0) {
+    rownames(X$info) <- rownames(X$data)
+  }
+  if (nrow(Y$data) == nrow(Y$info) && length(intersect(rownames(Y$info), rownames(Y$data)))==0) {
+    rownames(Y$info) <- rownames(Y$data)
+  }
 
   # First, provide information in a form that has corresponding rows in
   # data and info matrices (only take those available in both)
@@ -17,11 +29,14 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
 
   X$info[["chr"]] <- as.character(X$info[["chr"]])
   Y$info[["chr"]] <- as.character(Y$info[["chr"]])
-  X$info[X$info[["chr"]] == "X", "chr"] <- "23"
-  X$info[X$info[["chr"]] == "Y", "chr"] <- "24"
-  Y$info[Y$info[["chr"]] == "X", "chr"] <- "23"
-  Y$info[Y$info[["chr"]] == "Y", "chr"] <- "24"
 
+  # X/Y chromosome for data set X
+  if ("X" %in% X$info[["chr"]]) {X$info[X$info[["chr"]] == "X", "chr"] <- "23"}
+  if ("Y" %in% X$info[["chr"]]) {X$info[X$info[["chr"]] == "Y", "chr"] <- "24"}
+
+  # X/Y chromosome for data set X
+  if ("X" %in% Y$info[["chr"]]) {Y$info[Y$info[["chr"]] == "X", "chr"] <- "23"}
+  if ("Y" %in% Y$info[["chr"]]) {Y$info[Y$info[["chr"]] == "Y", "chr"] <- "24"}
 
   # Quarantee that there are no duplicated rows (probes) in the data
   # TODO: unless segmented data is used
@@ -40,7 +55,6 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
     Y$info <- Y$info[!dupl, ]
   }
 
-
   
   # First order chromosomes 1...22, X, Y, then chromosomes with other names
   if (is.null(chrs)) {
@@ -55,11 +69,9 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
   if (!"loc" %in% colnames(Y$info)) {
     # sometimes factors, sometimes numerics given; this should handle both cases correctly
     Y$info[["loc"]] <- (as.numeric(as.character(Y$info[, "start"])) + as.numeric(as.character(Y$info[, "end"])))/2
-      #rowMeans(Y$info[, c("start","end")])
   }
   if (!"loc" %in% colnames(X$info)) {
     X$info[["loc"]] <- (as.numeric(as.character(X$info[, "start"])) + as.numeric(as.character(X$info[, "end"])))/2
-    #X$info[["loc"]] <- rowMeans(X$info[, c("start","end")])
   }
   
 
@@ -72,13 +84,13 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
     yindices <- c(yindices, tmp$yinds)
   }
 
-  xdat <- as.matrix(X$data[xindices,])
-  ydat <- as.matrix(Y$data[yindices,])
+  xdat <- as.matrix(X$data[xindices,], length(xindices))
+  ydat <- as.matrix(Y$data[yindices,], length(yindices))
 
   # Sometimes file reading (with csv at least) leads to situation where the last column is NA.
   # To avoid this and other cases, remove 'NA samples'.
   nainds <- (colMeans(is.na(xdat)) == 1 | colMeans(is.na(ydat)) == 1)
-  if (sum(nainds)>0) {
+  if (sum(nainds) > 0) {
     xdat <- xdat[, !nainds]
     ydat <- ydat[, !nainds]
     warning(paste("Samples ", colnames(X$data)[nainds], " contained exclusively NA's; removed."))
@@ -87,7 +99,7 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
   newX <- list(data = xdat, info = X$info[xindices,])
   newY <- list(data = ydat, info = Y$info[yindices,])
 
-  return(list(X = newX, Y = newY))
+  list(X = newX, Y = newY)
 
 }
 
@@ -131,7 +143,7 @@ get.neighs <- function (X, Y, xchrinds, ychrinds, max.dist) {
     
     #Find indices of closest probe from Y for each from X
     xi <- 1:length(xchrinds)
-    yi <- sapply(X$info$loc[xchrinds], closest, vec = Y$info$loc[ychrinds])
+    yi <- sapply(as.numeric(as.character(X$info$loc[xchrinds])), closest, vec = as.numeric(as.character(Y$info$loc[ychrinds])))
 
     # Remove duplicates
     keep <- !duplicated(yi)
