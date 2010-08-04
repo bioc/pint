@@ -41,7 +41,7 @@ pint.data = function(data, info){
     arm <- info$arm
   }
   
-  info <- data.frame(chr = as.factor(info$chr), arm = arm, loc = as.numeric(loc))
+  info <- data.frame(chr = factor(info$chr, levels = c(1:22,"X","Y")), arm = arm, loc = as.numeric(loc))
 
   # Order data by chr, arm and loc
   ord <- order(info$chr,info$arm,info$loc)

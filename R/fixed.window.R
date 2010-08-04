@@ -25,7 +25,7 @@ function (X, Y, middleIndex, windowSize){
   inds <- wstart:wstop
   
   # Check that indices don't get out of bounds
-  #indsOutBounds <- (min(inds) < 1 || max(inds) > length(X$info$chr))
+  indsOutBounds <- (min(inds) < 1 || max(inds) > length(X$info$chr))
 
   # Check that chromosome and arm are the same
   if (!is.null(arm)) {
@@ -35,8 +35,8 @@ function (X, Y, middleIndex, windowSize){
     sameArm <- (identical(X$info$chr[min(inds)], X$info$chr[max(inds)]))
   }
  
-  #if(!indsOutBounds && sameArm){
-  if( sameArm ) {
+  if(!indsOutBounds && sameArm){
+  #if( sameArm ) {
 
     Xm <- t(centerData(t(X$data), rm.na = TRUE)[, inds])
     Ym <- t(centerData(t(Y$data), rm.na = TRUE)[, inds])

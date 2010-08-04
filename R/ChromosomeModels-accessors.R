@@ -64,8 +64,8 @@ setMethod("topModels","ChromosomeModels",
 		pscores <- getScore(getPArm(model))
 		qscores <- getScore(getQArm(model))
 		scores <- c(pscores,qscores)
-		pindices <- 1:length(pscores)
-		qindices <- 1:length(qscores)
+		pindices <- seq_along(pscores)
+		qindices <- seq_along(qscores)
 		indices <- c(pindices,qindices)
 		data <- data.frame(scores,indices,arm = c(rep('p',length(pscores)), rep('q',length(qscores))))
 		#Order dataframe
@@ -81,7 +81,7 @@ setMethod("topModels","ChromosomeModels",
 	}
 )
 
-setMethod("orderGenes","GenomeModels",
+setMethod("orderGenes","ChromosomeModels",
   function(model){
 
     scores <- vector()

@@ -41,7 +41,7 @@ calculate.arm <- function(X, Y, windowSize, chromosome, arm, method = "pSimCCA",
                                       mySeed = params$mySeed)
 
         setLoc(model) <- window$loc
-        setChromosome(model) <- chromosome
+        setChromosome(model) <- as.character(chromosome)
         setArm(model) <- arm
 	#setGeneName(res) <- window$geneName
         modelList[[k]] <- model
@@ -51,7 +51,7 @@ calculate.arm <- function(X, Y, windowSize, chromosome, arm, method = "pSimCCA",
   }
 
   #Change chromosome and arm factors and get levels from X
-  chromosome <- factor(chromosome, levels = levels(X$info$chr))
+  chromosome <- factor(chromosome, levels = c(1:22,"X","Y"))
   arm <- factor(arm, levels = levels(X$info$arm))
 	
   return(new("ChromosomeArmModels",

@@ -86,6 +86,15 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
     method = "pSimCCA"
   }
 
+  # Convert chromosome argument to factor with correct levels
+  if (!missing(chromosome)){
+    if (chromosome == 23) chromosome <- "X"
+    if (chromosome == 24) chromosome <- "Y"
+    chromosome = factor(chromosome, levels = c(1:22,"X","Y"))
+    if (is.na(chromosome))
+      stop("Incorrect chromosome given.")
+  }
+
   if (missing(chromosome)) {
     models <- calculate.genome(X, Y, windowSize, method, params)
   } else if (missing(arm)) {

@@ -12,7 +12,7 @@ pick.chr.arm <- function(X, chr, arm){
   }
 
   # pick probes for this arm
-  indices <- which(X$info$chr == chr & X$info$arm == arm)
+  indices <- which(X$info$chr == as.character(chr) & X$info$arm == arm)
   
   chrarmX <- list(data = X$data[indices,,drop=FALSE],
                   info = X$info[indices,])

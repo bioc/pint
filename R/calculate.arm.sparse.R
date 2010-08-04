@@ -34,7 +34,7 @@ calculate.arm.sparse <- function(X, Y, windowSize, chromosome, arm, method = "pS
 					marginalCovariances = params$marginalCovariances, H = params$H, sigmas = params$sigmas, 
 					covLimit = params$covLimit, mySeed=params$mySeed)
 				setLoc(model) <- window$loc
-				setChromosome(model) <- chromosome
+				setChromosome(model) <- as.character(chromosome)
 				setArm(model) <- arm
 				#setGeneName(res) <- window$geneName
 				modelList[[k]] <- model
@@ -43,7 +43,7 @@ calculate.arm.sparse <- function(X, Y, windowSize, chromosome, arm, method = "pS
 		}
 	}
 	# Change chromosome and arm factors and get levels from X
-	chromosome <- factor(chromosome, levels = levels(Xm$info$chr))
+	chromosome <- factor(chromosome, levels = levels(c(1:22,"X","Y")))
 	arm <- factor(arm, levels = levels(Xm$info$arm))
 	
 	return(new("ChromosomeArmModels", models = modelList, chromosome = chromosome, arm = arm, windowSize = windowSize, 

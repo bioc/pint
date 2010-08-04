@@ -66,6 +66,15 @@ screen.cgh.mir <- function(X, Y, windowSize, chromosome, arm, method = "", param
 	if(warningText)
 		warning("Similarity constrained CCA cannot be used, method changed to CCA")
 
+	# Convert chromosome argument to factor with correct levels
+	if (!missing(chromosome)){
+		if (chromosome == 23) chromosome <- "X"
+		if (chromosome == 24) chromosome <- "Y"
+		chromosome = factor(chromosome, levels = c(1:22,"X","Y"))
+		if (is.na(chromosome))
+			stop("Incorrect chromosome given.")
+	}
+
 	# Calculate dependency models
 	if (missing(chromosome))
 		models <- calculate.genome.sparse(X, Y, windowSize, method, params)

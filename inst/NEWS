@@ -1,3 +1,13 @@
+CHANGES IN VERSION 1.1.16 (2010-08-04)
+
+BUG FIXES
+
+  o screening functions can handle chromosomes with fewer samples
+  than window size
+  o isEmpty method is now exported
+  o topModels method for ChromosomeModels class gives no longer
+  an error when either arm has no dependency models
+
 CHANGES IN VERSION 1.1.15 (2010-06-16)
 
 SIGNIFICANT USER-VISIBLE CHANGES
@@ -29,7 +39,7 @@ CHANGES IN VERSION 0.99.5 (2010-03-28)
 
 SIGNIFICANT USER-VISIBLE CHANGES
 
-  o screen.chromosome function name changed to scree.cgh.mrna
+  o screen.chromosome function name changed to screen.cgh.mrna
   o methods findHighestGenes and findHighestModels changed to topGenes and topModels 
   o z.projection and W.projection changed to z.effects and W.effects
   o method name 'TPriorpSimCCA' removed and added to 'psimCCA'

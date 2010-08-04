@@ -47,7 +47,8 @@ getModelNumbers,
 topGenes,
 topModels,
 orderGenes,
-findModel
+findModel,
+isEmpty
 )
 
 importFrom(graphics, plot)

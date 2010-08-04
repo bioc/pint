@@ -95,7 +95,18 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
     ydat <- ydat[, !nainds]
     warning(paste("Samples ", colnames(X$data)[nainds], " contained exclusively NA's; removed."))
   }
-    
+  
+  # Convert chr to factor
+  if ("23" %in% X$info[["chr"]]) {X$info[X$info[["chr"]] == "23", "chr"] <- "X"}
+  if ("24" %in% X$info[["chr"]]) {X$info[X$info[["chr"]] == "24", "chr"] <- "Y"}
+
+  if ("23" %in% Y$info[["chr"]]) {Y$info[Y$info[["chr"]] == "23", "chr"] <- "X"}
+  if ("24" %in% Y$info[["chr"]]) {Y$info[Y$info[["chr"]] == "24", "chr"] <- "Y"}
+
+  X$info$chr = factor(X$info$chr, levels = c(1:22, "X", "Y"))
+  Y$info$chr = factor(Y$info$chr, levels = c(1:22, "X", "Y"))
+  
+  
   newX <- list(data = xdat, info = X$info[xindices,])
   newY <- list(data = ydat, info = Y$info[yindices,])
 
