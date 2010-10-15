@@ -1,3 +1,10 @@
+CHANGES IN VERSION 1.1.17 (2010-10-15)
+
+HELP & Rd FILE CHANGES
+
+  o sample and genes are displayed in correct order in help pages
+    for screening functions
+
 CHANGES IN VERSION 1.1.16 (2010-08-04)
 
 BUG FIXES
