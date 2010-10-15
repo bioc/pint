@@ -1,3 +1,15 @@
+CHANGES IN VERSION 1.1.17 (2010-10-16)
+
+LICENSE
+
+  o Changed license from GPL >=2 to FreeBSD (see
+    http://www.freebsd.org/copyright/freebsd-license.html)
+
+DOCUMENTATION
+
+  o Removed netresponse text from vignette IndexEntry (first line). 
+    This made netresponse text visible in devel website
+
 CHANGES IN VERSION 1.1.17 (2010-10-15)
 
 HELP & Rd FILE CHANGES
