@@ -1,4 +1,4 @@
-%\VignetteIndexEntry{netresponse}
+%\VignetteIndexEntry{pint}
 %The above line is needed to remove a warning in R CMD check
 \documentclass[a4paper]{article}
 
