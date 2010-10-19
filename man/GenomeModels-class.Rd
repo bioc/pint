@@ -67,8 +67,12 @@ arm. }
 	\item{orderGenes}{\code{signature(model = "GenomeModels")}:
 	Returns a data frame with gene names and their model scores sorted}
 	
-	\item{findModel}{\code{signature(model = "ChromosomeArmModels")}:
+	\item{findModel}{\code{signature(model = "GenomeModels")}:
 	Finds a dependency model by gene name and returns it.}
+	
+	\item{as.data.frame}{\code{signature(x = "GenomeModels")}:
+	converts dependency models as a dataframe with eachs row representing a dependency model for one gene.
+	The columns are: \code{geneName},\code{dependencyScore},\code{chr},\code{arm},\code{loc}}
   }
 }
 

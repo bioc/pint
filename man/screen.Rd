@@ -1,4 +1,4 @@
-\name{calculate}
+\name{screen}
 %\Rdversion{1.1}
 \alias{screen.cgh.mrna}
 \alias{screen.cgh.mir}
@@ -11,17 +11,18 @@ depending on arguments with chosen window size between two data sets.
 }
 \usage{
 screen.cgh.mrna(X, Y, windowSize, chromosome, arm, method = "", params =
-list(), max.dist = 1e7)
+list(), max.dist = 1e7, outputType = "models")
 
-screen.cgh.mir(X, Y, windowSize, chromosome, arm, method = "", params = list())
+screen.cgh.mir(X, Y, windowSize, chromosome, arm, method = "", params = list(),
+outputType = "models")
 }
 
 \arguments{
   \item{X,Y}{
     Data sets. Lists containing the following items:
     \describe{
-      \item{\code{data}}{ Data in a matrix form. Genes are in columns
-	and samples in rows. e.g. gene copy number.}
+      \item{\code{data}}{ Data in a matrix form. Genes are in rows
+	and samples in columnss. e.g. gene copy number.}
 
       \item{\code{info}}{ Data frame which contains following information about
 	genes in data matrix.
@@ -83,6 +84,9 @@ screen.cgh.mir(X, Y, windowSize, chromosome, arm, method = "", params = list())
   \item{max.dist}{Maximum allowed distance between probes. Used in
     automated matching of the probes between the two data sets based on
     chromosomal location information.}
+    
+  \item{outputType}{Specifies the output type of the function. possible values are \code{"models"}
+  and \code{"data.frame"}}
   
 }
 
@@ -115,11 +119,18 @@ Dependency scores are plotted with \link{dependency score plotting}.
 }
 
 \value{
-Depending on the arguments, returns a \linkS4class{ChromosomeArmModels}
+The type of the return value is defined by the the function argument \code{outputType}.
+
+With the argument \code{outputType = "models"}, the return value
+depends on the other arguments; returns a \linkS4class{ChromosomeArmModels}
 which contains all the models for dependencies in chromosomal arm, a
 \linkS4class{ChromosomeModels} which contains all the models for
 dependencies in chromosome or a \linkS4class{GenomeModels} which
 contains all the models for dependencies in genome.
+
+With the argument \code{outputType = "data.frame"}, the function returns a
+data frame with eachs row representing a dependency model for one gene.
+The columns are: \code{geneName},\code{dependencyScore},\code{chr},\code{arm},\code{loc}.
 }
 \references{
 

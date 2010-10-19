@@ -109,3 +109,21 @@ setMethod("findModel","ChromosomeModels",
    stop("No model found")
   }
 )
+
+setMethod(f="[[", signature("ChromosomeModels"),
+          definition=(function(x,i,j,drop) {
+      if (i == 'p' || i == 'P')
+        return(getPArm(x))
+      if (i == 'q' || i == 'Q')
+        return(getQArm(x))
+      else
+        stop("Use either 'p' or 'q' to access dependency models of an arm.")
+    } 
+))
+
+setMethod(f="as.data.frame",signature("ChromosomeModels"),
+          definition=(function(x, ...) {
+
+      return(rbind(as.data.frame(x[['p']]),as.data.frame(x[['q']])))
+    }
+))

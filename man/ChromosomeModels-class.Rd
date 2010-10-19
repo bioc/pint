@@ -17,6 +17,7 @@
 \alias{isEmpty,ChromosomeModels-method}
 \alias{orderGenes,ChromosomeModels-method}
 \alias{findModel,ChromosomeModels-method}
+\alias{[[,ChromosomeModels-method}
 
 \title{Class "ChromosomeModels"}
 
@@ -39,6 +40,9 @@ particular chromosome. The dependency models are in two
 
 \section{Methods}{
   \describe{
+
+    \item{[[}{\code{signature(x = "ChromosomeModels")}: Returns the
+    dependency models of the arm specified with 'p' or 'q'}
 
     \item{getChromosome}{\code{signature(model = "ChromosomeModels")}:
     Returns the chromosome}
@@ -77,8 +81,12 @@ particular chromosome. The dependency models are in two
    	\item{orderGenes}{\code{signature(model = "ChromosomeModels")}:
 	Returns a data frame with gene names and their model scores sorted}
 	
-	\item{findModel}{\code{signature(model = "ChromosomeArmModels")}:
+	\item{findModel}{\code{signature(model = "ChromosomeModels")}:
 	Finds a dependency model by gene name and returns it.}
+	
+	\item{as.data.frame}{\code{signature(x = "ChromosomeModels")}:
+	converts dependency models as a dataframe with eachs row representing a dependency models for one gene.
+	The columns are: \code{geneName},\code{dependencyScore},\code{chr},\code{arm},\code{loc}}
   }
 }
 
@@ -101,7 +109,7 @@ model17 <- screen.cgh.mrna(geneExp, geneCopyNum, windowSize = 10, chr
 model17
 
 # genes in p arm with the highest dependency scores
-topGenes(getPArm(model17), 5)
+topGenes(model17[['p']], 5)
 
 plot(model17)
 }

@@ -35,7 +35,8 @@ W.effects(model, X, Y = NULL)
 
   \code{z.effects} gives the contribution of each sample to the
   dependency score. This is approximated by projecting original data to
-  first principal component of \code{Wz}.
+  first principal component of \code{Wz}. This is possible only when the data window is smaller
+  than half the number of samples.
 
   \code{W.effects} gives the contribution of each variable to the
   observed dependency. This is approximated with the loadings of the

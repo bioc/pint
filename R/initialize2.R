@@ -42,8 +42,10 @@ function (X, Y) {
   W$total <- rbind(W$X,W$Y)
   
   phi.init <- list()
-  phi.init$X <- Dcov$X
-  phi.init$Y <- Dcov$Y
+  # Add a small diagonal value to ensure that the matrix is invertible 
+  # when using segmented data -OPH
+  phi.init$X <- Dcov$X + diag(1,Dim$X,Dim$X)
+  phi.init$Y <- Dcov$Y + diag(1,Dim$Y,Dim$Y)
   phi.init$total <- rbind(cbind(phi.init$X,nullmat), cbind(nullmat, phi.init$Y))
   
   list(phi = phi.init, W = W, Dcov = Dcov, Dim = Dim, nullmat = nullmat, Nsamples = Nsamples)

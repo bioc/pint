@@ -1,4 +1,5 @@
-screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "pSimCCA", params = list(), max.dist = 1e7)
+screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "pSimCCA", params = list(), max.dist = 1e7, 
+                            outputType = "models")
 {
 
   #X <- geneExp; Y <- geneCopyNum; windowSize = 10; chr = 17; arm = 'q'; params = list(); max.dist = 1e7
@@ -14,14 +15,14 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
   
   # Check ordering of samples
   if (any(colnames(X$data) != colnames(Y$data))) {
-    warning("Samples not in the same order in the two data sets. Using samples that are found in both data sets and reordering the samples..")
+    warning("Samples not in the same order in the two data sets. Using samples that are found in both data sets and reordering the samples..\n")
 
     commons <- intersect(colnames(X$data), colnames(Y$data))
     if (length(commons) > 1) {
       X$data <- X$data[, commons]
       Y$data <- Y$data[, commons]
     } else {
-      stop("Not enough common samples found. Check that the corresponding samples in the two data sets have identical names.")
+      stop("Not enough common samples found. Check that the corresponding samples in the two data sets have identical names.\n")
     }
   }
 
@@ -103,7 +104,11 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
     models <- calculate.arm(X, Y, windowSize, chromosome, arm, method, params)
   }
 
-
-  return(models)
+  if(outputType == "data.frame"){
+    return(as.data.frame(models))
+  }
+  else {
+    return(models)
+  }
 }
 

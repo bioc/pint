@@ -129,3 +129,18 @@ setMethod("findModel","ChromosomeArmModels",
   }
 )
     
+setMethod(f="as.data.frame",signature("ChromosomeArmModels"),
+          definition=(function(x, ...) {
+
+      model <- x
+      genes <- c(getGeneName(model))
+      scores <- c(getScore(model))
+      locs <- c(getLoc(model))
+      arms <- as.character(rep(getArm(model),length(scores)))
+      chrs <- as.character(rep(getChromosome(model),length(genes)))
+      #indices <- c(pindices,qindices)
+      data <- data.frame(geneName = genes, dependencyScore = scores, chr = chrs, 
+                         arm = arms, loc = locs, stringsAsFactors = FALSE)
+      return(data)
+    }
+))

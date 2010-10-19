@@ -123,3 +123,14 @@ setMethod("findModel","GenomeModels",
    stop("No model found")
   }
 )
+
+setMethod("as.data.frame","GenomeModels",
+          function(x, ...){
+    df <- data.frame(geneName = NULL, dependencyScore = NULL, chr = NULL,
+                    arm = NULL, loc = NULL)
+    for (i in 1:24){
+      df <- rbind(df, as.data.frame(x[[i]]))   
+    }
+    return(df)
+  }
+)

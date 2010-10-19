@@ -118,6 +118,10 @@ particular chromosome arm.}
 	
 	\item{findModel}{\code{signature(model = "ChromosomeArmModels")}:
 	Finds a dependency model by gene name and returns it.}
+	
+	\item{as.data.frame}{\code{signature(x = "ChromosomeArmModels")}:
+	converts dependency models as a dataframe with eachs row representing a dependency model for one gene.
+	The colmuns are: \code{geneName},\code{dependencyScore},\code{chr},\code{arm},\code{loc}}
   }
 }
 

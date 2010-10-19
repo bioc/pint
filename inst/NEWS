@@ -1,14 +1,21 @@
-CHANGES IN VERSION 1.1.17 (2010-10-16)
+CHANGES IN VERSION 1.3.1 (2010-10-19)
 
-LICENSE
+NEW FEATURES
 
-  o Changed license from GPL >=2 to FreeBSD (see
-    http://www.freebsd.org/copyright/freebsd-license.html)
+  o Segmented gene copy number data can be screened with pSimCCA
+    method, although it is not recommended.
+  o Output type of screening functions can changed to a data frame.
+  o All dependency model outputs from screening functions can now
+    converted to a data frame with as.data.frame method.
+  o ChromosomeArmModels can be accessed with [['p']] and [['q']]
+    from ChromosomeModels.
 
-DOCUMENTATION
+BUG FIXES
 
-  o Removed netresponse text from vignette IndexEntry (first line). 
-    This made netresponse text visible in devel website
+  o z.effects gives a proper error message when the window size is
+    too large.
+  o pCCA method gives a proper error message when the data matrix is not
+    invertible.
 
 CHANGES IN VERSION 1.1.17 (2010-10-15)
 

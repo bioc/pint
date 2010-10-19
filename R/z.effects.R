@@ -2,6 +2,8 @@ z.effects <- function(model,X,Y = NULL){
 
   W <- getW(model)
 
+
+
   # for models from 2 data sets
   if (!is.null(Y)){
     # Check if whole data is given instead window for this model
@@ -17,6 +19,10 @@ z.effects <- function(model,X,Y = NULL){
       X <- window$X
       Y <- window$Y
     }
+    
+    # Check that data window is smaller than half the sample size
+    if (getWindowSize(model) > ncol(X))
+      stop("Contribution of samples cannot be calculated when the window size is more than half the number of samples")
     W <- W$total
 
     z <- z.expectation(model,X,Y)

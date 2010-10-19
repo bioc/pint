@@ -16,6 +16,9 @@ solve.w <- function (Xc, Yc, Cxx, Cyy, dz = NULL) {
   dx <- qx$rank
   dy <- qy$rank
 
+  if (dx < ncol(Xc) || dy < ncol(Yc))
+    stop("Unable to calculate the pCCA model; the sample covariance matrix is not invertible.\nMake sure that you are not using segmented data")
+
   z <- svd(qr.qty(qx, qr.qy(qy, diag(1, nr, dy)))[1L:dx, , drop = FALSE], dx, dy)
 
   xcoef <- backsolve((qx$qr)[1L:dx, 1L:dx, drop = FALSE], z$u)
