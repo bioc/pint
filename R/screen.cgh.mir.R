@@ -5,6 +5,16 @@ screen.cgh.mir <- function(X, Y, windowSize, chromosome, arm, method = "", param
     stop("Samples are not in the same order in both datas")
 
 
+  if (is.null(windowSize)) {
+    windowSize <- min(floor(ncol(X$data)/3),15)
+    if (windowSize == 15){
+      cat("Chromosomal window (windowSize) not specified. Using default size 15.")
+	}
+	else {
+      cat("Chromosomal window (windowSize) not specified. Using default ratio of 1/3 between features and samples.")	
+	}
+  }
+
   ### Check parameters and put defaults where needed ###
 
   warningText <- FALSE

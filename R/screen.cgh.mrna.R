@@ -5,8 +5,13 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
   #X <- geneExp; Y <- geneCopyNum; windowSize = 10; chr = 17; arm = 'q'; params = list(); max.dist = 1e7
   
   if (is.null(windowSize)) {
-    cat("Chromosomal window (windowSize) not specified. Using default ratio of 1/3 between features and samples.")
-    windowSize <- floor(ncol(X$data)/3)
+    windowSize <- min(floor(ncol(X$data)/3),15)
+    if (windowSize == 15){
+      cat("Chromosomal window (windowSize) not specified. Using default size 15.")
+	}
+	else {
+      cat("Chromosomal window (windowSize) not specified. Using default ratio of 1/3 between features and samples.")	
+	}
   }
 
 

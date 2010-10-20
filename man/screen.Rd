@@ -49,7 +49,9 @@ outputType = "models")
   \item{windowSize}{
     Determine the window size. This specifies the number of nearest
     genes to be included in the chromosomal window of the model, and
-    therefore the scale of the investigated chromosomal region.
+    therefore the scale of the investigated chromosomal region. If
+    not specified, using the default ratio of 1/3 between features 
+    and samples or \code{15} if the ratio would be greater than 15
   }
 
   \item{method}{
