@@ -12,6 +12,7 @@
 \alias{topModels,GenomeModels-method}
 \alias{orderGenes,GenomeModels-method}
 \alias{findModel,GenomeModels-method}
+\alias{getModelNumbers,GenomeModels-method}
 
 \title{Class "GenomeModels"}
 
@@ -55,14 +56,18 @@ arm. }
 
     \item{getWindowSize}{\code{signature(model = "GenomeModels")}:
     Returns the size of the window used in the dependency models.}
+    
+     \item{getModelNumbers}{\code{signature(model = "GenomeModels")}:
+    Returns the total number of the dependency models.}
 
     \item{topGenes}{\code{signature(model = "GenomeModels", num
     = "numeric")}: Returns a vector of given number of names of the
-    genes which have the highest dependency score}
+    genes which have the highest dependency score. With default value 
+    \code{num = NA} returns all the genes.}
 
     \item{topModels}{\code{signature(model = "GenomeModels", num
     = "numeric")}: Returns a list with given number of dependency models
-    which have the highest dependency score}
+    which have the highest dependency score. By default returns one model.}
 
 	\item{orderGenes}{\code{signature(model = "GenomeModels")}:
 	Returns a data frame with gene names and their model scores sorted}

@@ -11,7 +11,7 @@ Pairs samples in two data sets.
 }
 \usage{
 pint.data(data, info)
-pint.match(X, Y, max.dist = 1e7, chrs = NULL)
+pint.match(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData = FALSE)
 }
 \arguments{
   \item{data}{
@@ -30,6 +30,8 @@ pint.match(X, Y, max.dist = 1e7, chrs = NULL)
   \item{max.dist}{maximum distance between paired genes in base pairs.}
   \item{chrs}{This option can be used to pick a subset of chromosomes in
   the data. By default, all chromosomes will be used.}
+  \item{useSegmentedData}{Logical. If \code{FALSE}, rows with identical
+  data are removed.}
 }
 \details{
 Function \code{pint.match} goes through every sample in \code{X} and

@@ -65,6 +65,7 @@ setMethod("getParams","ChromosomeArmModels",
 	} 
 )
 
+
 setMethod("getModelNumbers","ChromosomeArmModels", 
 	function(model) { 
 		return(length(model@models)) 
@@ -84,10 +85,13 @@ setMethod("isEmpty","ChromosomeArmModels",
 )
 
 setMethod("topGenes","ChromosomeArmModels",
-	function(model, num = 1) {
+	function(model, num = NA) {
           scores <- getScore(model)
           genes <- getGeneName(model)
           data <- data.frame(scores,genes)
+          if (is.na(num)){
+		    num <- length(scores)
+		  }
           # order dataframe and take num names of genes with highest scores 
           return(as.character(data[order(scores,decreasing=TRUE),]$genes[1:num]))	
 	}
@@ -101,9 +105,10 @@ setMethod("topModels","ChromosomeArmModels",
 		data <- data.frame(scores,indices)
 		# Order dataframe
 		data <- data[order(scores,decreasing=TRUE),]
-		returnList = list()
+		returnList <- list()
+
 		for(i in 1:num){
-			returnList = c(returnList,model[[data$indices[i]]])
+			returnList <- c(returnList,model[[data$indices[i]]])
 		}
 		return(returnList)
 	}

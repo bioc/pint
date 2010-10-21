@@ -12,6 +12,21 @@ setMethod("getParams","GenomeModels",
 	} 
 )	
 
+#setReplaceMethod(f="setSegmentedData", signature("GenomeModels"),
+#                 definition=(function(model,value) {
+#      if (!is.logical(value)){
+#        stop("Incorrect value given. Use TRUE or FALSE")
+#      }
+#      if (is.null(model@params$segmentedData)){
+#        model@params <- c(model@params, segmentedData = value)
+#      }
+#      else {
+#        model@params$segmentedData <- value 
+#      }
+#      return(model)
+#    }
+#))
+
 setMethod(f="[[", signature("GenomeModels"),
           definition=(function(x,i,j,drop) {
             if(i == 'X') 
@@ -41,7 +56,7 @@ setMethod("getWindowSize","GenomeModels",
 ) 
 
 setMethod("topGenes",signature("GenomeModels"),
-          function(model,num = 1) {
+          function(model,num = NA) {
             scores <- vector()
             genes <- vector()
             for(i in 1:24){
@@ -51,6 +66,10 @@ setMethod("topGenes",signature("GenomeModels"),
               genes <- c(genes, getGeneName(getPArm(model[[i]])))
             }
             data = data.frame(scores,genes)
+            if (is.na(num)){
+              num = length(scores)
+            }
+            
                                         #order dataframe and take num names of genes with highest scores 
             return(as.character(data[order(scores,decreasing=TRUE),]$genes[1:num]))
           }
@@ -92,6 +111,17 @@ setMethod("topModels","GenomeModels",
             return(returnList)
           }
           )
+
+setMethod("getModelNumbers","GenomeModels",
+  function(model){
+    num <- 0
+    for (i in 1:24){
+      num <- num + getModelNumbers(model[[i]])
+    }
+    return(num)
+  }
+)
+
 
 setMethod("orderGenes","GenomeModels",
   function(model){

@@ -14,6 +14,7 @@
 \alias{getWindowSize,ChromosomeModels-method}
 \alias{topGenes,ChromosomeModels-method}
 \alias{topModels,ChromosomeModels-method}
+\alias{getModelNumbers,ChromosomeModels-method}
 \alias{isEmpty,ChromosomeModels-method}
 \alias{orderGenes,ChromosomeModels-method}
 \alias{findModel,ChromosomeModels-method}
@@ -69,11 +70,12 @@ particular chromosome. The dependency models are in two
 
     \item{topGenes}{\code{signature(model = "ChromosomeModels",
 	num = "numeric")}: Returns a vector of given number of names of
-	the genes which have the highest dependency score}
+	the genes which have the highest dependency score. With default 
+	value \code{num = NA} returns all the genes.}
 
     \item{topModels}{\code{signature(model = "ChromosomeModels",
     num = "numeric")}: Returns a list with given number of dependency
-    models which have the highest dependency score}
+    models which have the highest dependency score. By default returns one model.}
 
     \item{isEmpty}{\code{signature(model = "ChromosomeModels")}: Returns
     TRUE if \code{model} has no dependency models}

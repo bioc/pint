@@ -1,4 +1,4 @@
-pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
+pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData = FALSE){
 
   if (all(is.na(X$data))) {stop("X data is empty/NA.")}
   if (all(is.na(Y$data))) {stop("Y data is empty/NA.")}
@@ -39,22 +39,21 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
   if ("Y" %in% Y$info[["chr"]]) {Y$info[Y$info[["chr"]] == "Y", "chr"] <- "24"}
 
   # Quarantee that there are no duplicated rows (probes) in the data
-  # TODO: unless segmented data is used
-  # (which should be explicitly indicated: add the option to function call)
-  dupl <- duplicated(X$data)
-  if (any(dupl)) {
-    cat("Removing duplicate probe signals on X data..\n")
-    X$data <- X$data[!dupl, ]
-    X$info <- X$info[!dupl, ]
-  }
+  if (!useSegmentedData){
+    dupl <- duplicated(X$data)
+    if (any(dupl)) {
+      cat("Removing duplicate probe signals on X data..\n")
+      X$data <- X$data[!dupl, ]
+      X$info <- X$info[!dupl, ]
+    }
 
-  dupl <- duplicated(Y$data)
-  if (any(dupl)) {
-    cat("Removing duplicate probe signals on Y data..\n")
-    Y$data <- Y$data[!dupl, ]
-    Y$info <- Y$info[!dupl, ]
+    dupl <- duplicated(Y$data)
+    if (any(dupl)) {
+      cat("Removing duplicate probe signals on Y data..\n")
+      Y$data <- Y$data[!dupl, ]
+      Y$info <- Y$info[!dupl, ]
+    }
   }
-
   
   # First order chromosomes 1...22, X, Y, then chromosomes with other names
   if (is.null(chrs)) {
@@ -105,10 +104,11 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL){
 
   X$info$chr = factor(X$info$chr, levels = c(1:22, "X", "Y"))
   Y$info$chr = factor(Y$info$chr, levels = c(1:22, "X", "Y"))
-  
-  
+    
   newX <- list(data = xdat, info = X$info[xindices,])
   newY <- list(data = ydat, info = Y$info[yindices,])
+
+  # Check if arm info is missing
 
   list(X = newX, Y = newY)
 

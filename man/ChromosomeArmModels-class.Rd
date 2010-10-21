@@ -34,6 +34,7 @@
 \alias{isEmpty,ChromosomeArmModels-method}
 \alias{orderGenes,ChromosomeArmModels-method}
 \alias{findModel,ChromosomeArmModels-method}
+\alias{setSegmentedData,ChromosomeArmModels-method}
 
 \title{Class "ChromosomeArmModels", for dependency models in chromosomal arm}
 
@@ -104,11 +105,12 @@ particular chromosome arm.}
     \item{topGenes}{\code{signature(model =
     "ChromosomeArmModels", num = "numeric")}: Returns a vector of given
     number of names of the genes which have the highest dependency
-    score}
+    score. With default value \code{num = NA} returns all the genes.}
 
     \item{topModels}{\code{signature(model =
     "ChromosomeArmModels", num = "numeric")}: Returns a list with given
-    number of dependency models which have the highest dependency score}
+    number of dependency models which have the highest dependency score
+    . By default returns one model.}
 
     \item{isEmpty}{\code{signature(model = "ChromosomeArmModels")}:
     Returns TRUE if \code{model} has no dependency models}

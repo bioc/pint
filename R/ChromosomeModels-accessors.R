@@ -39,8 +39,14 @@ setMethod("isEmpty","ChromosomeModels",
 	}
 )
 
+setMethod("getModelNumbers","ChromosomeModels",
+          function(model) {
+            return(getModelNumbers(model[['p']]) + getModelNumbers(model[['q']]))
+          }
+)
+
 setMethod("topGenes", "ChromosomeModels",
-          function(model, num = 1) {
+          function(model, num = NA) {
 
             pscores <- getScore(getPArm(model))
             qscores <- getScore(getQArm(model))
@@ -51,6 +57,10 @@ setMethod("topGenes", "ChromosomeModels",
             genes <- c(pgenes,qgenes)
             
             data <- data.frame(scores, genes)
+
+			if (is.na(num)){
+			  num <- length(scores)
+			}
 
             #order dataframe and take num names of genes with highest scores 
             return(as.character(data[order(scores, decreasing = TRUE),]$genes[1:num]))

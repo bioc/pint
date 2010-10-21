@@ -1,7 +1,7 @@
 setMethod(f="show",signature("ChromosomeArmModels"),
   function(object){
     if(length(object@models) == 0){
-	  cat("No dependency models for chromosome: ", as.character(object@chromosome), 
+	  cat("No dependency models calculated for chromosome: ", as.character(object@chromosome), 
 	      as.character(object@arm), "\n", sep = "")
 	  }
 	else {
@@ -42,7 +42,7 @@ setMethod(f="show",signature("ChromosomeModels"),
 	function(object){
 	
 		if ((getModelNumbers(object@pArmModels) + getModelNumbers(object@qArmModels)) == 0){
-			cat("No dependency models for chromosome: ", as.character(object@chromosome), "\n", sep = "")
+			cat("No dependency models calculated for chromosome: ", as.character(object@chromosome), "\n", sep = "")
 		}
 		else {
 			cat("*** Dependency models for chromosome: ", as.character(object@chromosome)," ***\n", sep = "")
@@ -82,9 +82,12 @@ setMethod(f="show",signature("ChromosomeModels"),
 
 setMethod(f="show",signature("GenomeModels"),
 	function(object){
+		if (getModelNumbers(object) == 0){
+			cat("No dependency models calculated","\n")
+		}
 		cat("*** Dependency models for genome ***\n", sep = "")
+	    cat("Number of models:", getModelNumbers(object),"\n")
 		cat("Method used:", as.character(object@method), "; window size", getWindowSize(object), "\n")
-	
 		#Printing parameters
 		if(length(object@params) > 0){
 			cat("Method parameters: \n")

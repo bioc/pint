@@ -16,7 +16,7 @@ function (X, Y,
 
   # Check if dimensionality is too big
   if(zDimension > ncol(X) || zDimension > ncol(Y))
-    stop("Dimension of latent variable too big")
+    stop("Dimension of latent variable is too big")
 
   # Storage for results from particular function that calculates dependency model
   res <- NA	

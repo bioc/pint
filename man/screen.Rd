@@ -11,7 +11,7 @@ depending on arguments with chosen window size between two data sets.
 }
 \usage{
 screen.cgh.mrna(X, Y, windowSize, chromosome, arm, method = "", params =
-list(), max.dist = 1e7, outputType = "models")
+list(), max.dist = 1e7, outputType = "models", useSegmentedData = FALSE)
 
 screen.cgh.mir(X, Y, windowSize, chromosome, arm, method = "", params = list(),
 outputType = "models")
@@ -88,7 +88,10 @@ outputType = "models")
     chromosomal location information.}
     
   \item{outputType}{Specifies the output type of the function. possible values are \code{"models"}
-  and \code{"data.frame"}}
+    and \code{"data.frame"}}
+
+  \item{useSegmentedData}{Logical. Determines the useage of the method 
+  for segmented data}
   
 }
 

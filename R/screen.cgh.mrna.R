@@ -1,5 +1,5 @@
 screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "pSimCCA", params = list(), max.dist = 1e7, 
-                            outputType = "models")
+                            outputType = "models", useSegmentedData = FALSE)
 {
 
   #X <- geneExp; Y <- geneCopyNum; windowSize = 10; chr = 17; arm = 'q'; params = list(); max.dist = 1e7
@@ -7,10 +7,10 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
   if (is.null(windowSize)) {
     windowSize <- min(floor(ncol(X$data)/3),15)
     if (windowSize == 15){
-      cat("Chromosomal window (windowSize) not specified. Using default size 15.")
+      cat("Chromosomal window (windowSize) not specified. Using default size 15.\n")
 	}
 	else {
-      cat("Chromosomal window (windowSize) not specified. Using default ratio of 1/3 between features and samples.")	
+      cat("Chromosomal window (windowSize) not specified. Using default ratio of 1/3 between features and samples.\n")	
 	}
   }
 
@@ -31,10 +31,23 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
     }
   }
 
+  ## Checks that segmented data is not used when not implicitely indicated by argument
+  #if (is.null(useSegmentedData)){
+  #  if (test.segmented(X$data) || test.segmented(Y$data)){
+  #    cat("Segmented data found. Using method for segmented data.\n")    
+  #    useSegmentedData <- TRUE
+  #  }
+  #}
+  if (!useSegmentedData){
+    if (test.segmented(X$data) || test.segmented(Y$data)){
+      warning("Segmented data found while method for non-segmented data is selected.\n", immediate. = TRUE)    
+    }
+  }
+
   ## Check probes. We should have observations in each data set for the probes.
 
   # Match probes by location
-  tmp <- pint.match(X, Y, max.dist)
+  tmp <- pint.match(X, Y, max.dist, useSegmentedData = useSegmentedData)
     X <- tmp$X
     Y <- tmp$Y
 
@@ -108,6 +121,9 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
   } else {
     models <- calculate.arm(X, Y, windowSize, chromosome, arm, method, params)
   }
+
+  # TODO: move this when segmented method is implemented
+  models@params <- c(models@params, segmentedData = useSegmentedData)
 
   if(outputType == "data.frame"){
     return(as.data.frame(models))
