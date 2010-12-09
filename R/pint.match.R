@@ -1,5 +1,5 @@
 pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL,
-useSegmentedData = FALSE, impute = TRUE){
+useSegmentedData = FALSE, impute = TRUE, replace.inf = TRUE){
 
   if (all(is.na(X$data))) {stop("X data is empty/NA.")}
   if (all(is.na(Y$data))) {stop("Y data is empty/NA.")}
@@ -7,12 +7,17 @@ useSegmentedData = FALSE, impute = TRUE){
   # Match genes/probes/clones in X/Y data sets based on location information
   #X <- geneExp; Y <- geneCopyNum
 
-  # If same number of rows and columns, assume that they match between data and info fields
-  # if the names are completely non-overlapping (as in our example data set)
-  if (nrow(X$data) == nrow(X$info) && length(intersect(rownames(X$info), rownames(X$data)))==0) {
-    rownames(X$info) <- rownames(X$data)
+  # If same number of rows and columns for data and info fields, 
+  # assume that they match between data and info fields and give both
+  # same rownames
+  if (nrow(X$data) == nrow(X$info) && !rownames(X$data) == rownames(X$info)) {
+     warning("The data and info fields in the X data set had different
+rownames; using the rownames from data field for both.")
+     rownames(X$info) <- rownames(X$data)
   }
-  if (nrow(Y$data) == nrow(Y$info) && length(intersect(rownames(Y$info), rownames(Y$data)))==0) {
+  if (nrow(Y$data) == nrow(Y$info)) {
+     warning("The data and info fields in the Y data set had different
+rownames; using the rownames from data field for both.")  
     rownames(Y$info) <- rownames(Y$data)
   }
 
@@ -57,14 +62,11 @@ useSegmentedData = FALSE, impute = TRUE){
   }
 
 
-  # Impute missing values
-  if (impute) {
-    message("Imputing missing values..")
-    X$data <- impute(X$data)     
-    Y$data <- impute(Y$data)
-  }
-  
+  # Impute missing values, replace infinite values etc.
+  X <- pint.data(X$data, X$info, impute, replace.inf)
+  Y <- pint.data(X$data, X$info, impute, replace.inf)
 
+  
   # First order chromosomes 1...22, X, Y, then chromosomes with other names
   if (is.null(chrs)) {
     chrs <- c(as.character(1:24), sort(setdiff(unique(X$info[["chr"]]), as.character(1:24))))

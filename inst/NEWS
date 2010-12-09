@@ -1,3 +1,14 @@
+
+CHANGES IN VERSION 1.3.33 (2010-12-09)
+
+BUG FIXES
+
+ o corrected bug in impute.R function which produced NAs
+
+ o added replace.inf in pint.data; now this preprocessing function
+   (and consequently pint.match) replaces infinite values with large
+   values by default
+
 CHANGES IN VERSION 1.3.32 (2010-12-09)
 
 NEW FEATURES

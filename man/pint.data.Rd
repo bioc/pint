@@ -10,9 +10,9 @@ Forms a data set for use in functions in 'pint' package (e.g. \code{\link{screen
 Pairs samples in two data sets.
 }
 \usage{
-pint.data(data, info, impute = TRUE)
+pint.data(data, info, impute = TRUE, replace.inf = TRUE)
 pint.match(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData =
-FALSE, impute = TRUE)
+FALSE, impute = TRUE, replace.inf = TRUE)
 }
 \arguments{
   \item{data}{
@@ -40,6 +40,10 @@ FALSE, impute = TRUE)
 		distribution following the mean and standard deviation
 		of the non-missing data points from the same sample.}
   
+  \item{replace.inf}{Logical. If \code{TRUE}, replace infinite values
+		     with highest non-infinite values seen in the
+		     data. Otherwise the calculation will halt.}
+
 }
 \details{
 Function \code{pint.match} goes through every sample in \code{X} and

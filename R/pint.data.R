@@ -1,4 +1,4 @@
-pint.data <- function(data, info, impute = TRUE){
+pint.data <- function(data, info, impute = TRUE, replace.inf = TRUE){
 
   # Probe data
   if (class(data) == "data.frame"){
@@ -11,6 +11,15 @@ pint.data <- function(data, info, impute = TRUE){
     message("Imputing missing values..")
     data <- impute(data)
   }
+  
+  # Replace infinite values by highest possible seen in the data
+  if (replace.inf) {
+     message("Replacing infinite values with highest non-infinite values seen in the data")
+     inds <- is.infinite(data)
+     data[inds] <- sign(data[inds])*max(abs(data[!inds])) # note the sign
+     message(paste("...", 100*mean(inds), "percent of the values replaced."))
+  }
+  
   
   ## Dealing with NaNs
   ## variables (rows) with NaNs
