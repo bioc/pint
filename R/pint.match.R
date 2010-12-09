@@ -1,4 +1,5 @@
-pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData = FALSE){
+pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL,
+useSegmentedData = FALSE, impute = TRUE){
 
   if (all(is.na(X$data))) {stop("X data is empty/NA.")}
   if (all(is.na(Y$data))) {stop("Y data is empty/NA.")}
@@ -54,7 +55,16 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData = FAL
       Y$info <- Y$info[!dupl, ]
     }
   }
+
+
+  # Impute missing values
+  if (impute) {
+    message("Imputing missing values..")
+    X$data <- impute(X$data)     
+    Y$data <- impute(Y$data)
+  }
   
+
   # First order chromosomes 1...22, X, Y, then chromosomes with other names
   if (is.null(chrs)) {
     chrs <- c(as.character(1:24), sort(setdiff(unique(X$info[["chr"]]), as.character(1:24))))
@@ -104,7 +114,7 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData = FAL
 
   X$info$chr = factor(X$info$chr, levels = c(1:22, "X", "Y"))
   Y$info$chr = factor(Y$info$chr, levels = c(1:22, "X", "Y"))
-    
+
   newX <- list(data = xdat, info = X$info[xindices,])
   newY <- list(data = ydat, info = Y$info[yindices,])
 
@@ -183,3 +193,5 @@ get.neighs <- function (X, Y, xchrinds, ychrinds, max.dist) {
   list(xinds = xinds, yinds = yinds)
   
 }
+
+

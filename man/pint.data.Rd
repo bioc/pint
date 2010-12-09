@@ -10,8 +10,9 @@ Forms a data set for use in functions in 'pint' package (e.g. \code{\link{screen
 Pairs samples in two data sets.
 }
 \usage{
-pint.data(data, info)
-pint.match(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData = FALSE)
+pint.data(data, info, impute = TRUE)
+pint.match(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData =
+FALSE, impute = TRUE)
 }
 \arguments{
   \item{data}{
@@ -24,14 +25,21 @@ pint.match(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData = FALSE)
     \code{end}. Chromosome arm is given as \code{arm} and chromosome as
     \code{chr}.
   }
-  \item{X, Y}{
-    Data sets to be paired.
-  }
+  \item{X, Y}{Data sets to be paired.}
+  
   \item{max.dist}{maximum distance between paired genes in base pairs.}
-  \item{chrs}{This option can be used to pick a subset of chromosomes in
-  the data. By default, all chromosomes will be used.}
-  \item{useSegmentedData}{Logical. If \code{FALSE}, rows with identical
-  data are removed.}
+
+  \item{chrs}{Use to pick a subset of chromosomes in the data. By
+	      default, all chromosomes will be used.}
+
+  \item{useSegmentedData}{Logical. If \code{FALSE}, rows with
+			  identical data are removed.}
+  
+  \item{impute}{Logical. If \code{TRUE}, missing values are imputed by
+		replacing them with random samples from a Gaussian
+		distribution following the mean and standard deviation
+		of the non-missing data points from the same sample.}
+  
 }
 \details{
 Function \code{pint.match} goes through every sample in \code{X} and

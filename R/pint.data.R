@@ -1,27 +1,37 @@
-pint.data = function(data, info){
+pint.data <- function(data, info, impute = TRUE){
 
   # Probe data
   if (class(data) == "data.frame"){
     data <- as.matrix(data)
   }
-  # Dealing with NaNs
-  # variables (rows) with NaNs
-  rows <- which(rowSums(is.nan(data)) > 0)
-  if (length(rows) > 0) {
-    nans <- 0;
-    # Replace NaNs with samples from normal distribution
-    for(i in rows) {
-      mean <- mean(data[i,],na.rm=TRUE)
-      sd <- sd(data[i,],na.rm=TRUE)
-      inds <- which(is.nan(data[i,]))
-      for(j in inds){
-          data[i,j] <- rnorm(1,mean,sd)
-          nans <- nans + 1
-      }
-    }
-    warning(paste(nans,"NaNs in probe data imputed with samples from normal distribution"))
+
+
+  # Impute missing values
+  if (impute) {
+    message("Imputing missing values..")
+    data <- impute(data)
   }
   
+  ## Dealing with NaNs
+  ## variables (rows) with NaNs
+  #rows <- which(rowSums(is.nan(data)) > 0)
+  #if (length(rows) > 0) {
+  #  nans <- 0;
+  #  # Replace NaNs with samples from normal distribution
+  ##  for(i in rows) {
+  #    mean <- mean(data[i,],na.rm=TRUE)
+  ##    sd <- sd(data[i,],na.rm=TRUE)
+  ##    inds <- which(is.nan(data[i,]))
+  #    for(j in inds){
+  #        data[i,j] <- rnorm(1,mean,sd)
+  #        nans <- nans + 1
+  #    }
+  #  }
+  #  warning(paste(nans,"NaNs in probe data imputed with samples from normal distribution"))
+  #}
+  
+  
+ 
   # Location
   if (is.null(info$loc) && is.null(info$bp)) {
     loc <- (info$start + info$end)/2
