@@ -10,7 +10,7 @@ Forms a data set for use in functions in 'pint' package (e.g. \code{\link{screen
 Pairs samples in two data sets.
 }
 \usage{
-pint.data(data, info, impute = TRUE, replace.inf = TRUE)
+pint.data(data, info, impute = TRUE, replace.inf = TRUE, remove.duplicates)
 pint.match(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData =
 FALSE, impute = TRUE, replace.inf = TRUE)
 }
@@ -33,7 +33,10 @@ FALSE, impute = TRUE, replace.inf = TRUE)
 	      default, all chromosomes will be used.}
 
   \item{useSegmentedData}{Logical. If \code{FALSE}, rows with
-			  identical data are removed.}
+    identical data are removed (option for pint.match)}
+
+  \item{remove.duplicates}{Logical. If \code{TRUE}, rows with identical
+			  data are removed (option for pint.data)}
   
   \item{impute}{Logical. If \code{TRUE}, missing values are imputed by
 		replacing them with random samples from a Gaussian

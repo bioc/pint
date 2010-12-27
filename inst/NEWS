@@ -1,4 +1,31 @@
 
+CHANGES IN VERSION 1.3.34 (2010-12-26)
+
+BUG FIXES 
+
+  o in pint.match added rownames check between Y$info and
+    Y$data, previously only number of rows was checked for Y data. For
+    X data things were ok: both row number and row names were checked
+
+  o in pint.data call within pint.match, the X data set was
+    erroneously used for both X and Y calls. Now calling Y for Y and X
+    for X. Also polishing replace.inf part.
+    
+NEW FEATURES
+   
+  o checking info fields in pint.data for synonymous terms: replacing
+    "chromosome" with "chr" and "stop" with "end". Requires less
+    tweaking from the end user.
+
+  o if chromosome names X or Y used, replace these with 23 and
+    24. This makes code compatible with any organism.
+
+MISC
+ 
+  o changed the internal function name 'impute' to 'imputation'
+
+  o moved some functionality from pint.match to pint.data
+
 CHANGES IN VERSION 1.3.33 (2010-12-09)
 
 BUG FIXES

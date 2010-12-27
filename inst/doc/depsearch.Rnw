@@ -31,32 +31,34 @@
 
 Multiple types of genomic observations from the same patients are
 increasingly available in biomedical studies, including measurements
-of gene- and miRNA expression levels, gene copy number, and
-methylation status.  By investigating the dependencies between these
-data sets it is possible to discover functional mechanisms and
-interactions that are not seen in the individual data sets. For
-example, integration of gene expression and copy number has been shown
-to reveal cancer-associated chromosomal regions and associated genes
+of gene- and micro-RNA expression levels, DNA copy number, and
+methylation status.  By investigating the dependencies between the
+various functional layers of the genome it is possible to discover
+mechanisms and interactions that are not seen in the individual data
+sets. For instance, integration of gene expression and DNA copy number
+can reveal cancer-associated chromosomal regions and associated genes
 with potential diagnostic, prognostic and clinical impact
-\cite{Lahti09mlsp}. 
+\cite{Lahti09mlsp}.
 
 We demonstrate how to integrate gene or micro-RNA expression with DNA
 copy number (aCGH) measurements to discover functionally active
 chromosomal aberrations. The models capture the shared signal in
-paired observations, and indicate the affected genes and patients.
-The methods are potentially applicable also to other types of
-biomedical data, including methylation, SNPs, alternative splicing and
-transcription factor binding, or in other application fields.
+paired observations, indicating the affected genes and patients.  The
+methods are potentially applicable also to other types of biomedical
+data, including epigenetic modifications, SNPs, alternative splicing
+and transcription factor binding, or in other application fields.
 
-The package provides general-purpose tools for the discovery and
-analysis of statistical dependencies between co-occurring data
-sources. The methods are based on a principled framework,
+The methods are based on a particular latent variable model,
 probabilistic canonical correlation analysis \cite{Bach05} and its
 extensions \cite{Archambeau06,Klami08,Lahti09mlsp}. Probabilistic
 formulation deals rigorously with uncertainty associated with small
-sample sizes common in biomedical studies, and the package also
-provides tools to guide dependency modeling through Bayesian priors
+sample sizes common in biomedical studies.  Additional tools to guide
+dependency modeling through Bayesian priors are provided
 \cite{Lahti09mlsp}.
+
+%The package provides general-purpose tools for the discovery and
+%analysis of statistical dependencies between co-occurring data
+%sources. 
 
 %* references
 
@@ -126,6 +128,17 @@ tuned by changing the window size ('windowSize'). The default
 dependency modeling method is a constrained version of probabilistic
 CCA; \cite{Lahti09mlsp}. See help(screen.cgh.mrna) for further
 options.
+
+\subsection{Application to micro-RNA or epigenetic measurements}
+
+Micro-RNA and epigenetic measurements are increasingly available in
+biomedical studies, accompanying observations of DNA copy number
+changes and mRNA expression levels. Assuming that appropriate
+preprocessing is performed, and these data types are provided as
+matrices with matched samples and chromosomal location information for
+the measurement probes, the current functions provide tools to
+discover chromosomally local dependencies between any of these data
+sources.
 
 \subsection{Visualizing the results}
 
@@ -315,7 +328,7 @@ matrix $H$. This would set a particular relationship between the
 manifestations of the shared component in each data set, and
 $sigma^2_T$ is again be used to tune the strength of such prior.
 
-\subsection{Measuring the dependency}
+\subsection{Quantifying dependency}
 
 Dependency between the data sets \(X\), \(Y\) is measured by the ratio
 of shared vs. data set-specific signal (see '?dependency.score'):
@@ -334,7 +347,7 @@ of the model.
 \subsection*{Acknowledgements}
 
 We would like to thank prof. Sakari Knuutila (University of Helsinki)
-for providing the example data set for the package.
+for providing the example data set.
 
 \begin{thebibliography}{1}
 
