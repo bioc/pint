@@ -74,12 +74,13 @@ pint.data <- function(data, info, impute = TRUE, replace.inf = TRUE, remove.dupl
   # Arm
   if (is.null(info$arm)) {
     arm <- factor(rep("p",length(loc)),levels=c("p","q"))
-  }
-  else {
+  } else {
     arm <- info$arm
   }
   
-  info <- data.frame(chr = factor(info$chr, levels = c(1:24)), arm = arm, loc = as.numeric(loc))
+  info2 <- data.frame(chr = factor(info$chr, levels = c(1:24)), arm = arm, loc = as.numeric(loc))
+  rownames(info2) <- rownames(info)
+  info <- info2
 
   # Order data by chr, arm and loc
   ord <- order(info$chr,info$arm,info$loc)

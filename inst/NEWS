@@ -1,5 +1,5 @@
 
-CHANGES IN VERSION 1.3.34 (2010-12-26)
+CHANGES IN VERSION 1.3.35 (2010-12-30)
 
 BUG FIXES 
 
@@ -9,7 +9,8 @@ BUG FIXES
 
   o in pint.data call within pint.match, the X data set was
     erroneously used for both X and Y calls. Now calling Y for Y and X
-    for X. Also polishing replace.inf part.
+    for X. Also polishing replace.inf part. Now also naming the info field
+    rows correctly.
     
 NEW FEATURES
    

@@ -1,22 +1,15 @@
 screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "pSimCCA", params = list(), max.dist = 1e7, 
                             outputType = "models", useSegmentedData = FALSE)
 {
-
-  #X <- geneExp; Y <- geneCopyNum; windowSize = 10; chr = 17; arm = 'q'; params = list(); max.dist = 1e7
   
   if (is.null(windowSize)) {
     windowSize <- min(floor(ncol(X$data)/3),15)
-    if (windowSize == 15){
-      cat("Chromosomal window (windowSize) not specified. Using default size 15.\n")
-	}
-	else {
-      cat("Chromosomal window (windowSize) not specified. Using default ratio of 1/3 between features and samples.\n")	
-	}
+      if (windowSize == 15){
+        cat("Chromosomal window (windowSize) not specified. Using default size 15.\n")
+      } else {
+        cat("Chromosomal window (windowSize) not specified. Using default ratio of 1/3 between features and samples.\n")	
+      }
   }
-
-
-  #source("~/local/Rpackages/pint/R/screen.cgh.mrna.R"); X <- ge.pint; Y <- cn.pint; windowSize = 10; method = ""; params = list(); max.dist = 1e7
-
   
   # Check ordering of samples
   if (any(colnames(X$data) != colnames(Y$data))) {
@@ -32,19 +25,11 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
   }
 
   ## Checks that segmented data is not used when not implicitely indicated by argument
-  #if (is.null(useSegmentedData)){
-  #  if (test.segmented(X$data) || test.segmented(Y$data)){
-  #    cat("Segmented data found. Using method for segmented data.\n")    
-  #    useSegmentedData <- TRUE
-  #  }
-  #}
   if (!useSegmentedData){
     if (test.segmented(X$data) || test.segmented(Y$data)){
       warning("Segmented data found while method for non-segmented data is selected.\n", immediate. = TRUE)    
     }
   }
-
-  ## Check probes. We should have observations in each data set for the probes.
 
   # Match probes by location
   tmp <- pint.match(X, Y, max.dist, useSegmentedData = useSegmentedData)
@@ -109,7 +94,7 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
   if (!missing(chromosome)){
     if (chromosome == 23) chromosome <- "X"
     if (chromosome == 24) chromosome <- "Y"
-    chromosome = factor(chromosome, levels = c(1:22,"X","Y"))
+    chromosome = factor(chromosome, levels = c(1:22, "X", "Y"))
     if (is.na(chromosome))
       stop("Incorrect chromosome given.")
   }
