@@ -7,7 +7,7 @@ z.expectation <- function (model, X, Y = NULL) {
     # Check if whole data is given instead window for this model
     if(class(X) == "list"){
       # Find correct window for this model
-      index <- which(dimnames(X$data)[[1]] == getGeneName(model))
+      index <- which(rownames(X$data) == getGeneName(model))
     
       # Check if model has only 1 variable from X data
       if (nrow(W$X) == 1)

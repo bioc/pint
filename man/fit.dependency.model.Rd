@@ -19,7 +19,8 @@
 
 \usage{
 fit.dependency.model(X, Y, zDimension = 1, marginalCovariances = "full", 
-	H = 1, sigmas = 0, covLimit = 0, mySeed = 123)
+	H = 1, sigmas = 0, covLimit = 1e-3, mySeed = 123, priors =
+NULL, version = "standard")
 
 ppca(X, Y, zDimension = 1)
 pcca(X, Y, zDimension = 1)
@@ -53,6 +54,10 @@ Dimensionality of the shared latent variable.
     model type.}
 
   \item{mySeed}{Random seed}
+  
+  \item{priors}{Prior parameters for the model.}
+
+  \item{version}{Select stable version ("standard") or devel version ("devel").}
 }
 
 \details{

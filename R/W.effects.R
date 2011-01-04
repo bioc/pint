@@ -1,6 +1,6 @@
-W.effects <- function(model,X,Y=NULL){
+W.effects <- function(model, X, Y = NULL){
 
-  z <- z.expectation(model,X,Y)
+  z <- z.expectation(model, X, Y)
   W <- getW(model)$total
 
   # Calculate first component of PCA for W*z

@@ -77,3 +77,12 @@ optimize.simCCA.W <- function (w, phi, Dim, Dcov, nullmat, epsilon = 1e-3,
   list(W = W, phi = phi, score = cost.new)
 
 }
+
+
+
+
+
+
+
+
+

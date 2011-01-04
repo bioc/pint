@@ -1,12 +1,14 @@
 optimize.fullcov <-
 function (W, phi, Dim, Dcov, nullmat, epsilon = 1e-3, par.change = 1e6, cost.old = 1e6, mySeed=123) {
 
+  # REMOVE THIS FUNCTION?
+
   set.seed(mySeed)
 
-  cost.new = cost5(W$X, phi, Dcov)
-  initcost = cost.new
+  cost.new <- cost5(W$X, phi, Dcov)
+  initcost <- cost.new
 
-  while (par.change>epsilon || par.change < 0) {
+  while (par.change > epsilon || par.change < 0) {
 
 	cost.old = cost.new
 
@@ -82,4 +84,31 @@ function (W, phi, Dim, Dcov, nullmat, epsilon = 1e-3, par.change = 1e6, cost.old
    list(W=W, phi=phi, score=cost.new)
    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

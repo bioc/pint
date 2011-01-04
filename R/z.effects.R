@@ -1,15 +1,13 @@
-z.effects <- function(model,X,Y = NULL){
+z.effects <- function(model, X, Y = NULL){
 
   W <- getW(model)
-
-
 
   # for models from 2 data sets
   if (!is.null(Y)){
     # Check if whole data is given instead window for this model
     if (class(X) == "list"){
       # Find correct window for this model
-      index <- which(dimnames(X$data)[[1]] == getGeneName(model))
+      index <- which(rownames(X$data) == getGeneName(model))
 
       # Check if model has only 1 variable from X data
       if (nrow(getW(model)$X) == 1)
@@ -54,4 +52,7 @@ z.effects <- function(model,X,Y = NULL){
   
   }
 }
+
+
+
 

@@ -157,8 +157,10 @@ plot(models, showTop = 10)
 \end{figure}
 
 Here the highest dependency is between 30-40Mbp which is a known
-gastric cancer-associated region. The top-5 genes with the highest
-dependency in their chromosomal neighborghood can be retrieved with:
+gastric cancer-associated region. Note that the display shows the
+location in megabasepairs while location is provided in basepairs. The
+top-5 genes with the highest dependency in their chromosomal
+neighborghood can be retrieved with:
 
 <<>>=
 topGenes(models, 5)
@@ -354,11 +356,11 @@ for providing the example data set.
 \bibitem{Archambeau06}
 C{\'e}dric Archambeau, Nicolas Delannay, and Michel Verleysen.
 \newblock Robust probabilistic projections.
-\newblock In W.W. Cohen and A.~Moore, editors, {\em Proceedings of the 23rd
+\newblock In W.W. Cohen and A. Moore, editors, {\em Proceedings of the 23rd
   International conference on machine learning}, pages 33--40. ACM, 2006.
 
 \bibitem{Bach05}
-Francis~R. Bach and Michael~I. Jordan.
+Francis R. Bach and Michael I. Jordan.
 \newblock A probabilistic interpretation of canonical correlation analysis.
 \newblock Technical Report 688, Department of Statistics, University of
   California, Berkeley, 2005.

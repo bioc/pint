@@ -2,9 +2,9 @@ cost.W <-
 function (vec, phi, priors, Dim, Dcov, H) {
 
 	# Retrieve the actual W and T from the parameter vector
- 	wt = get.W(vec, Dim)
-	W = wt$W
-	T = wt$T
+ 	wt <- get.W(vec, Dim)
+	W <- wt$W
+	T <- wt$T
 
 	# Marginal cost for the whole data set
 	# integrated over z
@@ -14,23 +14,19 @@ function (vec, phi, priors, Dim, Dcov, H) {
 	
 	# Data prob. Taken from probCCA paper, section 4, l1
 
-	wtw.xy = W$X%*%t(W$Y)
+	wtw.xy <- W$X%*%t(W$Y)
 
-	Sigma = rbind(cbind(W$X%*%t(W$X) + phi$X*diag(Dim$X), wtw.xy),
+	Sigma <- rbind(cbind(W$X%*%t(W$X) + phi$X*diag(Dim$X), wtw.xy),
 		      cbind(t(wtw.xy),W$Y%*%t(W$Y) + phi$Y*diag(Dim$Y)))
 
-	
-	#print(W$X)		
-	#print(det(Sigma))
-
 	# -logP for the data
-	cost.data = log(det(Sigma)) + sum(diag(solve(Sigma)%*%Dcov$total))
+	cost.data <- log(det(Sigma)) + sum(diag(solve(Sigma)%*%Dcov$total))
 
 	# -logP for T prior
-        tcost = sum((T - H)^2) * priors$T
+        tcost <- sum((T - H)^2) * priors$T
 		
 	# -logP for W prior - skip since not used now
-	#wcost = sum((W$X)^2) * priors$W
+	#wcost <- sum((W$X)^2) * priors$W
 
 	cost.data + tcost #+ wcost
 

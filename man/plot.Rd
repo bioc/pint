@@ -19,12 +19,12 @@ plot.DependencyModel(x, X, Y, ann.types = NULL, ann.cols = NULL, legend.x = 0,
         cex.z = 0.6, cex.WX = 0.6, cex.WY = 0.6, ...)
 
 plot.ChromosomeArmModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
-	topName = FALSE, type = 'l', xlab = 'gene location (Mbp)', 
+	topName = FALSE, type = 'l', xlab = 'gene location', 
 	ylab = 'dependency score', main = paste('Dependency score for chromosome ', 
 	chr, arm, sep = ''), pch = 20, cex = 0.75, tpch = 3, tcex = 1, ylim = NA, ...)
 
 plot.ChromosomeModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
-	topName = FALSE, type = 'l', xlab = 'gene location (Mbp)', ylab = 'dependency score',
+	topName = FALSE, type = 'l', xlab = 'gene location', ylab = 'dependency score',
 	main = paste('Dependency score for chromosome ', chr, sep = ''),
 	pch = 20, cex = 0.75, tpch = 3, tcex = 1, xlim = NA, ylim = NA,...)
 

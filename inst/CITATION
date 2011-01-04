@@ -1,25 +1,25 @@
 citHeader("To cite pint in publications use:")
 
-
 citEntry(entry="misc",
          title = "Dependency detection with similarity constraints",
          author = personList(
 	 	person(first ="Leo", last="Lahti", email = "leo.lahti@iki.fi"),
 	 	person(first ="Samuel", last="Myllykangas"),
 	 	person(first ="Sakari", last="Knuutila"),
-	 	person(first ="Samuel", last="Kaski")
-	 	  ),
-	 note = "In Proc. MLSP'09 IEEE International Workshop on Machine Learning for Signal Processing",
+	 	person(first ="Samuel", last="Kaski")),
+	 note = "In Proc. IEEE International Workshop on Machine Learning for Signal Processing XIX / MLSP09",
 	 year = "2009",
 	 publisher = "IEEE",
+	 address = "Piscataway, NJ, USA", 
+         pages = "89-94",
          textVersion =
          paste("Leo Lahti et al.",
                "Dependency detection with similarity constraints",
-               "In Proc. IEEE International Workshop on Machine Learning for Signal Processing (MLSP'09).",
+               "In T{\"u}lay Adali, Jocelyn Chanussot, Christian Jutten, and Jan Larsen, editors.",      
+	       "Proc. IEEE International Workshop on Machine Learning for Signal Processing XIX / MLSP09.", 
+	       "Piscataway, NJ, USA, pp. 89-94, 2009.",
                sep=" ")
          )
 
-citFooter("pint has been created by Olli-Pekka Huovilainen and Leo
-          Lahti. Please cite also the pint BioConductor package when
-          using it for data analysis.")
+citFooter("pint has been created by Olli-Pekka Huovilainen and Leo Lahti. Please cite the pint BioConductor package and the MLSP09 publication.")
 

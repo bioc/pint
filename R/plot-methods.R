@@ -100,7 +100,7 @@ plot.DependencyModel <- function(x, X, Y = NULL, ann.types = NULL, ann.cols = NU
   #Title
   title <- paste(getModelMethod(model),"model around gene",getGeneName(model))
   if(length(getLoc(model)) > 0)
-    title <- paste(title,"at",(getLoc(model)/1e6),"Mbp")
+    title <- paste(title,"at",(getLoc(model)/1e6)," ") # was Mbp but removed since user may give locations with kbp or other measure
 
   mtext(title, NORTH<-3, line=0, adj=0.5, cex=1.2, outer=TRUE)
 
@@ -109,7 +109,7 @@ plot.DependencyModel <- function(x, X, Y = NULL, ann.types = NULL, ann.cols = NU
 
 plot.ChromosomeArmModels <-
 function (x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FALSE,
-	type = 'l', xlab = 'gene location (Mbp)', ylab = 'dependency score',
+	type = 'l', xlab = 'gene location', ylab = 'dependency score',
 	main = paste('Dependency score for chromosome ', chr, arm, sep = ''),
 	pch = 20, cex = 0.75, tpch = 3, tcex = 1, ylim = NA, ...){
 	models <- x
@@ -170,7 +170,7 @@ function (x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FA
 
 plot.ChromosomeModels <-
 function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FALSE,
-	type = 'l', xlab = 'gene location (Mbp)', ylab = 'dependency score',
+	type = 'l', xlab = 'gene location', ylab = 'dependency score',
 	main = paste('Dependency score for chromosome ', chr, sep = ''),
 	pch = 20, cex = 0.75, tpch = 3, tcex = 1, xlim = NA, ylim = NA,...){
 

@@ -1,7 +1,7 @@
 screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "pSimCCA", params = list(), max.dist = 1e7, 
-                            outputType = "models", useSegmentedData = FALSE)
+                            outputType = "models", useSegmentedData = FALSE, segmented = FALSE, regularized = FALSE)
 {
-  
+    
   if (is.null(windowSize)) {
     windowSize <- min(floor(ncol(X$data)/3),15)
       if (windowSize == 15){
@@ -10,7 +10,9 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
         cat("Chromosomal window (windowSize) not specified. Using default ratio of 1/3 between features and samples.\n")	
       }
   }
-  
+
+  #FIXME: move all preprocessing stuff to dedicated preprocessing functions
+
   # Check ordering of samples
   if (any(colnames(X$data) != colnames(Y$data))) {
     warning("Samples not in the same order in the two data sets. Using samples that are found in both data sets and reordering the samples..\n")
@@ -25,22 +27,44 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
   }
 
   ## Checks that segmented data is not used when not implicitely indicated by argument
+  ## FIXME: this is independent of 'segmented' option, join these later
   if (!useSegmentedData){
     if (test.segmented(X$data) || test.segmented(Y$data)){
       warning("Segmented data found while method for non-segmented data is selected.\n", immediate. = TRUE)    
     }
   }
 
-  # Match probes by location
-  tmp <- pint.match(X, Y, max.dist, useSegmentedData = useSegmentedData)
-    X <- tmp$X
-    Y <- tmp$Y
-
+  if (!segmented) {    
+      # Match probes
+      tmp <- pint.match(X, Y, max.dist)
+      X <- tmp$X
+      Y <- tmp$Y
+  }
+		       
   # Remove probes where observations are not available in either data set
   # TODO
 
   ############################################################################
-  
+
+  # Set priors
+
+  # Currently imlement only pSimCCA for the screening
+  if (method == "pSimCCA") {
+        # similarity prior: Wx = Wy identically
+	priors <- list(sigma.w = 0) 
+  } else if (method == "nonmatched") {
+    # no similarity prior for Wx ~ Wy, completely uncoupled 
+    priors <- list(sigma.w = Inf)
+  } else {
+    message("Method not among pSimCCA, nonmatched. Using empty prior.")
+    priors <- NULL
+  }
+	      
+  if (regularized) {priors$W <- 1e-3} # W>=0 prior
+		  
+
+  ###########################################################################
+
   if (method == "pSimCCA") {
     if (is.null(params$H)) {
       params$H <- diag(1, windowSize, windowSize)
@@ -100,14 +124,14 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
   }
 
   if (missing(chromosome)) {
-    models <- calculate.genome(X, Y, windowSize, method, params)
+    models <- calculate.genome(X, Y, windowSize, method, params, segmented = segmented, priors = priors, regularized = regularized)
   } else if (missing(arm)) {
-    models <- calculate.chr(X, Y, windowSize, chromosome, method, params)
+    models <- calculate.chr(X, Y, windowSize, chromosome, method, params, segmented = segmented, priors = priors, regularized = regularized)
   } else {
-    models <- calculate.arm(X, Y, windowSize, chromosome, arm, method, params)
+    models <- calculate.arm(X, Y, windowSize, chromosome, arm, method, params, segmented = segmented, priors = priors, regularized = regularized)
   }
 
-  # TODO: move this when segmented method is implemented
+  # TODO: move this when segmented method is fully implemented (option 'segmented')
   models@params <- c(models@params, segmentedData = useSegmentedData)
 
   if(outputType == "data.frame"){
