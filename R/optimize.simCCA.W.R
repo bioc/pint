@@ -64,7 +64,7 @@ optimize.simCCA.W <- function (w, phi, Dim, Dcov, nullmat, epsilon = 1e-3,
     W.new <- W
 
         # Update phi
-    phi <- update.phi.EM.simcca(Dcov, W.new, phi.inv, W.old, M)
+    phi <- phi.EM.simcca(Dcov, W.new, phi.inv, W.old, M)
 
         # Check marginal likelihood (-logP) for data to keep eye on convergence correctness
         # the smaller, the better are the parameters

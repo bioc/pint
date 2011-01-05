@@ -1,5 +1,4 @@
-# Perhaps this could be modified later?
-update.phi.EM.simcca <- function (Dcov, W.new, phi.inv, W.old, M) {
+phi.EM.simcca <- function (Dcov, W.new, phi.inv, W.old, M) {
 
   # From BachJordan sec. 4.1
 
@@ -9,7 +8,6 @@ update.phi.EM.simcca <- function (Dcov, W.new, phi.inv, W.old, M) {
   mat <- W.old$X%*%M%*%t(W.new$X)
   nullmat <- matrix(0, nrow = dx, ncol = dx)
   mat2 <- Dcov$total - Dcov$total%*%rbind(cbind(phi.inv$X%*%mat,nullmat), cbind(nullmat,phi.inv$Y%*%mat))
-
 
   # ensure that diagonals are nonnegative by adding a small positive constant
   dd <- diag(mat2)

@@ -54,7 +54,8 @@ extensions \cite{Archambeau06,Klami08,Lahti09mlsp}. Probabilistic
 formulation deals rigorously with uncertainty associated with small
 sample sizes common in biomedical studies.  Additional tools to guide
 dependency modeling through Bayesian priors are provided
-\cite{Lahti09mlsp}.
+\cite{Lahti09mlsp}. For more details on the implementation and usage,
+see \cite{Huovilainen10}.
 
 %The package provides general-purpose tools for the discovery and
 %analysis of statistical dependencies between co-occurring data
@@ -375,6 +376,13 @@ Leo Lahti, Samuel Myllykangas, Sakari Knuutila, and Samuel Kaski.
 \newblock Dependency detection with similarity constraints.
 \newblock In {\em Proc. MLSP'09 IEEE International Workshop on Machine Learning
   for Signal Processing}, 2009.
+  
+\bibitem{Huovilainen10}
+Olli-Pekka Huovilainen.
+\newblock Screening of functional copy number changes with dependency models. 
+\newblock M.Sc. thesis (in Finnish). Aalto University School of
+Science and Technology, Department of Information and Computer
+Science, Espoo, Finland, 2010.
 
 \bibitem{Myllykangas08}
 Samuel Myllykangas, Siina Junnila, Arto Kokkola, Reija Autio, Ilari Scheinin, Tuula Kiviluoto, Marja-Liisa Karjalainen-Lindsberg, Jaakko Hollm\'{e}n, Sakari Knuutila, Pauli Puolakkainen, Outi Monni

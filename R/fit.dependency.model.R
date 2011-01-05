@@ -6,29 +6,28 @@ function (X, Y,
           mySeed = 123, priors = NULL, version = "standard")
 {
 
- #warning(paste("in fit.dependency.model using version", version))
-
-  if (version == "devel") {
+  if (covLimit == 0)  {covLimit <- 1e-3}
 
   # Center data
-  X <- t(centerData(t(X), rm.na = TRUE))
+  X <- t(centerData(t(X), rm.na = TRUE)) #moi
   Y <- t(centerData(t(Y), rm.na = TRUE))
-  
+
   # Check dimensionality
   if(zDimension > nrow(X) || zDimension > nrow(Y)) {
     message("zDimension exceeds dimensionality of X or Y; using full dimensionality min(ncol(X), ncol(Y)).")
     zDimension <- min(nrow(X), nrow(Y))
   }
- # WAS
- #  if(zDimension > ncol(X) || zDimension > ncol(Y))     
- #      stop("Dimension of latent variable is too big")                
        
-
-  # fixme: MAKE THIS Automatically later
   if (nrow(X) < nrow(Y)) {stop("If the two data matrices do not have equal dimensionality, then place the smaller one in Y.")}
   
   # Storage for results
   res <- NA; method <- ""
+
+  #####################################
+
+  if (version == "devel") {
+
+    message(paste("in fit.dependency.model using version", version))
 
   if (!nrow(X) == nrow(Y)) {
     message("Dependency model without assuming matched variables (dimX != dimY).")
@@ -125,8 +124,6 @@ function (X, Y,
       if(nrow(H) != nrow(Y)){stop("rows of H must match rows of Y")}
         
       # SimCCA with isotropic covariances and possibility to tune prior for T
-      if (covLimit == 0) 
-        covLimit <- 1e-6
       res <- simCCA.optimize(X, Y,
                              zDimension,
                              H,
@@ -135,37 +132,11 @@ function (X, Y,
                              mySeed,
                              epsilon = covLimit)
     }
-  }
-}	
-   # Test whether model exists for given arguments
-  if (any(is.na(res))) {
-    stop("Error with model parameters")
-  } else {
-    params <- list(marginalCovariances = marginalCovariances, sigmas = sigmas, H = H, 
-                   zDimension = zDimension, covLimit = covLimit)
-    score <- dependency.score(res)
-    geneName <- rownames(X)[[ trunc((nrow(X) + 1)/2) ]]
-    if(is.null(geneName))
-      geneName <- ""
-    model <- new("DependencyModel", W = res$W, phi = res$phi, score = score, chromosome = "", arm = "",
-                 windowSize = nrow(Y), method = method, params = params, geneName = geneName)	
-  }
-  model
-
+   }
+  }	
+  
   } else if (version == "standard") {
-    
-    # Center data                
-    X <- t(centerData(t(X), rm.na = TRUE))                
-    Y <- t(centerData(t(Y), rm.na = TRUE))                      
      
-    # Check if dimensionality is too big               
-    if(zDimension > ncol(X) || zDimension > ncol(Y))             
-      stop("Dimension of latent variable is too big") 
-          
-    # Storage for results from particular function that calculates dependency model                
-    res <- NA        
-    method <- ""               
- 
     if (!is.null(H) && any(is.na(H))) { 
       method <- "pCCA"                       
       if (marginalCovariances == "full") {                           
@@ -178,12 +149,9 @@ function (X, Y,
 	# Thayer D. 1982    
 	res <- calc.pfa(X, Y, zDimension)    
 	method <- "pFA"          
-      } else if (marginalCovariances == "isotropic") {                                  
-        if (covLimit == 0)                     
-          covLimit <- 1e-6                                 
-	  # pCCA assuming isotropic margins                    
-          # with phiX != phiY          
-	  res <- calc.pcca.with.isotropic.margins(X, Y, zDimension, epsilon=covLimit)  
+      } else if (marginalCovariances == "isotropic") {
+	  # pCCA assuming isotropic margins with phiX != phiY 
+	  res <- calc.pcca.with.isotropic.margins(X, Y, zDimension, epsilon = covLimit)  
       } else if(marginalCovariances == "identical isotropic"){        
       	method <- "pPCA"                                   
      	res <- calc.ppca(X, Y, zDimension)        
@@ -199,52 +167,38 @@ function (X, Y,
         #  full-rank Wx, Wy, Sigmax, Sigmay: (dxd-matrices where d equals to         
         #  number of features in X and Y)      
 	H <- diag(1, nrow(X), nrow(Y))   
-	if (covLimit == 0)     
-	  covLimit <- 1e-3  
-	res <- simCCA.optimize.fullcov.EM(X, Y, zDimension, mySeed = mySeed, epsilon = covLimit)                                                 
-                                                                      
-     } else if (marginalCovariances == 'isotropic' && sigmas != 0) {    
+	res <- simCCA.optimize.fullcov.EM(X, Y, zDimension, mySeed = mySeed, epsilon = covLimit)                                                                
+     } else if (marginalCovariances == 'isotropic' && sigmas != 0) {
        # Make H indetity matrix if scalar is given
-       if(length(H) == 1){                              
-       		    H <- diag(1, nrow(X), nrow(Y))     
-       }                                        
-                     
-       if(ncol(H) != nrow(X)){                      
-       		  stop("columns of H must match rows of X")                           
-       }    
-   
-       if(nrow(H) != nrow(Y)){                                
-	         stop("rows of H must match rows of Y")       
-       }                                      
-                    
-       # SimCCA with isotropic covariances and possibility to tune prior for T                        
-       if (covLimit == 0)                     
-              covLimit <- 1e-6                                 
+       if(length(H) == 1){ H <- diag(1, nrow(X), nrow(Y)) }                               
+       if(ncol(H) != nrow(X)){ stop("columns of H must match rows of X") }
+       if(nrow(H) != nrow(Y)){ stop("rows of H must match rows of Y") }
+	         
+       # SimCCA with isotropic covariances and possibility to tune prior for T                                      
        res <- simCCA.optimize(X, Y, zDimension, H, sigma2.T = sigmas, sigma2.W = 1e12,                                         
                              mySeed, epsilon = covLimit)                               
     }  
   }        
-                                                          
-
-
-   # Test whether model exists for given arguments 
-   if (any(is.na(res))) {                           
-         stop("Error with model parameters")                 
-   } else {                           
-     params <- list(marginalCovariances = marginalCovariances, 
-                    sigmas = sigmas, H = H,
-                   zDimension = zDimension, covLimit = covLimit)       
-     score <- dependency.score(res)         
-     geneName <- rownames(X)[[ trunc((nrow(X) + 1)/2) ]]                       
-     if(is.null(geneName))                      
-          geneName <- ""                         
-     model <- new("DependencyModel", W = res$W, phi = res$phi, score = score, chromosome = "", arm = "",                 
-                  windowSize = nrow(Y), method = method, params = params, geneName = geneName)     
+                                                            
   }
-  model        
+
+  ##################################################################
+
+   # Test whether model exists for given arguments
+  if (any(is.na(res))) {
+    stop("Error with model parameters")
+  } else {
+    params <- list(marginalCovariances = marginalCovariances, sigmas = sigmas, H = H, 
+                   zDimension = zDimension, covLimit = covLimit)
+    score <- dependency.score(res)
+    geneName <- rownames(X)[[ trunc((nrow(X) + 1)/2) ]]
+  }
   
-  }
+  if(is.null(geneName)) {geneName <- ""}
+  model <- new("DependencyModel", W = res$W, phi = res$phi, score = score, chromosome = "", arm = "",
+                windowSize = nrow(Y), method = method, params = params, geneName = geneName)	
 
+  model
 }
 
 
