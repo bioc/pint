@@ -1,7 +1,7 @@
-dependency.score <- function (res) {
+dependency.score <- function (model) {
 
-  W <- res$W
-  phi <- res$phi
+  W <- model$W
+  phi <- model$phi
 
   if (!is.null(W$X)){
     # this equals to the trace of the full Phi
@@ -15,9 +15,9 @@ dependency.score <- function (res) {
     wtw <- W$total %*% t(W$total)
   }
 
-  signal = sum(diag(wtw)) # trace of full WWt covariance 
+  signal <- sum(diag(wtw)) # trace of full WWt covariance 
 
-  cost = signal/noise
+  cost <- signal/noise
   cost
 }
 

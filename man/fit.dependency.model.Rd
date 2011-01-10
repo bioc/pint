@@ -7,7 +7,7 @@
 \alias{pfa}
 \title{Fit dependency model between two data sets.}
 
-\description{ Fits a selected dependency model between two data
+\description{Fits a selected dependency model between two data
   sets. The function can fit probabilistic canonical correlation
   analysis (pCCA; \cite{Bach & Jordan 2005}), probabilistic principal
   component (pPCA; \cite{Tipping & Bishop 1999}) analysis, probabilistic
@@ -18,9 +18,9 @@
   structure and parameters in \code{fit.dependency.model}. }
 
 \usage{
-fit.dependency.model(X, Y, zDimension = 1, marginalCovariances = "full", 
-	H = 1, sigmas = 0, covLimit = 1e-3, mySeed = 123, priors =
-NULL, version = "standard")
+fit.dependency.model(X, Y, zDimension = 1, marginalCovariances = "full",
+                     H = 1, sigmas = 0, covLimit = 1e-3,
+                     mySeed = 123, priors = list(), matched = TRUE)
 
 ppca(X, Y, zDimension = 1)
 pcca(X, Y, zDimension = 1)
@@ -53,11 +53,11 @@ Dimensionality of the shared latent variable.
   \item{covLimit}{ Convergence limit. default value depends on chosen
     model type.}
 
-  \item{mySeed}{Random seed}
+  \item{mySeed}{Random seed.}
   
   \item{priors}{Prior parameters for the model.}
 
-  \item{version}{Select stable version ("standard") or devel version ("devel").}
+  \item{matched}{The variables are matched between X and Y (TRUE/FALSE).}
 }
 
 \details{

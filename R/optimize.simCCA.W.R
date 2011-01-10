@@ -1,9 +1,11 @@
 optimize.simCCA.W <- function (w, phi, Dim, Dcov, nullmat, epsilon = 1e-3,
-                               par.change = 1e6, cost.old = 1e6, mySeed=123, dz = NULL) { 
+                               par.change = 1e6, cost.old = 1e6, mySeed = 123, dz = NULL) { 
 
-#optimize.simCCA.W(
-#w <- W.init$X; phi <- phi.init; epsilon <- 1e-3; par.change = 1e6; cost.old = 1e6; mySeed=124; dz = zDimension
+  #optimize.simCCA.W(
+  #w <- W.init$X; phi <- phi.init; epsilon <- 1e-3; par.change = 1e6; cost.old = 1e6; mySeed=124; dz = zDimension
 
+  # assuming Wx = Wy!
+ 
   # modified from optimize.fullcov function
   # input otherwise similar, except that w is a single matrix
   # dimX x dimZ (note that dimX = dimY as always with simcca)
