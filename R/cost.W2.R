@@ -25,10 +25,11 @@ function (vec, phi, priors, Dim, Dcov) {
   # -logP for W prior
   # wcost <- sum((W$X)^2) * priors$W
   # Assuming exponential prior distribution with rate parameter priors$W
-  if (!is.null(priors)) {
+  if (!is.null(priors) && priors$W > 0) {
     wcost <- -sum(dexp(vec, rate = priors$W, log = TRUE))
   } else {
     wcost <- 0 # no effect
+    #(this option is selected also if rate parameter prior$W < 0)
   }
   
   cost.data + wcost

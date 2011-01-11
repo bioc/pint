@@ -81,7 +81,7 @@ gastric cancer patients \cite{Myllykangas08}.
 Load the package and example data:
 
 <<>>=
-require(pint)
+library(pint)
 data(chromosome17)
 @
 

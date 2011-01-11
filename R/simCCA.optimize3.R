@@ -52,8 +52,6 @@ function (X, Y, zDimension = 1, mySeed = 123, epsilon = 1e-6, priors = NULL) {
 
   W <- list(X = res$W$X, Y = res$W$Y, total = rbind(res$W$X, res$W$Y))
   phi <- res$phi
-
-
   
   rownames(W$X) <- rownames(X)
   rownames(W$Y) <- rownames(Y)

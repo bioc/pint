@@ -9,15 +9,12 @@ function (X, Y,
   # (C) Olli-Pekka Huovilainen and Leo Lahti 
   # FreeBSD license (keep this notice).
 
-  #zDimension = 1; marginalCovariances = "full"; H = 1; sigmas = 0; covLimit = 1e-3; mySeed = 123; priors = NULL
+  # zDimension = 1; marginalCovariances = "full"; H = 1; sigmas = 0; covLimit = 1e-3; mySeed = 123; priors = NULL
   
   # Fits the generative model
   # X = Wx * z + epsx
   # Y = Wy * z + epsy
   # with various modeling assumptions
-
-
-
   
   # FIXME using priors$sigma.w and the parameter sigmas for the same purpose
   # (in !matched case always sigma.w)
@@ -27,6 +24,7 @@ function (X, Y,
     if (exists("sigmas")) {
       priors$sigma.w <- sigmas
     } else {
+      message("priors$sigma.w not given, using noninformative priors$sigma.w = Inf, which corresponds to uncoupled Wx~Wy (pCCA).")
       priors$sigma.w <- 0
     }
   } else if (!priors$sigma.w == sigmas) {
@@ -43,7 +41,7 @@ function (X, Y,
 
   # Check dimensionality
   if(zDimension > nrow(X) || zDimension > nrow(Y)) {
-    message("zDimension exceeds data dimensionality; using full dimensionality min(ncol(X), ncol(Y)).")
+    message("zDimension cannot exceed data dimensionality; using full dimensionality min(ncol(X), ncol(Y)).")
     zDimension <- min(nrow(X), nrow(Y))
   }       
 
@@ -59,11 +57,29 @@ function (X, Y,
     message("- Applying the methods for nonmatched data.")
   }
 
-  # Matrix normal distribution mean matrix not specified -> no
-  # effective priors here.
+  # Matrix normal distribution mean matrix not specified
   if (is.null(H)) {
-    H <- 1; priors$sigma.w <- Inf;
-    warning("The matrix H is not specified. Assuming priors$sigma.w is infinite and Wx ~ Wy unconstrained.")
+    warning("The matrix H is not specified. Setting H = 1.")
+    H <- 1
+    if (is.null(priors$sigma.w)) {
+      # No effective priors given, set uninformative priors for
+      #compatibility
+
+      priors$sigma.w <- Inf
+
+      warning("No prior for sigma.w. Assuming priors$sigma.w is infinite, i.e. Wx ~ Wy unconstrained.")
+      }
+  }
+
+  # Exponential prior for elements in W. Forces nonnegative solutions.
+  if (!is.null(priors$W)) {
+    nonnegative.w <- TRUE
+    #if (!priors$W > 0) { stop("Nonnegative prior for priors$W required!") }
+  } else {
+    nonnegative.w <- FALSE
+    warning("No priors for W (priors$W) provided with nonmatched variables; no constraints applied.")
+    # FIXME: implement/apply here the fast non-prior case a.k.a pCCA when no
+    # priors are provided (for nonmatched case at least)?
   }
   
   #####################################
@@ -73,10 +89,6 @@ function (X, Y,
   if (!matched) {
     #message("Assuming non-matched variables.")
 
-    # no similarity prior for Wx ~ Wy, completely uncoupled
-    # -> no matching, no similarities (TODO: some similarities might still apply, implement later?)
-    priors$sigma.w <- Inf
-
     if (!zDimension == 1) {
       warning("For non-matched variables only 1-dimensional latent variable model has been implemented. Using zDimension = 1.") # FIXME: implement multidimensional cases for nonmatched variables. Some if it may rock already; test.
       zDimension <- 1
@@ -85,12 +97,6 @@ function (X, Y,
     if (!is.null(priors$sigma.w)) {
       warning("Non-matched case (matched = FALSE). Similarity between Wx, Wy is not constrained by priors in this case. Ignoring priors for Wx~Wy relation (priors sigma.w).")
       priors$sigma.w <- NULL
-    }
-
-    # FIXME: implement here the fast non-prior case a.k.a pCCA when no
-    # priors are provided?
-    if (is.null(priors$W)) {
-      stop("Provide priors$W with nonmatched variables!")
     }
 
     if (marginalCovariances == "full") {
@@ -109,36 +115,20 @@ function (X, Y,
 
       #message("Assuming matched variables.")
       # Matched case (for instance, for non-segmented data)
-      
       if (any(is.na(H))) {
-
         warning("H cannot contain NAs! Using nonconstrained version with priors$sigma.w = Inf.")
-
         H <- 1
         priors$sigma.w <- Inf
       }
-
+      
       if (priors$sigma.w == 0 && !marginalCovariances == "full") {
         stop("With priors$sigma.w = 0 the matched simcca model is implemented only with full marginal covariances.")
       }    
 
       # Case I : Relation Wx, Wy not constrained.
-      # FIXME: define this in a more elegant manner through priors
-      if (priors$sigma.w == Inf) {
-        wx.wy.relation.constrained <- FALSE
-      } else {
-        wx.wy.relation.constrained <- TRUE
-      }
 
-      # Exponential prior for elements in W. Forces nonnegative solutions
-      if (!is.null(priors$W)) {
-        nonnegative.w <- TRUE
-        #if (!priors$W > 0) { stop("Nonnegative prior for priors$W required!") }
-      } else {
-        nonnegative.w <- FALSE
-      }
-      
-      if ( !wx.wy.relation.constrained ) {
+      # Wx ~ Wy not constrained
+      if ( priors$sigma.w == Inf ) {
 
         #message("Relation between Wx, Wy is unconstrained.")
         
@@ -150,7 +140,7 @@ function (X, Y,
             res <- calc.pcca(X, Y, zDimension)            
             method <- "pCCA"
             message("Full marginal covariances.")
-          } else if (marginalCovariances == "diagonal"){                                  
+          } else if (marginalCovariances == "diagonal"){          
             # Probabilistic factor analysis model as proposed in          
             # EM Algorithms for ML Factoral Analysis, Rubin D. and      
 	    # Thayer D. 1982    
@@ -171,10 +161,10 @@ function (X, Y,
 
           message("Wx ~ Wy free. Regularized W (W>=0).")        
 
-         if (!marginalCovariances == "full") {           
-           warning("Only full marginal covariances implemented with uncontrained Wx/Wy and regularized W. Using full marginal covariances.")
-           marginalCovariances <- "full"           
-         }
+          if (!marginalCovariances == "full") {           
+            warning("Only full marginal covariances implemented with uncontrained Wx/Wy and regularized W. Using full marginal covariances.")
+            marginalCovariances <- "full"           
+          }
           
           # Currently implemented exponential prior for W,
           # priors$W is the rate parameter of the exponential.
@@ -190,7 +180,7 @@ function (X, Y,
                                  epsilon = covLimit, priors = priors)
         }
 
-      } else if ( wx.wy.relation.constrained ){
+      } else if ( !priors$sigma.w == Inf ){
 
         method <- "pSimCCA"
         #message("Regulating the relationship Wx ~ Wy.")
@@ -213,7 +203,7 @@ function (X, Y,
             # SimCCA Wx = Wy with regularized W (W>=0)
             #message("Case Wx = Wy and regularized W.")
 
-            # Initialize
+            # Initialize (FIXME: make initialization as in the other options)
             inits <- initialize2(X, Y)
             phi.init <- inits$phi
             W.init <- inits$W

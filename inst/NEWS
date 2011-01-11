@@ -1,5 +1,5 @@
 
-CHANGES IN VERSION 1.3.6 (2010-01-05)
+CHANGES IN VERSION 1.3.63 (2010-01-11)
 
   o Added many new development features that help to handle segmented
     data (options segmented and nonmatched, and related scripts). Will
