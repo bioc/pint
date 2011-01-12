@@ -72,15 +72,15 @@ function (X, Y,
   }
 
   # Exponential prior for elements in W. Forces nonnegative solutions.
-  if (!is.null(priors$W)) {
+  if (!is.null(priors$W) && priors$W > 0) {
     nonnegative.w <- TRUE
     #if (!priors$W > 0) { stop("Nonnegative prior for priors$W required!") }
   } else {
     nonnegative.w <- FALSE
-    warning("No priors for W (priors$W) provided with nonmatched variables; no constraints applied.")
-    # FIXME: implement/apply here the fast non-prior case a.k.a pCCA when no
-    # priors are provided (for nonmatched case at least)?
   }
+
+  # FIXME: implement/apply the fast non-prior case a.k.a pCCA when no
+  # priors are provided (for nonmatched case at least)?
   
   #####################################
 
