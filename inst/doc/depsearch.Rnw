@@ -356,44 +356,9 @@ of the model.
 
 This document was written using:        
                                         
-					<<details>>=       
-					sessionInfo()             
-					@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<<details>>=       
+sessionInfo()             
+@
 
 
 \subsection*{Acknowledgements}
