@@ -1,7 +1,7 @@
 
 export(
 #cost5,
-dependency.score,
+#dependency.score,
 iterative.window,
 fixed.window,
 fit.cgh.mir.byname,
@@ -56,8 +56,7 @@ topGenes,
 topModels,
 orderGenes,
 findModel,
-isEmpty,
-as.data.frame
+isEmpty
 )
 
 importFrom(graphics, plot)

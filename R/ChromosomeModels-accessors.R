@@ -132,7 +132,7 @@ setMethod(f="[[", signature("ChromosomeModels"),
 ))
 
 setMethod(f="as.data.frame",signature("ChromosomeModels"),
-          definition=(function(x, ...) {
+          definition=(function (x, row.names = NULL, optional = FALSE, ...) {
 
       return(rbind(as.data.frame(x[['p']]),as.data.frame(x[['q']])))
     }

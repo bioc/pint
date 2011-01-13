@@ -135,7 +135,7 @@ setMethod("findModel","ChromosomeArmModels",
 )
     
 setMethod(f="as.data.frame",signature("ChromosomeArmModels"),
-          definition=(function(x, ...) {
+          definition=(function (x, row.names = NULL, optional = FALSE, ...) {
 
       model <- x
       genes <- c(getGeneName(model))
