@@ -346,6 +346,55 @@ The package implements the dependency modeling framework (see
 'fit.dependency.model'), and provides wrappers for the special cases
 of the model.
 
+\section{Details}                                     
+                    
+\begin{itemize}                                     
+\item {\it Licensing terms:} the package is licensed under FreeBSD open software license                    
+\item {\it Citing pint:} Please cite \cite{Lahti09mlsp} when using the package                         
+\end{itemize}                                 
+                    
+
+This document was written using:        
+                                        
+					<<details>>=       
+					sessionInfo()             
+					@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection*{Acknowledgements}
 
@@ -376,7 +425,17 @@ Leo Lahti, Samuel Myllykangas, Sakari Knuutila, and Samuel Kaski.
 \newblock Dependency detection with similarity constraints.
 \newblock In {\em Proc. MLSP'09 IEEE International Workshop on Machine Learning
   for Signal Processing}, 2009.
-  
+
+\bibitem{Lahti10thesis}                                           
+Leo Lahti (2010).                                     
+\newblock Probabilistic analysis of the human transcriptome with side
+information.                       
+\newblock PhD thesis. Aalto University School of Science and
+Technology, Department of information and Computer Science, Espoo,
+Finland, 2010.                        
+\newblock http://lib.tkk.fi/Diss/2010/isbn9789526033686/        
+                    
+		   
 \bibitem{Huovilainen10}
 Olli-Pekka Huovilainen.
 \newblock Screening of functional copy number changes with dependency models. 
