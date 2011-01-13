@@ -56,7 +56,8 @@ topGenes,
 topModels,
 orderGenes,
 findModel,
-isEmpty
+isEmpty,
+as.data.frame
 )
 
 importFrom(graphics, plot)
