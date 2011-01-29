@@ -1,8 +1,14 @@
 pint.data <- function(data, info, impute = TRUE, replace.inf = TRUE, remove.duplicates = TRUE){
 
-  data <- as.data.frame(data)
-  info <- as.data.frame(info)
+  data2 <- as.data.frame(data)
+  info2 <- as.data.frame(info)
+
+  dimnames(data2) <- dimnames(data) 
+  dimnames(info2) <- dimnames(info)
   
+  data <- data2
+  info <- info2
+
   ## Replace synonymous info fields
   # chromosome -> chr
   if ("chromosome" %in% colnames(info) && !"chr" %in% colnames(info)) {
