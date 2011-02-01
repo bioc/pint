@@ -3,6 +3,16 @@ pint.data <- function(data, info, impute = TRUE, replace.inf = TRUE, remove.dupl
   data2 <- as.data.frame(data)
   info2 <- as.data.frame(info)
 
+  if (is.null(colnames(data))) {
+    warning("No column names for data matrix given, naming by indices..")
+    colnames(data) <- as.character(1:ncol(data))
+  }
+  
+  if (is.null(rownames(data))) {
+    warning("No row names for data matrix given, naming by indices..")
+    rownames(data) <- as.character(1:nrow(data))
+  }  
+
   dimnames(data2) <- dimnames(data) 
   dimnames(info2) <- dimnames(info)
   
