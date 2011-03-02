@@ -215,7 +215,7 @@ function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FAL
   }
   else {
     if (all(is.na(ylim))){
-      ylim <- c(0,max(max(pscores),max(qscores),1.0))	
+      ylim <- c(0,max(max(pscores),max(qscores)))	
     }
     if (all(is.na(xlim))){
       xlim <- c(min(min(plocs/1e6),min(qlocs/1e6)),max(max(qlocs/1e6),max(plocs/1e6)))
@@ -309,7 +309,7 @@ function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FAL
           next   
         scores <- c(scores, getScore(getPArm(x[[i]])), getScore(getQArm(x[[i]])))
         locs <- c(locs, getLoc(getPArm(x[[i]])), getLoc(getQArm(x[[i]])))
-        chrs <- c(chrs, rep(i,length( getModelNumbers(getPArm(x[[i]])) + getModelNumbers(getQArm(x[[i]])) )))
+        chrs <- c(chrs, rep(i,getModelNumbers(getPArm(x[[i]])) + getModelNumbers(getQArm(x[[i]]) )))
         genes <- c(genes, getGeneName(getPArm(x[[i]])), getGeneName(getQArm(x[[i]])))
       }
 
