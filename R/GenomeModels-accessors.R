@@ -145,10 +145,10 @@ setMethod("findModel","GenomeModels",
    for (i in 1:24){
      pIndex <- which(getGeneName(getPArm(model[[i]])) == name)
      if(length(pIndex) > 0) 
-       return(getPArm(model[[i]])[[pIndex]])
+       return(getPArm(model[[i]])[[pIndex[1]]])
      qIndex <- which(getGeneName(getQArm(model[[i]])) == name)
      if(length(qIndex) > 0) 
-       return(getQArm(model[[i]])[[qIndex]])
+       return(getQArm(model[[i]])[[qIndex[1]]])
    }   
    stop("No model found")
   }

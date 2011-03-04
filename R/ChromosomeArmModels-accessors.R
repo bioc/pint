@@ -129,7 +129,7 @@ setMethod("findModel","ChromosomeArmModels",
   function(model, name){
     index = which(getGeneName(model) == name)
     if (length(index) > 0)
-      return(model[[which(getGeneName(model) == name)]])
+      return(model[[index[1]]])
     stop("No model found")
   }
 )

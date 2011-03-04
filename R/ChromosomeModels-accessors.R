@@ -111,10 +111,10 @@ setMethod("findModel","ChromosomeModels",
 
    pIndex <- which(getGeneName(getPArm(model)) == name)
    if(length(pIndex) > 0) 
-     return(getPArm(model)[[pIndex]])
+     return(getPArm(model)[[pIndex[1]]])
    qIndex <- which(getGeneName(getQArm(model)) == name)
    if(length(qIndex) > 0) 
-     return(getQArm(model)[[qIndex]])
+     return(getQArm(model)[[qIndex[1]]])
    
    stop("No model found")
   }
