@@ -58,6 +58,12 @@ setMethod("getGeneName","DependencyModel",
           } 
 ) 
 
+setMethod("getGeneNames","DependencyModel", 
+          function(model) { 
+            rownames(getW(model)$X)
+          } 
+)
+
 setMethod("getParams","DependencyModel", 
 	function(model) { 
 		return(model@params) 

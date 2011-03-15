@@ -1,3 +1,7 @@
+CHANGES IN VERSION 1.3.71 (2011-03-10)
+
+  o The sign of the effects in z.effects and W.effects now corresponds with the data
+
 CHANGES IN VERSION 1.3.70 (2011-03-04)
 
 BUG FIXES

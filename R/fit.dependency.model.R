@@ -269,7 +269,8 @@ function (X, Y,
   }
   
   if(is.null(geneName)) {geneName <- ""}
-  model <- new("DependencyModel", W = res$W, phi = res$phi, score = score, chromosome = "", arm = "", windowSize = nrow(Y), method = method, params = params, geneName = geneName)	
+  model <- new("DependencyModel", W = res$W, phi = res$phi, score = score, chromosome = "", arm = "", 
+               windowSize = nrow(Y), method = method, params = params, geneName = geneName)	
   
   model
 }

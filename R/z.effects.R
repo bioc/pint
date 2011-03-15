@@ -24,7 +24,7 @@ z.effects <- function(model, X, Y = NULL){
     W <- W$total
 
     z <- z.expectation(model,X,Y)
-
+    
     # Calculate first component of PCA for W*z
     pca <- princomp(t(W%*%z))
     projvec <- pca$loadings[,1]
@@ -32,7 +32,11 @@ z.effects <- function(model, X, Y = NULL){
     # Project data to this component
     data <- rbind(X,Y)
     proj <- t(data)%*%projvec
-   
+    
+    # Make sure the highest value is allways positive
+    if (abs(min(proj)) > max(proj))
+      proj <- -proj   
+
     return(proj)
   }
   # for models with one data set
@@ -44,10 +48,15 @@ z.effects <- function(model, X, Y = NULL){
     pca <- princomp(t(W%*%z))
     projvec <- pca$loadings[,1]
 
+      
     # Project data to this component
     data <- X
     proj <- t(data)%*%projvec
    
+    # Make sure the highest value is allways positive
+    if (abs(min(proj)) > max(proj))
+      proj <- -proj
+
     return(proj)
   
   }

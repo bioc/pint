@@ -149,3 +149,12 @@ setMethod(f="as.data.frame",signature("ChromosomeArmModels"),
       return(data)
     }
 ))
+
+
+
+
+
+
+
+
+          
