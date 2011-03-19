@@ -35,6 +35,7 @@
 \alias{orderGenes,ChromosomeArmModels-method}
 \alias{findModel,ChromosomeArmModels-method}
 \alias{setSegmentedData,ChromosomeArmModels-method}
+\alias{as.data.frame,ChromosomeArmModels-method}
 
 \title{Class "ChromosomeArmModels", for dependency models in chromosomal arm}
 

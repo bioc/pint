@@ -19,6 +19,7 @@
 \alias{orderGenes,ChromosomeModels-method}
 \alias{findModel,ChromosomeModels-method}
 \alias{[[,ChromosomeModels-method}
+\alias{as.data.frame,ChromosomeModels-method}
 
 \title{Class "ChromosomeModels"}
 

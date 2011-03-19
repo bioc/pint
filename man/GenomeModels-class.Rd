@@ -13,6 +13,7 @@
 \alias{orderGenes,GenomeModels-method}
 \alias{findModel,GenomeModels-method}
 \alias{getModelNumbers,GenomeModels-method}
+\alias{as.data.frame,GenomeModels-method}
 
 \title{Class "GenomeModels"}
 
