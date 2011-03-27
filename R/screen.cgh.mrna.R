@@ -97,10 +97,10 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
   }
   if (is.null(params$zDimension))
     params$zDimension <- 1
-  if (is.null(params$covLimit))
-    params$covLimit <- 0
-  if (is.null(params$mySeed))
-    params$mySeed <- 566
+  #if (is.null(params$covLimit))
+  #  params$covLimit <- 0
+  #if (is.null(params$mySeed))
+  #  params$mySeed <- 566
   if (!is.null(params$H) && any(is.na(params$H))) {
     if (params$marginalCovariances == "full")
       method = "pCCA"
@@ -114,18 +114,24 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
     method = "pSimCCA"
   }
 
-  # Convert chromosome argument to factor with correct levels
+  # Convert X and Y chromosomes to numbers
   if (!missing(chromosome)){
     if (chromosome == 23) chromosome <- "X"
     if (chromosome == 24) chromosome <- "Y"
-    chromosome = factor(chromosome, levels = c(1:22, "X", "Y"))
-    if (is.na(chromosome))
-      stop("Incorrect chromosome given.")
+  #  chromosome = factor(chromosome, levels = c(1:22, "X", "Y"))
+  #  if (is.na(chromosome))
+  #    stop("Incorrect chromosome given.")
+  }
+
+  # give warning if arm param given and no arm data is available
+  if (!missing(arm) && any(X$info$arm == "")){
+    warning("No arm information in the data. Calculating thw whole chromosome")
+    arm <- NULL
   }
 
   if (missing(chromosome)) {
     models <- calculate.genome(X, Y, windowSize, method, params, segmented = segmented, priors = priors, regularized = regularized)
-  } else if (missing(arm)) {
+  } else if (missing(arm) || is.null(arm)) {
     models <- calculate.chr(X, Y, windowSize, chromosome, method, params, segmented = segmented, priors = priors, regularized = regularized)
   } else {
     models <- calculate.arm(X, Y, windowSize, chromosome, arm, method, params, segmented = segmented, priors = priors, regularized = regularized)

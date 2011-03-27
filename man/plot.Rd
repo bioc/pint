@@ -1,7 +1,6 @@
 \name{plot}
 %\Rdversion{1.1}
-\alias{plot.DependencyModel}
-\alias{plot.ChromosomeArmModels}
+\alias{plot.GeneDependencyModel}
 \alias{plot.ChromosomeModels}
 \alias{plot.GenomeModels}
 \alias{dependency score plotting}
@@ -10,18 +9,13 @@ Dependency score plotting
 }
 \description{
 Plot the contribution of the samples and variables to the dependency
-model or dependency model fitting scores of chromosomal arm, chromosome
+model or dependency model fitting scores of chromosome
 or genome.
 }
 \usage{
-plot.DependencyModel(x, X, Y, ann.types = NULL, ann.cols = NULL, legend.x = 0, 
+plot.GeneDependencyModel(x, X, Y, ann.types = NULL, ann.cols = NULL, legend.x = 0, 
         legend.y = 1, legend.xjust = 0, legend.yjust = 1, order = FALSE, 
         cex.z = 0.6, cex.WX = 0.6, cex.WY = 0.6, ...)
-
-plot.ChromosomeArmModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
-	topName = FALSE, type = 'l', xlab = 'gene location', 
-	ylab = 'dependency score', main = paste('Dependency score for chromosome ', 
-	chr, arm, sep = ''), pch = 20, cex = 0.75, tpch = 3, tcex = 1, ylim = NA, ...)
 
 plot.ChromosomeModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
 	topName = FALSE, type = 'l', xlab = 'gene location', ylab = 'dependency score',
@@ -37,7 +31,7 @@ plot.GenomeModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
 
 \arguments{
 	\item{x}{
-		\code{\link{DependencyModel-class}}, \code{\link{ChromosomeArmModels-class}}, 
+		\code{\link{GeneDependencyModel-class}}, , 
 		\code{\link{ChromosomeModels-class}}, \code{\link{GenomeModels-class}}; models to be plotted. 
 	}
 	\item{X, Y}{
@@ -121,7 +115,7 @@ plot.GenomeModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
 }
 \details{
 Function plots scores of each dependency model of a gene for the whole
-chromosomal arm, chromosome or genome according to used
+chromosome or genome according to used
 method. \code{plot(x, cancerGenes = NULL, showDensity = FALSE, ...)} is
 also usable and chosen according to class of \code{models}.
 }
@@ -137,7 +131,6 @@ Olli-Pekka Huovilainen \email{ohuovila@gmail.com}
 
 \seealso{
 \code{\link{DependencyModel-class}}, 
-\code{\link{ChromosomeArmModels-class}}, 
 \code{\link{ChromosomeModels-class}}, 
 \code{\link{GenomeModels-class}}, 
 \code{\link{screen.cgh.mrna}},
@@ -147,19 +140,19 @@ Olli-Pekka Huovilainen \email{ohuovila@gmail.com}
 
 data(chromosome17)
 
-## Dependency model around 150th gene
-window <- fixed.window(geneExp, geneCopyNum, 150, 10)
-model <- fit.dependency.model(window$X, window$Y)
+## pSimCCA model on chromosome 17p
+models17ppSimCCA <- screen.cgh.mrna(geneExp, geneCopyNum, 10, 17, 'p')
+plot(models17ppSimCCA,
+     hilightGenes=c("ENSG00000108342", "ENSG00000108298"), showDensity = TRUE)
+
+## Dependency model around 50th gene
+model <- models17ppSimCCA[[50]]
 
 ## example annnotation types
 ann.types <- factor(c(rep("Samples 1 - 10", 10), rep("Samples 11 - 51", 41)))
 plot(model, geneExp, geneCopyNum, ann.types, legend.x = 40, legend.y = -4,
      order = TRUE)
 
-## pSimCCA model on chromosome 17p
-models17ppSimCCA <- screen.cgh.mrna(geneExp, geneCopyNum, 10, 17, 'p')
-plot(models17ppSimCCA,
-     hilightGenes=c("ENSG00000108342", "ENSG00000108298"), showDensity = TRUE)
 
 }
 \keyword{hplot}

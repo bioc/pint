@@ -1,5 +1,18 @@
 W.effects <- function(model, X, Y = NULL){
 
+  # Check if whole data is given instead window for this model
+  if (class(X) == "list"){
+    # Find correct window for this model
+    index <- which(rownames(X$data) == getGeneName(model))
+
+    # Check if model has only 1 variable from X data
+    if (nrow(getW(model)$X) == 1)
+      window <- sparse.window(X, Y, index, getWindowSize(model))
+    else
+      window <- fixed.window(X, Y, index, getWindowSize(model))
+    X <- window$X
+    Y <- window$Y
+  }  
   z <- z.expectation(model, X, Y)
   W <- getW(model)$total
 

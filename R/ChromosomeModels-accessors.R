@@ -1,139 +1,186 @@
+setMethod(f="[[", signature("ChromosomeModels"),
+  definition=(function(x,i,j,drop) {
+    if (i == 'p') return(getPArm(x))
+    if (i == 'q') return(getQArm(x)) 
+    return(x@models[[i]])
+  } 
+))
+
+setReplaceMethod(f="[[",signature("ChromosomeModels"),
+  definition=(function(x,i,j,value) {
+    x@models[[i]] <- value
+    return(x)
+  }
+))
+
 setMethod("getChromosome","ChromosomeModels", 
-	function(model) { 
-		return(model@chromosome) 
-	} 
+  function(model) { 
+    return(model@chromosome) 
+  } 
 ) 
 
 setMethod("getPArm","ChromosomeModels", 
-	function(model) { 
-		return(model@pArmModels) 
-	} 
+  function(model) {
+    arms <- getArm(model)
+	if (all(arms == "")){
+	  stop("cannot return dependency models for an arm because no arm information was given")
+	}
+	
+	return(new("ChromosomeModels",                                  
+               models = model@models[arms == 'p'],                                   
+               chromosome = getChromosome(model), 
+               method = getModelMethod(model),                                                
+               params = getParams(model)))       
+  } 
 ) 
 
 setMethod("getQArm","ChromosomeModels", 
-	function(model) { 
-		return(model@qArmModels) 
-	} 
+  function(model) {
+    arms <- getArm(model)
+	if (all(arms == "")){
+	  stop("cannot return dependency models for an arm because no arm information was given")
+	}
+	
+	return(new("ChromosomeModels",                                  
+               models = model@models[arms == 'q'],                                   
+               chromosome = getChromosome(model), 
+               method = getModelMethod(model),                                                
+               params = getParams(model)))       
+  } 
 ) 
 
 setMethod("getParams","ChromosomeModels", 
-	function(model) { 
-		return(model@params) 
-	} 
+  function(model) { 
+    return(model@params) 
+  } 
 ) 
 
 setMethod("getModelMethod","ChromosomeModels", 
-	function(model) { 
-		return(model@method) 
-	} 
+  function(model) { 
+    return(model@method) 
+  } 
 ) 
 
 setMethod("getWindowSize","ChromosomeModels", 
-	function(model) { 
-		return(getWindowSize(getPArm(model))) 
-	} 
+  function(model) { 
+    return(getWindowSize(model@models[[1]])) 
+  } 
 ) 
 setMethod("isEmpty","ChromosomeModels",
-	function(model) {
-		return(isEmpty(getPArm(model)) && isEmpty(getQArm(model)))
-	}
+  function(model) {
+    return(length(model@models) == 0)
+  }
 )
 
 setMethod("getModelNumbers","ChromosomeModels",
-          function(model) {
-            return(getModelNumbers(model[['p']]) + getModelNumbers(model[['q']]))
-          }
+  function(model) {
+    return(length(model@models))
+  }
 )
 
+setMethod("getScore","ChromosomeModels", 
+  function(model) {
+    scores <- vector()
+    for (i in seq_along(model@models)) {
+      scores[i] <- getScore(model[[i]])
+    }
+    return(scores) 
+})	
+
 setMethod("topGenes", "ChromosomeModels",
-          function(model, num = NA) {
+  function(model, num = NA) {
 
-            pscores <- getScore(getPArm(model))
-            qscores <- getScore(getQArm(model))
-            scores <- c(pscores, qscores)
-            
-            pgenes <- getGeneName(getPArm(model))
-            qgenes <- getGeneName(getQArm(model))
-            genes <- c(pgenes,qgenes)
-            
-            data <- data.frame(scores, genes)
+    scores <- getScore(model)
+    genes <- getGeneName(model)        
+    data <- data.frame(scores, genes)
 
-			if (is.na(num)){
-			  num <- length(scores)
-			}
+    if (is.na(num)){
+      num <- length(scores)
+    }
+    #order dataframe and take num names of genes with highest scores 
+    return(as.character(data[order(scores, decreasing = TRUE),]$genes[1:num]))
+})
 
-            #order dataframe and take num names of genes with highest scores 
-            return(as.character(data[order(scores, decreasing = TRUE),]$genes[1:num]))
+setMethod("getGeneName", "ChromosomeModels",
+  function(model){
+    genes <- vector()
+      for (i in seq_along(model@models)) {
+        genes[i] <- getGeneName(model[[i]])
+      }
+    return(genes) 
+	} 
+)	
 
-          }
-          )
-
-
-setMethod("topModels","ChromosomeModels",
-	function(model,num = 1) {
-		pscores <- getScore(getPArm(model))
-		qscores <- getScore(getQArm(model))
-		scores <- c(pscores,qscores)
-		pindices <- seq_along(pscores)
-		qindices <- seq_along(qscores)
-		indices <- c(pindices,qindices)
-		data <- data.frame(scores,indices,arm = c(rep('p',length(pscores)), rep('q',length(qscores))))
-		#Order dataframe
-		data <- data[order(scores,decreasing=TRUE),]
-		returnList = list()
-		for (i in 1:num) {
-			if (data$arm[i] == 'p')
-				returnList = c(returnList,getPArm(model)[[data$indices[i]]])
-			else
-				returnList = c(returnList,getQArm(model)[[data$indices[i]]])
+setMethod("getLoc","ChromosomeModels", 
+	function(model) {
+		locs <- vector()
+		for (i in seq_along(model@models)) {
+			locs[i] <- getLoc(model[[i]])
 		}
-		return(returnList)
-	}
+		return(locs) 
+	} 
+)			
+
+setMethod("getArm","ChromosomeModels", 
+	function(model) {
+    return(sapply(model@models,getArm))
+	} 
+)
+	
+setMethod("topModels","ChromosomeModels",
+  function(model,num = 1) {
+    scores <- getScore(model)
+    genes <- getGeneName(model)        
+    data <- data.frame(scores, genes)
+    indices <- seq_along(scores)
+
+    data <- data.frame(scores,indices)
+    #Order dataframe
+    data <- data[order(scores,decreasing=TRUE),]
+    returnList = list()
+    if (num > 1){
+      for (i in 1:num) {
+          returnList = c(returnList,model[[data$indices[i]]])
+      }
+      return(returnList)
+    } else {
+      return(model[[data$indices[1]]])
+    }
+  }
 )
 
 setMethod("orderGenes","ChromosomeModels",
   function(model){
 
-    scores <- vector()
-    genes <- vector()
-    scores <- c(scores, getScore(getQArm(model)))
-    scores <- c(scores, getScore(getPArm(model)))
-    genes <- c(genes, getGeneName(getQArm(model)))
-    genes <- c(genes, getGeneName(getPArm(model)))
-   
-    data <- data.frame(scores,genes,stringsAsFactors=FALSE)
-    return(data[order(scores,decreasing=TRUE),])
+    return(topGenes(model))
   }	
 )
 
 setMethod("findModel","ChromosomeModels",
   function(model, name){
-
-   pIndex <- which(getGeneName(getPArm(model)) == name)
-   if(length(pIndex) > 0) 
-     return(getPArm(model)[[pIndex[1]]])
-   qIndex <- which(getGeneName(getQArm(model)) == name)
-   if(length(qIndex) > 0) 
-     return(getQArm(model)[[qIndex[1]]])
-   
-   stop("No model found")
+    index = which(getGeneName(model) == name)
+    if (length(index) > 0)
+      return(model[[index[1]]])
+    stop("No model found")
   }
 )
 
-setMethod(f="[[", signature("ChromosomeModels"),
-          definition=(function(x,i,j,drop) {
-      if (i == 'p' || i == 'P')
-        return(getPArm(x))
-      if (i == 'q' || i == 'Q')
-        return(getQArm(x))
-      else
-        stop("Use either 'p' or 'q' to access dependency models of an arm.")
-    } 
-))
-
 setMethod(f="as.data.frame",signature("ChromosomeModels"),
-          definition=(function (x, row.names = NULL, optional = FALSE, ...) {
+  definition=(function (x, row.names = NULL, optional = FALSE, ...) {
 
-      return(rbind(as.data.frame(x[['p']]),as.data.frame(x[['q']])))
-    }
+    model <- x
+    genes <- getGeneName(model)
+    scores <- getScore(model)
+    locs <- getLoc(model)
+    arms <- getArm(model)
+    chrs <- rep(getChromosome(model),getModelNumbers(model))
+    if (!any(arms == "")){  
+      data <- data.frame(geneName = genes, dependencyScore = scores, chr = chrs, 
+                         arm = arms, loc = locs, stringsAsFactors = FALSE)
+    } else {
+      data <- data.frame(geneName = genes, dependencyScore = scores, chr = chrs, 
+                         loc = locs, stringsAsFactors = FALSE)
+    } 
+    return(data)
+  }
 ))

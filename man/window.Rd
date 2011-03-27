@@ -62,12 +62,15 @@ Dependency model fitting: \code{\link{fit.dependency.model}}
 data(chromosome17)
 window <- iterative.window(geneExp, geneCopyNum, 30, 10)
 model <- fit.dependency.model(window$X, window$Y)
+
+# Conversion from DependencyModel to GeneDependencyModel so that gene name and location can be stored
+model <- as(model,"GeneDependencyModel")
 setGeneName(model) <- window$geneName
 setLoc(model) <- window$loc
 model
 
 window <- fixed.window(geneExp, geneCopyNum, 10, 10)
-model <- fit.dependency.model(window$X, window$Y, H = NA)
+model <- fit.dependency.model(window$X, window$Y)
 model
 }
 

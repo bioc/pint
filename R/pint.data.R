@@ -88,18 +88,20 @@ pint.data <- function(data, info, impute = TRUE, replace.inf = TRUE, remove.dupl
   }
  
   # Arm
-  if (is.null(info$arm)) {
-    arm <- factor(rep("p",length(loc)),levels=c("p","q"))
-  } else {
-    arm <- info$arm
-  }
+  if (!is.null(info$arm)) {
+    info2 <- data.frame(chr = info$chr, arm = info$arm, loc = as.numeric(loc))
+    rownames(info2) <- rownames(info)
+    info <- info2
+    # Order data by chr, arm and loc
+    ord <- order(as.numeric(info$chr),info$arm,info$loc)
+  } else {  # Arm info missing
+    info2 <- data.frame(chr = as.numeric(info$chr), loc = as.numeric(loc))
+    rownames(info2) <- rownames(info)
+    info <- info2
+    # Order data by chr and loc
+    ord <- order(info$chr,info$loc)
+  }  
   
-  info2 <- data.frame(chr = factor(info$chr, levels = c(1:24)), arm = arm, loc = as.numeric(loc))
-  rownames(info2) <- rownames(info)
-  info <- info2
-
-  # Order data by chr, arm and loc
-  ord <- order(info$chr,info$arm,info$loc)
   data <- data[ord,]
   info <- info[ord,]
 
@@ -113,5 +115,5 @@ pint.data <- function(data, info, impute = TRUE, replace.inf = TRUE, remove.dupl
     info[["loc"]] <- (as.numeric(as.character(info[, "start"])) + as.numeric(as.character(info[, "end"])))/2
   }
 
-  list(data = data, info = info)
+  list(data = as.matrix(data), info = info)
 }

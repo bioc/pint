@@ -30,23 +30,27 @@ calculate.arm.sparse <- function(X, Y, windowSize, chromosome, arm, method = "pS
 			# Skip windows that overlaps chromosome arms
 			if (!window$fail){
 						
-				model <- fit.dependency.model(window$X, window$Y,zDimension = params$zDimension, 
-					marginalCovariances = params$marginalCovariances, H = params$H, sigmas = params$sigmas, 
-					covLimit = params$covLimit, mySeed=params$mySeed)
+				             model <- fit.dependency.model(window$X,         
+                                           window$Y,   
+                                           zDimension = params$zDimension,
+                                           marginalCovariances = params$marginalCovariances,      
+                                           priors = list(Nm.wxwy.mean = params$H,          
+                                           Nm.wxwy.sigma = params$sigmas),includeData = FALSE, calculateZ = FALSE)        
 				setLoc(model) <- window$loc
 				setChromosome(model) <- as.character(chromosome)
-				setArm(model) <- arm
-				#setGeneName(res) <- window$geneName
+        setGeneName(model) <- window$geneName
+        if (!is.null(arm)) setArm(model)  <- arm   
 				modelList[[k]] <- model
 				k <- k+1
 			}
 		}
 	}
-	# Change chromosome and arm factors and get levels from X
-	chromosome <- factor(chromosome, levels = levels(c(1:22,"X","Y")))
-	arm <- factor(arm, levels = levels(Xm$info$arm))
-	
-	return(new("ChromosomeArmModels", models = modelList, chromosome = chromosome, arm = arm, windowSize = windowSize, 
-		method = method, params = params))
-}
+ 
+ return(new("ChromosomeModels",                                  
+            models = modelList,                                   
+            chromosome = chromosome, 
+            method = method,                                                
+            params = params))                           
+} 
+
 

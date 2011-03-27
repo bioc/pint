@@ -193,7 +193,7 @@ model17qpCCA <- screen.cgh.mrna(geneExp, geneCopyNum, windowSize = 10, chr = 17,
 \begin{figure}[H]
 \begin{center}
 <<fig=true>>=
-model <- topModels(models, 1)[[1]]
+model <- topModels(models)
 plot(model, geneExp, geneCopyNum)
 @
 \end{center}

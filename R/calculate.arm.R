@@ -1,4 +1,4 @@
-calculate.arm <- function(X, Y, windowSize, chromosome, arm, method =
+calculate.arm <- function(X, Y, windowSize, chromosome, arm = NULL, method =
 "pSimCCA", params = list(), segmented = FALSE, priors = NULL, regularized = FALSE){
 
   # Get Indices to X and Y for chosen chromosome and arm
@@ -51,14 +51,11 @@ calculate.arm <- function(X, Y, windowSize, chromosome, arm, method =
 	     # still ensure that no regularization used here:                 
              priors$W <- NULL                           
              model <- fit.dependency.model(window$X,         
-		                           window$Y,   
-                        zDimension = params$zDimension,
-			marginalCovariances = params$marginalCovariances,      
-                                         H = params$H,          
-				    sigmas = params$sigmas,                                     
-                                  covLimit = params$covLimit,                   
-                                    mySeed = params$mySeed,
-				    priors = priors)                                     
+                                           window$Y,   
+                                           zDimension = params$zDimension,
+                                           marginalCovariances = params$marginalCovariances,      
+                                           priors = list(Nm.wxwy.mean = params$H,          
+                                           Nm.wxwy.sigma = params$sigmas),includeData = FALSE, calculateZ = FALSE)                                     
     
   
              } else if (!segmented && regularized) {                     
@@ -76,351 +73,26 @@ calculate.arm <- function(X, Y, windowSize, chromosome, arm, method =
 	      	 model <- fit.dependency.model(window$X, window$Y,zDimension = params$zDimension, priors = priors)                                   
                                                                       
      	   }
-  
+           model <- as(model, "GeneDependencyModel")
+           #setGeneName(model) <- rownames(window$X)[[ trunc((nrow(window$X) + 1)/2) ]]
+           setGeneName(model) <- window$geneName
+          #setLocs(model) <- window$loc        
           setLoc(model) <- window$loc
-	  setChromosome(model) <- as.character(chromosome)   
-	  setArm(model)  <- arm          
-	  modelList[[k]] <- model
-	  k <- k + 1                    
+        setChromosome(model) <- chromosome
+        if (!is.null(arm)) setArm(model)  <- arm          
+        modelList[[k]] <- model
+        k <- k + 1                                 
       }                
     }
   }
-                                                   
  #Change chromosome and arm factors and get levels from X          
- chromosome <- factor(chromosome, levels = c(1:22,"X","Y"))     
- arm <- factor(arm, levels = levels(X$info$arm))      
+ #chromosome <- factor(chromosome, levels = c(1:22,"X","Y"))     
+ #arm <- factor(arm, levels = levels(X$info$arm))      
  
- return(new("ChromosomeArmModels",                                  
-                models = modelList,                                   
-	    chromosome = chromosome, 
-	    arm = arm,     
-	      windowSize = windowSize, 
-	     method = method,                                                
-             params = params))                           
-	     }                     
-           
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ return(new("ChromosomeModels",                                  
+            models = modelList,                                   
+            chromosome = chromosome,    
+            method = method,                                                
+            params = params))                           
+}                     
 

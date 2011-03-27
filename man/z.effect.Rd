@@ -1,15 +1,13 @@
-\name{z.expectation}
+\name{z.effects}
 %\Rdversion{1.1}
-\alias{z.expectation}
 \alias{z.effects}
 \alias{W.effects}
 \title{The model parameters z and W}
 \description{
-  Expectation of the latent variable z,  contribution of each sample
+  Contribution of each sample
 to a dependency model, and contribution of each variable.
 }
 \usage{
-z.expectation(model, X, Y = NULL)
 z.effects(model, X, Y = NULL)
 W.effects(model, X, Y = NULL)
 }
@@ -30,9 +28,6 @@ W.effects(model, X, Y = NULL)
 }
 \details{
 
-  \code{z.expectation} gives ML estimate of the shared latent variable
-  Z, given data X, Y and the model parameters in \code{model}.
-
   \code{z.effects} gives the contribution of each sample to the
   dependency score. This is approximated by projecting original data to
   first principal component of \code{Wz}. This is possible only when the data window is smaller
@@ -48,7 +43,7 @@ W.effects(model, X, Y = NULL)
 }
 
 \value{
-\code{z.expectation} gives the matrix z. \code{z.effects} gives
+\code{z.effects} gives
 a projection vector over the samples and \code{W.effects} gives a projection vector
 over the variables.
 }
@@ -81,19 +76,16 @@ data(chromosome17)
 window <- fixed.window(geneExp, geneCopyNum, 150, 10)
 
 ## pSimCCA model around one gene
-depmodel2 <- fit.dependency.model(window$X, window$Y)
-barplot(z.effects(depmodel2, geneExp, geneCopyNum))
+depmodel <- fit.dependency.model(window$X, window$Y)
+# Conversion from DependencyModel to GeneDependencyModel so that gene name and location can be stored
+depmodel <- as(depmodel,"GeneDependencyModel")
+setGeneName(depmodel) <- window$geneName
+setLoc(depmodel) <- window$loc
+barplot(z.effects(depmodel, geneExp, geneCopyNum))
 
 ## Plot the contribution of each genes to the model. Only the X component is plotted
 ## here since Wx = Wy (in SimCCA) 
-barplot(W.effects(depmodel2, geneExp, geneCopyNum)$X)
-
-## Fit pCCA around one gene
-depmodel <- fit.dependency.model(window$X, window$Y, zDimension = 1,
-	                         marginalCovariances = "full", H = NA)
-
-## Retrieve the shared latent variable Z between data sets
-z.expectation(depmodel, geneExp, geneCopyNum)
+barplot(W.effects(depmodel, geneExp, geneCopyNum)$X)
 
 ## plot.DpenendencyModel shows also sample and variable effects
 plot(depmodel,geneExp,geneCopyNum)

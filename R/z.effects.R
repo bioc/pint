@@ -42,7 +42,7 @@ z.effects <- function(model, X, Y = NULL){
   # for models with one data set
   else {
     W <- W$total
-    z <- z.expectation(model,X)
+    z <- z.expectation(model,X$data)
     
     # Calculate first component of PCA for W*z
     pca <- princomp(t(W%*%z))

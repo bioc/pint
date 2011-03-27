@@ -187,19 +187,12 @@ models17pSimCCA <- screen.cgh.mrna(geneExp, geneCopyNum,
                                     
 plot(models17pSimCCA)
 
-## pCCA model on chromosome 17q with 3-dimensional latent variable z
+## pCCA model on chromosome 17p with 3-dimensional latent variable z
 models17ppCCA <- screen.cgh.mrna(geneExp, geneCopyNum,
                                    windowSize = 10,
                                    chromosome = 17, arm = 'p',method="pCCA", 
 	      	 	           params = list(zDimension = 3))
 plot(models17ppCCA)
-
-## pFA on chromosome 17p. method is determined by the parameters
-models17ppFA <- screen.cgh.mrna(geneExp, geneCopyNum,
-                                  windowSize = 10,
-                                  chromosome = 17, arm = 'p',
-                                  params = list(marginalCovariances = "diagonal", H = NA))
-plot(models17ppFA)
 }
 \keyword{math}
 \keyword{iteration}

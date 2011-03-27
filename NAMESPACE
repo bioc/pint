@@ -1,34 +1,20 @@
 
 export(
-#cost5,
-#dependency.score,
 iterative.window,
 fixed.window,
 fit.cgh.mir.byname,
 fit.cgh.mrna.byname,
-fit.dependency.model,
-#initialize2,
-#optimize.simCCA.W,
-ppca,
-pcca,
-pcca.isotropic,
-pfa,
-#phi.EM.simcca,
 pint.data,
 pint.match,
-plot.DependencyModel,
-plot.ChromosomeArmModels,
+plot.GeneDependencyModel,
 plot.ChromosomeModels,
 plot.GenomeModels,
 screen.cgh.mrna,
 screen.cgh.mir,
-#simCCA.optimize.fullcov.EM,
 W.effects,
-z.expectation,
 z.effects)
 
-exportClasses("DependencyModel",
-"ChromosomeArmModels",
+exportClasses("GeneDependencyModel",
 "ChromosomeModels",
 "GenomeModels")
 
@@ -61,3 +47,6 @@ as.data.frame
 )
 
 importFrom(graphics, plot)
+import(dmt)
+
+importClasses("DependencyModel")

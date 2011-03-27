@@ -1,84 +1,51 @@
-setMethod(f="show",signature("ChromosomeArmModels"),
+setMethod(f="show",signature("ChromosomeModels"),
   function(object){
-    if(length(object@models) == 0){
-	  cat("No dependency models calculated for chromosome: ", as.character(object@chromosome), 
-	      as.character(object@arm), "\n", sep = "")
-	  }
-	else {
-      cat("*** Dependency models for chromosome: ", as.character(object@chromosome), 
-          as.character(object@arm), " ***\n", sep = "")
-      cat("Number of models:", length(object@models),"\n")
-      cat("Method used:", as.character(object@method), "; window size", getWindowSize(object), "\n")
-		
-      #Printing parameters
-      if(length(object@params) > 0){
-        cat("Method parameters: \n")
-        names <- names(object@params)
-        for (n in 1:length(names)){			
-          if(names[n] == 'H'){
-            if(identical(object@params$H,diag(1,getWindowSize(object),getWindowSize(object)))){
-              cat("- H: identity matrix","\n")
-            }
-            else {
-              cat("- ")
-              cat(matrix.print(object@params$H,"H"),"\n", sep="")				
-            }
-          }
-          else {
-            cat("- ",names[n], ": ", object@params[[names[n]]], "\n", sep="")
-          }
-        }
+
+    arms <- getArm(object)
+    if (getModelNumbers(object) == 0){
+      cat("No dependency models calculated for chromosome: ", as.character(object@chromosome), "\n", sep = "")
+    } else {
+      cat("*** Dependency models for chromosome:", as.character(object@chromosome))
+      if (all(arms == 'p') || all(arms == 'q')){
+        cat(as.data.frame(object)$arm[1])
+      }          
+      cat(" ***\n", sep = "")
+      
+      cat("Method used:", getModelMethod(object), "with window size", getWindowSize(object), "\n")
+      if (any(arms == 'p') && any(arms == 'q')){
+        cat("Number of models in ", as.character(object@chromosome), "p: ",  length(arms == 'p'), 
+            ", ", as.character(object@chromosome), "q: ",  length(arms == 'q'), "\n", sep="")
+      } else {
+        cat("Number of models: ",  getModelNumbers(object), "\n", sep="")
       }
+      #Printing parameters
+      #if(length(object@params) > 0){
+      #  cat("Method parameters: \n")
+      #  names <- names(object@params)
+      #  for (n in 1:length(names)){			
+      #    if(names[n] == 'H'){
+      #      if(identical(object@params$H,diag(1,getWindowSize(object),getWindowSize(object)))){
+      #        cat("- H: identity matrix","\n")
+      #      } else {
+      #        cat("- ")
+      #        cat(matrix.print(object@params$H,"H"),"\n", sep="")				
+      #      }
+      #    } else {
+      #      cat("- ",names[n], ": ", object@params[[names[n]]], "\n", sep="")
+      #    }
+      #  }
+      #}
+
       #Summary of score
       cat("Summary of dependency scores: \n")
-      print(summary(getScore(object)))
-		
+      score <- getScore(object)
+      print(summary(score))
+
       cat("******************************************\n")
     }
   }
 )
 
-setMethod(f="show",signature("ChromosomeModels"),
-	function(object){
-	
-		if ((getModelNumbers(object@pArmModels) + getModelNumbers(object@qArmModels)) == 0){
-			cat("No dependency models calculated for chromosome: ", as.character(object@chromosome), "\n", sep = "")
-		}
-		else {
-			cat("*** Dependency models for chromosome: ", as.character(object@chromosome)," ***\n", sep = "")
-			cat("Method used:", as.character(object@method), "; window size", getWindowSize(object), "\n")
-			cat("Number of models in ", as.character(object@chromosome), "p: ",  getModelNumbers(object@pArmModels), 
-				", ", as.character(object@chromosome), "q: ",  getModelNumbers(object@qArmModels), "\n", sep="")
-	
-			#Printing parameters
-			if(length(object@params) > 0){
-				cat("Method parameters: \n")
-				names <- names(object@params)
-				for (n in 1:length(names)){			
-			    	if(names[n] == 'H'){
-						if(identical(object@params$H,diag(1,getWindowSize(object),getWindowSize(object)))){
-							cat("- H: identity matrix","\n")
-						}
-						else {
-					    	cat("- ")
-					    	cat(matrix.print(object@params$H,"H"),"\n", sep="")				
-						}
-					}
-					else {
-						cat("- ",names[n], ": ", object@params[[names[n]]], "\n", sep="")
-					}
-				}
-			}
-
-			#Summary of score
-			cat("Summary of dependency scores: \n")
-			score <- c(getScore(getPArm(object)),getScore(getQArm(object)))
-			print(summary(score))
-
-			cat("******************************************\n")
-		}
-	}
-)
 
 setMethod(f="show",signature("GenomeModels"),
 	function(object){
@@ -89,30 +56,30 @@ setMethod(f="show",signature("GenomeModels"),
 	    cat("Number of models:", getModelNumbers(object),"\n")
 		cat("Method used:", as.character(object@method), "; window size", getWindowSize(object), "\n")
 		#Printing parameters
-		if(length(object@params) > 0){
-			cat("Method parameters: \n")
-			names <- names(object@params)
-			for (n in 1:length(names)){			
-			        if(names[n] == 'H'){
-					if(identical(object@params$H,diag(1,getWindowSize(object),getWindowSize(object)))){
-						cat("- H: identity matrix","\n")
-					}
-					else {
-					     cat("- ")
-					     cat(matrix.print(object@params$H,"H"),"\n", sep="")				
-					}
-				}
-				else {
-					cat("- ",names[n], ": ", object@params[[names[n]]], "\n", sep="")
-				}
-			}
-		}
+		#if(length(object@params) > 0){
+		#	cat("Method parameters: \n")
+		#	names <- names(object@params)
+		#	for (n in 1:length(names)){			
+		#	        if(names[n] == 'H'){
+		#			if(identical(object@params$H,diag(1,getWindowSize(object),getWindowSize(object)))){
+		#				cat("- H: identity matrix","\n")
+		#			}
+		#			else {
+		#			     cat("- ")
+		#			     cat(matrix.print(object@params$H,"H"),"\n", sep="")				
+		#			}
+		#		}
+		#		else {
+		#			cat("- ",names[n], ": ", object@params[[names[n]]], "\n", sep="")
+		#		}
+		#	}
+		#}
 
 		#Summary of score
 		cat("Summary of dependency scores: \n")
 		score <- vector()
 		for(i in 1:24){
-			score <- c(score, getScore(getPArm(object[[i]])), getScore(getQArm(object[[i]])))
+			score <- c(score, getScore(object[[i]]))
 		}
 		print(summary(score))
 
@@ -121,17 +88,17 @@ setMethod(f="show",signature("GenomeModels"),
 )
 
 
-setMethod(f="show",signature("DependencyModel"),
+setMethod(f="show",signature("GeneDependencyModel"),
   function(object){
-    cat("***", object@method, "dependency model for window size:",object@windowSize,"*** \n")
+    cat("***", object@method, "dependency model for window size:",getWindowSize(object),"*** \n")
     #Gene name and location
-    if (object@geneName != "" | length(object@loc) > 0){   
-      cat("Gene:",object@geneName)
+    if (length(object@geneName) > 0 | length(object@loc) > 0){   
+      if (length(object@geneName) > 0) cat("Gene:",object@geneName)
       if(length(object@loc) > 0){
         cat("  Location: ")
-        if (object@arm != "" && object@chromosome != ""){
-          cat(object@chromosome,object@arm,", ",sep="")
-        }
+        if (length(object@chromosome) > 0) cat(object@chromosome)
+        if (length(object@arm) > 0) cat(object@arm)
+        cat(", ")
         loc <- format((object@loc/1e6),digits=5)
         cat(loc,"Mbp",sep="")
       }

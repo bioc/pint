@@ -5,10 +5,31 @@
 
 \alias{getPArm}
 \alias{getQArm}
+\alias{[[}
+\alias{[[<-}
+\alias{getChromosome}
+\alias{getArm}
+\alias{getGeneName}
+\alias{getModelMethod}
+\alias{getParams}
+\alias{getWindowSize}
+\alias{topGenes}
+\alias{topModels}
+\alias{getModelNumbers}
+\alias{isEmpty}
+\alias{orderGenes}
+\alias{findModel}
 
+
+\alias{[[,ChromosomeModels-method}
+\alias{[[<-,ChromosomeModels-method}
 \alias{getChromosome,ChromosomeModels-method}
 \alias{getPArm,ChromosomeModels-method}
 \alias{getQArm,ChromosomeModels-method}
+\alias{getArm,ChromosomeModels-method}
+\alias{getGeneName,ChromosomeModels-method}
+\alias{getLoc,ChromosomeModels-method}
+\alias{getScore,ChromosomeModels-method}
 \alias{getModelMethod,ChromosomeModels-method}
 \alias{getParams,ChromosomeModels-method}
 \alias{getWindowSize,ChromosomeModels-method}
@@ -18,6 +39,7 @@
 \alias{isEmpty,ChromosomeModels-method}
 \alias{orderGenes,ChromosomeModels-method}
 \alias{findModel,ChromosomeModels-method}
+\alias{isEmpty,ChromosomeModels-method}
 \alias{[[,ChromosomeModels-method}
 \alias{as.data.frame,ChromosomeModels-method}
 
@@ -33,8 +55,8 @@ particular chromosome. The dependency models are in two
 
 \section{Slots}{
   \describe{
-    \item{pArmModels, qArmModels}{an \linkS4class{ChromosomeArmModels} object, dependency models in p or q arm}
-    \item{chromosome}{a factor of chromosome}
+     \item{models}{a list of \linkS4class{GeneDependencyModel}s}
+    \item{chromosome}{the number of chromosome}
     \item{method}{a string with name of the method used in dependency models}
     \item{params}{a list of parameters of the used method}
   }
@@ -43,28 +65,38 @@ particular chromosome. The dependency models are in two
 \section{Methods}{
   \describe{
 
-    \item{[[}{\code{signature(x = "ChromosomeModels")}: Returns the
+    \item{[[}{\code{signature(x = "ChromosomeModels")}: Returns the 
+    model from the list or returns the
     dependency models of the arm specified with 'p' or 'q'}
+
+    \item{[[<-}{\code{signature(x = "ChromosomeArmModels")}: Attaches
+    the a model to the list}
 
     \item{getChromosome}{\code{signature(model = "ChromosomeModels")}:
     Returns the chromosome}
 
+    \item{getArm}{\code{signature(model = "ChromosomeModels")}:
+    Returns a vector of arms where corresponding dependency model has been calculated.}
+
+    \item{getLoc}{\code{signature(model = "ChromosomeModels")}:
+    Returns a vector of locations of the genomic dependency models.}
+
+    \item{getScore}{\code{signature(model = "ChromosomeModels")}:
+    Returns a vector of the scores of the genomic dependency models.}
+
     \item{getPArm}{\code{signature(model = "ChromosomeModels")}: Returns
     the dependency models of the p arm which is of class
-    \linkS4class{ChromosomeArmModels}}
+    \linkS4class{ChromosomeModels}}
 
     \item{getQArm}{\code{signature(model = "ChromosomeModels")}: Returns
     the dependency models of the q arm which is of class
-    \linkS4class{ChromosomeArmModels}}
+    \linkS4class{ChromosomeModels}}
 
     \item{getModelMethod}{\code{signature(model = "ChromosomeModels")}:
     Returns the name of the used method}
 
     \item{getParams}{\code{signature(model = "ChromosomeModels")}:
     Returns a list of used parameters for the method}
-
-    \item{getChr}{\code{signature(model = "ChromosomeModels")}: Returns
-    the chromosome}
 
     \item{getWindowSize}{\code{signature(model = "ChromosomeModels")}:
     Returns the size of the window used in the dependency models.}
@@ -97,7 +129,7 @@ particular chromosome. The dependency models are in two
 
 \seealso{ For calculation of dependency models for chromosomal arm:
 \code{\link{screen.cgh.mrna}}. This class holds a number of
-\linkS4class{DependencyModel} in two \linkS4class{ChromosomeArmModels}
+\linkS4class{GeneDependencyModel} 
 objects. For plotting dependency scores see \link{dependency score plotting}. 
 Dependency models for whole genome:
 \linkS4class{GenomeModels}.  }
@@ -111,9 +143,20 @@ model17 <- screen.cgh.mrna(geneExp, geneCopyNum, windowSize = 10, chr
 
 model17
 
+## Information of the dependency model which has the highest dependency score
+topGenes(model17, 1)
+
+## Finding a dependency model by its name
+findModel(model17, "ENSG00000129250")
+
+## Information of the first dependency model
+model17[[1]]
+
+#Plotting
+plot(model17)
+
 # genes in p arm with the highest dependency scores
 topGenes(model17[['p']], 5)
 
-plot(model17)
 }
 \keyword{classes}

@@ -12,11 +12,13 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData = FAL
   # Find unique chromosome names present in the data
   # First order chromosomes 1...24, then chromosomes with other names
   if (is.null(chrs)) {
-    default.chrs <- as.character(1:24)
-    chrs <- c(default.chrs, sort(setdiff(unique(X$info[["chr"]]), default.chrs)))
-  } else {
-    chrs <- as.character(chrs)
+    chrs <- 1:24
   }
+  #  default.chrs <- as.character(1:24)
+  #  chrs <- c(default.chrs, sort(setdiff(unique(X$info[["chr"]]), default.chrs)))
+  #} else {
+  #  chrs <- as.character(chrs)
+  #}
 
   message("Matching probes between the data sets..")
   xindices <- yindices <- vector()
@@ -42,8 +44,8 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData = FAL
   #X$info$chr = factor(X$info$chr, levels = c(1:22, "X", "Y"))
   #Y$info$chr = factor(Y$info$chr, levels = c(1:22, "X", "Y"))
 
-  X$info$chr = factor(X$info$chr, levels = c(1:24))
-  Y$info$chr = factor(Y$info$chr, levels = c(1:24))
+  #X$info$chr = factor(X$info$chr, levels = c(1:24))
+  #Y$info$chr = factor(Y$info$chr, levels = c(1:24))
 
   newX <- list(data = xdat, info = X$info[xindices,])
   newY <- list(data = ydat, info = Y$info[yindices,])

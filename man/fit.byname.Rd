@@ -84,7 +84,7 @@ data(chromosome17)
 
 model <- fit.cgh.mrna.byname(geneExp,geneCopyNum,"ENSG00000132361",10)
 ## With different model parameters (pCCA)
-model2 <- fit.cgh.mrna.byname(geneExp,geneCopyNum,"ENSG00000132361",10,zDimension=5,H=NA)
+model2 <- fit.cgh.mrna.byname(geneExp,geneCopyNum,"ENSG00000132361",10,zDimension=5,priors=list(Nm.wxwy.sigma = NULL))
 }
 \keyword{math}
 \keyword{iteration}
