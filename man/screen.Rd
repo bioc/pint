@@ -30,8 +30,8 @@ outputType = "models")
 	genes in data matrix.
 
 	\describe{
-	  \item{\code{chr}}{ Factor indicating the chrosome for the gene: (1 to 23, or X or Y}
-	  \item{\code{arm}}{ Factor indicating the chromosomal arm for the gene ('p' or 'q')}
+	  \item{\code{chr}}{ Number indicating the chrosome for the gene: (1 to 24). Characters 'X' or 'Y' can be used also.}
+	  \item{\code{arm}}{ Character indicating the chromosomal arm for the gene ('p' or 'q')}
 	  \item{\code{loc}}{ Location of the gene in base pairs.}
 	}
       }
@@ -133,8 +133,7 @@ Dependency scores are plotted with \link{dependency score plotting}.
 The type of the return value is defined by the the function argument \code{outputType}.
 
 With the argument \code{outputType = "models"}, the return value
-depends on the other arguments; returns a \linkS4class{ChromosomeArmModels}
-which contains all the models for dependencies in chromosomal arm, a
+depends on the other arguments; returns a
 \linkS4class{ChromosomeModels} which contains all the models for
 dependencies in chromosome or a \linkS4class{GenomeModels} which
 contains all the models for dependencies in genome.
@@ -171,7 +170,6 @@ Olli-Pekka Huovilainen \email{ohuovila@gmail.com} and Leo Lahti \email{leo.lahti
 
 \seealso{
 To fit a dependency model: \code{\link{fit.dependency.model}}.
-\linkS4class{ChromosomeArmModels} holds dependency models for chromosomal arm,
 \linkS4class{ChromosomeModels} holds dependency models for chromosome, 
 \linkS4class{GenomeModels} holds dependency models for genome. For
 plotting, see: 

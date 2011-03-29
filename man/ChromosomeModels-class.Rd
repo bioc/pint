@@ -46,8 +46,7 @@
 \title{Class "ChromosomeModels"}
 
 \description{Collection of dependency models fitting two data sets in
-particular chromosome. The dependency models are in two
-\linkS4class{ChromosomeArmModels} objects which represents q and p arms.
+particular chromosome. 
 }
 
 \section{Objects from the Class}{ Function
@@ -69,7 +68,7 @@ particular chromosome. The dependency models are in two
     model from the list or returns the
     dependency models of the arm specified with 'p' or 'q'}
 
-    \item{[[<-}{\code{signature(x = "ChromosomeArmModels")}: Attaches
+    \item{[[<-}{\code{signature(x = "ChromosomeModels")}: Attaches
     the a model to the list}
 
     \item{getChromosome}{\code{signature(model = "ChromosomeModels")}:
@@ -121,7 +120,8 @@ particular chromosome. The dependency models are in two
 	
 	\item{as.data.frame}{\code{signature(x = "ChromosomeModels")}:
 	converts dependency models as a dataframe with eachs row representing a dependency models for one gene.
-	The columns are: \code{geneName},\code{dependencyScore},\code{chr},\code{arm},\code{loc}}
+	The columns are: \code{geneName},\code{dependencyScore},\code{chr},\code{arm},\code{loc}. If arm information 
+  has not been given to screening function, \code{arm} column is omitted}.
   }
 }
 

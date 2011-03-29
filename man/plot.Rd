@@ -31,7 +31,7 @@ plot.GenomeModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
 
 \arguments{
 	\item{x}{
-		\code{\link{GeneDependencyModel-class}}, , 
+		\code{\link{GeneDependencyModel-class}}, 
 		\code{\link{ChromosomeModels-class}}, \code{\link{GenomeModels-class}}; models to be plotted. 
 	}
 	\item{X, Y}{

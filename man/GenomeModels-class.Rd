@@ -19,9 +19,7 @@
 
 \description{Collection of dependency models fitting two data sets in
 whole genome. The dependency models are in a list of
-\linkS4class{ChromosomeModels}s (which represents each chromosome) that
-have two \linkS4class{ChromosomeArmModels} objects (which represents q
-and p arms) that have a list of dependency models in that chromosomal
+\linkS4class{ChromosomeModels}s (which represents each chromosome) that have a list of dependency models in that chromosomal
 arm. }
 
 \section{Objects from the Class}{ Function
@@ -86,7 +84,6 @@ arm. }
 
 \seealso{ For calculation of dependency models for chromosomal arm:
 \code{\link{screen.cgh.mrna}}. This class holds a number of
-\linkS4class{DependencyModel} in two \linkS4class{ChromosomeModels}
-objects in each \linkS4class{ChromosomeArmModels}.  For plotting
+\linkS4class{GeneDependencyModel} in each \linkS4class{ChromosomeModels}.  For plotting
 dependency scores see \code{\link{dependency score plotting}}.  }
 \keyword{classes}
