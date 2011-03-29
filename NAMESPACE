@@ -48,5 +48,3 @@ as.data.frame
 
 importFrom(graphics, plot)
 import(dmt)
-
-importClasses(dmt,"DependencyModel")
