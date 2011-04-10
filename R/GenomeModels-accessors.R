@@ -50,8 +50,12 @@ setReplaceMethod(f="[[",signature("GenomeModels"),
                              ))
 
 setMethod("getWindowSize","GenomeModels", 
-          function(model) { 
-            return(getWindowSize(getPArm(model[[1]]))) 
+          function(model) {
+            for(i in 1:24) {
+              if(getModelNumbers(model[[i]]) > 0)
+              return(getWindowSize(model[[i]]))
+            }
+            return(NULL) 
           } 
 ) 
 
@@ -71,6 +75,10 @@ setMethod("topGenes",signature("GenomeModels"),
             }
             
                                         #order dataframe and take num names of genes with highest scores 
+            if (num > getModelNumbers(model)){
+              warning("Attempted to get more genes than there are models. Returning the genes from all models")
+              num <- getModelNumbers(model)
+            }
             return(as.character(data[order(scores,decreasing=TRUE),]$genes[1:num]))
           }
           )
@@ -102,6 +110,12 @@ setMethod("topModels","GenomeModels",
                                         #Order dataframe
             data <- data[order(scores,decreasing=TRUE),]
             returnList = list()
+
+            if (num > getModelNumbers(model)){
+              warning("Attempted to get more models than is calculated. Returning all models")
+              num <- getModelNumbers(model)
+            }
+
             for (i in 1:num) {
               if (data$arm[i] == 'p')
                 returnList = c(returnList,getPArm(model[[data$chr[i]]])[[data$indices[i]]])

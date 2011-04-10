@@ -22,11 +22,11 @@ setMethod("getChromosome","ChromosomeModels",
 setMethod("getPArm","ChromosomeModels", 
   function(model) {
     arms <- getArm(model)
-	if (all(arms == "")){
-	  stop("cannot return dependency models for an arm because no arm information was given")
-	}
+	  if (all(arms == "") && length(arms) > 0){
+	    stop("cannot return dependency models for an arm because no arm information was given")
+	  }
 	
-	return(new("ChromosomeModels",                                  
+	  return(new("ChromosomeModels",                                  
                models = model@models[arms == 'p'],                                   
                chromosome = getChromosome(model), 
                method = getModelMethod(model),                                                
@@ -37,7 +37,7 @@ setMethod("getPArm","ChromosomeModels",
 setMethod("getQArm","ChromosomeModels", 
   function(model) {
     arms <- getArm(model)
-	if (all(arms == "")){
+	if (all(arms == "") && length(arms) > 0){
 	  stop("cannot return dependency models for an arm because no arm information was given")
 	}
 	
