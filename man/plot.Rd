@@ -19,7 +19,7 @@ plot.GeneDependencyModel(x, X, Y, ann.types = NULL, ann.cols = NULL, legend.x = 
 
 plot.ChromosomeModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
 	topName = FALSE, type = 'l', xlab = 'gene location', ylab = 'dependency score',
-	main = paste('Dependency score for chromosome ', chr, sep = ''),
+	main = NULL,
 	pch = 20, cex = 0.75, tpch = 3, tcex = 1, xlim = NA, ylim = NA,...)
 
 plot.GenomeModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, 
@@ -78,8 +78,10 @@ plot.GenomeModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
       }
 
       \item{type, xlab, ylab, main}{
-	plot type and labels. See \code{\link{plot}} for details. In
-	\code{plot.GenomeModels} these affet only if \code{onePlot} is
+	plot type and labels. See \code{\link{plot}} for details. 
+  A text for chromosome (and arm if only models from one arm is plotted) 
+  is used in \code{main} if \code{NULL} is given. In
+	\code{plot.GenomeModels}, \code{ylab} and \code{xlab} affect only if \code{onePlot} is
 	\code{TRUE}.
       }
       

@@ -111,7 +111,7 @@ plot.GeneDependencyModel <- function(x, X, Y = NULL, ann.types = NULL, ann.cols 
 plot.ChromosomeModels <-
 function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FALSE,
 	type = 'l', xlab = 'gene location', ylab = 'dependency score',
-	main = paste('Dependency score for chromosome ', chr, sep = ''),
+	main = NULL,
 	pch = 20, cex = 0.75, tpch = 3, tcex = 1, xlim = NA, ylim = NA,...){
 
   models <- x
@@ -158,6 +158,13 @@ function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FAL
       xlim <- c(min(min(plocs/1e6),min(qlocs/1e6)),max(max(qlocs/1e6),max(plocs/1e6)))
     }
   }	
+
+  # Text for plot
+  if (is.null(main)) {
+    main <- paste('Dependency score for chromosome ', chr, sep = '')
+    if (length(qscores) == 0) main <- paste(main, 'p', sep='')
+    if (length(pscores) == 0) main <- paste(main, 'q', sep='')
+  }    
 
   #p Arm plot
   pl <- plot((plocs/1e6), pscores, type = type, xlab = xlab, xlim = xlim,
