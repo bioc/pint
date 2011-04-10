@@ -57,16 +57,20 @@ outputType = "models")
   }
 
   \item{method}{
-    Specify the dependency model: 
+    Dependency screening can utilize any of the functions from the
+    package dmt (at CRAN). Particular options include
+
     \describe{
+      \item{'pSimCCA'}{probabilistic similarity constrained canonical
+      correlation analysis \cite{Lahti et al. 2009}. This is the default
+      method.}    
       \item{'pCCA'}{probabilistic canonical correlation analysis \cite{Bach & Jordan 2005}} 
       \item{'pPCA'}{probabilistic principal component analysis \cite{Tipping & Bishop 1999}}
       \item{'pFA'}{probabilistic factor analysis \cite{Rubin & Thayer 1982}}
-      \item{'pSimCCA'}{probabilistic similarity constrained canonical correlation analysis \cite{Lahti et al. 2009}}
-      \item{'TPriorpSimCCA'}{probabilistic similarity constarined canonical correlation analysis
+      \item{'TPriorpSimCCA'}{probabilistic similarity constrained canonical correlation analysis
 	with possibility to tune T prior (Lahti et al. 2009)}
     }
-    If anything else, the model is specified by the given parameters.
+      If anything else, the model is specified by the given parameters.
   }
 
   \item{params}{

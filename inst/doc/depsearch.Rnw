@@ -4,9 +4,7 @@
 
 \title{pint:\\Pairwise integration of functional genomics data}
 
-\author{Olli-Pekka Huovilainen\footnote{ohuovila@gmail.com} and Leo Lahti\\
-  Department of Information and Computer Science,\\Aalto University
-  School of Science and Technology, Finland}
+\author{Olli-Pekka Huovilainen$^1$\footnote{ohuovila@gmail.com}\  and Leo Lahti$^{1,2}$\\(1) Information and Computer Science, Aalto University, Finland\\(2) Veterinary Biosciences, University of Helsinki, Finland}
 
 \usepackage{Sweave}
 \usepackage{float}
@@ -19,15 +17,16 @@
 \newcommand{\Robject}[1]{{\texttt{#1}}}
 \newcommand{\Rpackage}[1]{{\textit{#1}}}
 
+\def\z{\mathbf{z}}
+\def\x{\mathbf{x}}
+\def\y{\mathbf{y}}
+\def\N{\mathcal{N}}
+
 \begin{document}
 
 \maketitle
 
-%\VignetteIndexEntry{Finding chromosome areas with strong dependencies between data sets}
-
 \section{Introduction}
-
-%* motivation
 
 Multiple types of genomic observations from the same patients are
 increasingly available in biomedical studies, including measurements
@@ -42,77 +41,72 @@ with potential diagnostic, prognostic and clinical impact
 
 We demonstrate how to integrate gene or micro-RNA expression with DNA
 copy number (aCGH) measurements to discover functionally active
-chromosomal aberrations. The models capture the shared signal in
-paired observations, indicating the affected genes and patients.  The
-methods are potentially applicable also to other types of biomedical
+chromosomal aberrations and to visualize the affected genes and
+samples. The methods are applicable also to other types of biomedical
 data, including epigenetic modifications, SNPs, alternative splicing
 and transcription factor binding, or in other application fields.
 
-The methods are based on a particular latent variable model,
-probabilistic canonical correlation analysis \cite{Bach05} and its
-extensions \cite{Archambeau06,Klami08,Lahti09mlsp}. Probabilistic
-formulation deals rigorously with uncertainty associated with small
-sample sizes common in biomedical studies.  Additional tools to guide
-dependency modeling through Bayesian priors are provided
-\cite{Lahti09mlsp}. For more details on the implementation and usage,
-see \cite{Huovilainen10}.
-
-%The package provides general-purpose tools for the discovery and
-%analysis of statistical dependencies between co-occurring data
-%sources. 
-
+The methods are based on latent variable models including
+probabilistic canonical correlation analysis \cite{Bach05} and related
+extensions \cite{Archambeau06,Klami08,Lahti09mlsp}, implemented in the
+\Rpackage{dmt} package in CRAN \cite{Lahti10dmt,
+  Huovilainen10}. Probabilistic formulation deals rigorously with
+uncertainty associated with small sample sizes common in biomedical
+studies and provides tools to guide dependency modeling through
+Bayesian priors \cite{Lahti09mlsp}.
 
 
 \section{Examples}
 
 This Section shows how to apply the methods for dependency detection
-in functional genomics studies. The general dependency modeling
-framework and tools are described in Section ~\ref{sec:framework}.
+in functional genomics. For further details on the dependency modeling
+framework, see the dependency modeling package {\it dmt} in
+CRAN\footnote{http://dmt.r-forge.r-project.org/}.
+
 
 \subsection{Example data}
 
-Use of the package is demonstrated with an example data set containing
-paired observations of gene expression and copy number from a set of
-gastric cancer patients \cite{Myllykangas08jc}.
-
-Load the package and example data:
+Our example data set contains matched observations of gene expression
+and copy number from a set of gastric cancer patients
+\cite{Myllykangas08jc}. Load the package and example data with:
 
 <<>>=
 library(pint)
 data(chromosome17)
 @
 
-Each example data set ($geneExp$ and $geneCopyNum$) consists of a list
-with two items: $data$ and $info$. The probes in gene expression and
-gene copy number are assumed to be paired. $data$ is a data matrix
-with gene expression or gene copy number data. Genes are in rows and
-samples in columns and rows and columns should be named. $info$ is a
-data frame with additional information about genes. It has three
-elements: $loc$, $chr$ and $arm$. $loc$ indicates the genomic location
-of the probes in base pairs (numeric); $chr$ and $arm$ are factors 
-indicating the chromosome and chromosomal arm of the probe.
+The example data contains ($geneExp$ and $geneCopyNum$) objects. Each
+of them is a list with two elements: $data$ and $info$:
 
-\subsubsection{Modeling assumptions}
+\begin{itemize}
+\item $data$ data matrix with gene expression or gene copy number
+  data. Genes are in rows and samples in columns and rows and columns
+  should be named. The current implementation assumes that the probes
+  and samples are matched between gene expression and gene copy number
+  data.
 
-Note that the currently implemented dependency models assume
-approximately Gaussian distributed observations. With microarray data
-sets, this is typically obtained by presenting the data in the
-\(log_2\) domain; this is the default in many microarray preprocessing
-methods.
+\item $info$ data frame with additional information about genes; in
+  particular, $loc$ indicates the genomic location of each probe in
+  base pairs (numeric); $chr$ and $arm$ indicate the chromosome and
+  chromosomal arm of the probe.
+\end{itemize}
+  
+The models assume {\it approximately} Gaussian distributed
+observations. With microarray data sets, this is typically obtained by
+presenting the data in the \(log_2\) domain, which is the default in
+many microarray preprocessing methods.
+
 
 \subsection{Discovering functionally active copy number changes}
 
-Chromosomal regions with frequent copy number alterations and
-associated gene expression changes are potential candidates for cancer
-genes. Such regions are assumed to have high dependency between gene
-copy number and expression levels. To detect these regions, we measure
-the dependency between expression and copy number for each region and
-pick the regions showing the highest dependency. In practice, a
-sliding window over the genome is used.
-
-
-The following example screens chromosome arm 17q for dependendent
-regions.
+Chromosomal regions that have simultaneous copy number alterations and
+gene expression changes will reveal potential cancer gene
+candidates. To detect these regions, we measure the dependency between
+expression and copy number for each region and pick the regions
+showing the highest dependency as such regions have high dependency
+between the two data sources. A sliding window over the genome is used
+to quantify dependency within each region. Here we show a brief example on
+chromosome arm 17q:
 
 <<>>=
 models <- screen.cgh.mrna(geneExp, geneCopyNum, windowSize = 10, chr = 17, arm = 'q')
@@ -127,21 +121,21 @@ dependency modeling method is a constrained version of probabilistic
 CCA; \cite{Lahti09mlsp}. See help(screen.cgh.mrna) for further
 options.
 
-\subsection{Application to micro-RNA or epigenetic measurements}
 
-Micro-RNA and epigenetic measurements are increasingly available in
-biomedical studies, accompanying observations of DNA copy number
-changes and mRNA expression levels. Assuming that appropriate
-preprocessing is performed, and these data types are provided as
-matrices with matched samples and chromosomal location information for
-the measurement probes, the current functions provide tools to
-discover chromosomally local dependencies between any of these data
-sources.
+\subsection{Application in other genomic data integration tasks}
+
+Other genomic data sources such as micro-RNA or epigenetic
+measurements are increasingly available in biomedical studies,
+accompanying observations of DNA copy number changes and mRNA
+expression levels \cite{tcga08}. Given matched probes and samples, the
+current functions can be used to screen for dependency between any
+pair of genomic (or other) data sources.
+
 
 \subsection{Visualizing the results}
 
-A dependency plot reveals chromosomal regions with the strongest
-dependency between gene expression and copy number:
+Dependency plots will reveals chromosomal regions with the strongest
+dependency between gene expression and copy number changes:
 
 \begin{figure}[H]
 \begin{center}
@@ -164,30 +158,18 @@ neighborghood can be retrieved with:
 topGenes(models, 5)
 @
 
-It is possible investigate the contribution of individual patients or
-probes on the overall dependency (Fig. ~\ref{fig:modelplot}). 
-
-This is based on the model parameters \(W\) and the latent variable
-\(z\) that are easily retrieved from the learned dependency model (see
-Section~\ref{sec:framework} for description of the model
-parameters). In 1-dimensional case the interpretation is
-straightforward: \(z\) indicates the strength of shared signal in each
-sample (patient), and \(W\) describes how this signal is captured by
-each gene expression or copy number probe. With multi-dimensional
-\(W\) and \(z\), the variable- and sample effects are approximated
-(for visualization purposes) by the loadings and projection scores
-corresponding of the first principal component of \(Wz\) which
-describes the shared signal in each data set.
-
-\subsection{Additional parameters}
-
-The dimensionality of the shared latent variable \(Z\) and the
-dependency modeling method can also be set by the user. For example,
-use probabilistic CCA with 1-dimensional \(Z\):
-
-<<eval = FALSE>>=
-model17qpCCA <- screen.cgh.mrna(geneExp, geneCopyNum, windowSize = 10, chr = 17, arm = 'q', method = "pCCA", params = list("zDimension = 1")) 
-@
+It is also possible investigate the contribution of individual
+patients or probes on the overall dependency based on the model
+parameters \(W\) and the latent variable \(z\) that are easily
+retrieved from the learned dependency model
+(Fig. ~\ref{fig:modelplot}). In 1-dimensional case the interpretation
+is straightforward: \(z\) will indicate the shared signal strength in
+each sample and \(W\) describes how the shared signal is reflected in
+each data source. With multi-dimensional \(W\) and \(z\), the
+variable- and sample effects are approximated (for visualization
+purposes) by the loadings and projection scores corresponding of the
+first principal component of \(Wz\) is used to summarize the shared
+signal in each data set. 
 
 
 \begin{figure}[H]
@@ -205,149 +187,40 @@ plot(model, geneExp, geneCopyNum)
 \end{figure}
 
 
-\section{Dependency modeling framework}
-\label{sec:framework}
+\subsection{Quantifying dependency between two data sources}
 
-\begin{figure}[htb]
-\centering \includegraphics[height=3.5cm, keepaspectratio=TRUE]{cca2}
-\caption{Graphical description of the shared latent variable model showing
-generation of data sets $X$ and $Y$ from latent shared variable $\mathbf{z}$ 
-through $W_x$ and $W_y$}
-\label{modelpic}
-\end{figure}
-
-Modeling of dependencies is based on the probabilistic canonical
-correlation analysis framework \cite{Bach05} and its extensions
-\cite{Archambeau06,Lahti09mlsp}. This is a latent variable model that
-assumes that the two data sets, \(X\) and \(Y\) can be decomposed in
-{\it shared} and {\it data set-specific} components
-(Figure~\ref{modelpic}). Our task is to discover these components,
-given modeling assumptions.
-
-The shared signal is modeled with a shared latent variable
-$\mathbf{z}$. Intuitively, this measures the strength of the shared
-signal in each patient. While the variation is shared, it can have
-different manifestation in each data set. This is described by
-\(W_xz\) and \(W_yz\) where \(W_x\), \(W_y\) indicate how the shared
-signal is observed in the individual data sets. Assuming a Gaussian
-model for the shared latent variable and data set-specific effects,
-this leads to the following model:
+Detailed description of the model parameters and available dependency
+detection methods is provided with the {\it dmt} package in CRAN
+\cite{Lahti10dmt}. In summary, the shared signal between two
+(multivariate) observations \(X, Y\) is modeled with a shared latent
+variable $Z$. This can have different manifestation in each data set,
+which is described by linear transformations \(W_x\) and \(W_y\).
+Standard multivariate normal distribution for the shared latent
+variable and data set-specific effects gives the following model:
 
 \begin{equation}\label{eq:model}             
-X \sim \mathcal{N}(W_x\mathbf{z}, \Psi_x)   
-\end{equation}
-\begin{equation}\label{eq:model2}             
-Y \sim \mathcal{N}(W_y\mathbf{z}, \Psi_y)                                      
-\end{equation}
-
-The latent variable \(\mathbf{z}\) is assumed to follow standard
-multivariate normal distribution, i.e. \(\mathbf{z} ~ N(0, I)\). The
-data set-specific effects are described by the covariance matrices
-$\Psi_x$ and $\Psi_y$. The model parameters are estimated with an
-expectation-maximization (EM) algorithm (see
-'fit.dependency.model'). After fitting the model parameters \(W\),
-\(\Psi\), a maximum-likelihood estimate of \(\mathbf{z}\) can be
-calculated (see 'z.expectation').
-
-\subsection{Special cases}
-
-Particular models are obtained as special cases of the above modeling
-framework. This leads to a set of alternative models for dependency
-detection, including
-
-\begin{itemize}
-  \item probabilistic PCA (pPCA)
-  \item probabilistic factor analysis (pFA)  
-  \item probabilistic CCA (pCCA)
-  \item similarity-constrained probabilistic CCA (pSimCCA)
-\end{itemize}
-
-These correspond to different assumptions regarding the structure of
-the data set-specific effects and types of dependency. While PCA and
-factor analysis are typically used for analysing individual data sets,
-they are special cases of the described framework and can therefore
-also be used to model dependencies between data sets. For discussion
-of the differences between these models, see \cite{Bach05,
-  Lahti09mlsp}.
-
-\subsubsection{Probabilistic PCA}
-
-Probabilistic PCA (pPCA) assumes an isotropic model for the data
-set-specific effects, with identical covariance matrices:
-
-\begin{equation}\label{eq:pPCA}
-\Psi_x = \Psi_y = \sigma I.
+\begin{aligned}
+  X \sim W_x\z + \varepsilon_x\\
+  Y \sim W_y\z + \varepsilon_y
+\end{aligned}
 \end{equation}
 
-This model is called pPCA since it is identical to concatenating
-\(X\), \(Y\), and fitting ordinary probabilistic PCA on the
-concatenated data set.
-
-\subsubsection{Probabilistic factor analysis}
-
-Probabilistic factor analysis (pFA) assumes a diagonal model for
-\(\Psi_x\), \(\Psi_y\). Note that in general, \(\Psi_x \neq
-\Psi_y\). The package also implements a special case with isotropic
-but not necessarily identical (as in pPCA) covariance matrices.
-
-This model is called pFA since it is identical to concatenating \(X\),
-\(Y\), and fitting ordinary probabilistic factor analysis on the
-concatenated data set.
-
-\subsubsection{Probabilistic CCA}
-
-Probabilistic CCA (pCCA) assumes full covariance matrices \(\Psi_x\),
-\(\Psi_y\), giving the most detailed model for the data set specific
-effects in the described modeling framework. The connection of this
-latent variable model and the traditional canonical correlation
-analysis has been established in \cite{Bach05}.
-
-\subsubsection{Probabilistic SimCCA}
-
-We also provide toos to guide dependency modeling through Bayesian
-priors \cite{Lahti09mlsp}. Similarity-constrained probabilistic CCA
-(pSimCCA) imposes a prior on the relation between $W_x$ and
-$W_y$. This can be used to guide modeling to focus on certain types of
-dependencies, and to avoid overfitting.
-
-The relationship between $W_x$ and $W_y$ is described with \(W_y =
-TW_x\). A prior on \(T\) can be used to focus the modeling on certain
-types of dependencies. We use matrix normal prior distribution:
-
-\begin{equation}\label{T}
-P(T) = N_m(H, \sigma^2_TI, \sigma^2_TI)
-\end{equation}
-
-By default, $H = I$ and \(\sigma^2_T = 0\), which results in identical
-manifestation of the shared signal in the two data sets: $W_y =
-W_x$. This model is denoted pSimCCA in the package. However, the prior
-can be loosened by tuning $sigma^2_T$. With $sigma^2_T \rightarrow
-\infty$, estimation of $W_x$ and $W_y$ become independent, which leads
-to ordinary probabilistic CCA. It is also possible to tune the mean
-matrix $H$. This would set a particular relationship between the
-manifestations of the shared component in each data set, and
-$sigma^2_T$ is again be used to tune the strength of such prior.
-
-\subsection{Quantifying dependency}
-
-Dependency between the data sets \(X\), \(Y\) is measured by the ratio
-of shared vs. data set-specific signal (see '?dependency.score'):
+The data set-specific effects are modeled with multivariate Gaussians
+\(\varepsilon_. \sim \mathcal{N}(0, \Psi_.)\) with covariances
+$\Psi_x$, $\Psi_y$, respectively.  Dependency between the data sets
+\(X\), \(Y\) is quantified by the ratio of shared vs. data
+set-specific signal (see '?dependency.score'), calculated as
 
 \begin{equation}\label{depscore}
   \frac{Tr(WW^T)}{Tr(\Psi)}
 \end{equation}
 
-\subsection{Functions for dependency modeling}
 
-The package implements the dependency modeling framework (see
-'fit.dependency.model'), and provides wrappers for the special cases
-of the model.
-
-\section{Details}                                     
+\section{Details}
                     
 \begin{itemize}                                     
-\item {\it Licensing terms:} the package is licensed under FreeBSD open software license                    
-\item {\it Citing pint:} Please cite \cite{Lahti09mlsp} when using the package                         
+\item {\it Licensing terms:} the package is licensed under FreeBSD open software license
+\item {\it Citing pint:} Please cite \cite{Lahti09mlsp}               
 \end{itemize}                                 
                     
 

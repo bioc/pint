@@ -1,8 +1,12 @@
+CHANGES IN VERSION 1.3.84 (2011-04-10)
+
+  o vignette updated
+
 CHANGES IN VERSION 1.3.83 (2011-04-10)
 
 BUG FIXES
 
-  o Multiple bugs with GenomdeModels' methods fixed
+  o Multiple bugs with GenomeModels methods fixed
 
 CHANGES IN VERSION 1.3.82 (2011-04-10)
 
