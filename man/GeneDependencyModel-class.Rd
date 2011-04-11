@@ -21,6 +21,7 @@
 \alias{getWindowSize,GeneDependencyModel-method}
 \alias{getChromosome,GeneDependencyModel-method}
 \alias{getArm,GeneDependencyModel-method}
+\alias{getZ,GeneDependencyModel-method}
 
 
 \title{Class "GeneDependencyModel"}
@@ -64,13 +65,14 @@
     \item{getChromosome}{\code{signature(model = "GeneDependencyModel")}: Returns the chromosome}
     \item{getArm}{\code{signature(model = "GeneDependencyModel")}: Returns the chromosome arm}
     \item{getWindowSize}{\code{signature(model = "GeneDependencyModel")}: Returns the size of window}
+    \item{getZ}{\code{signature(model = "GeneDependencyModel")}: Calculates the expectation of latent variable Z. The original data
+      is needed as arguments as given to screen function}
   }
 }
 
 \author{Olli-Pekka Huovilainen \email{ohuovila@gmail.com}}
 
 \seealso{
-Calculation of latent variable z: \code{\link{z.expectation}}.
 For calculation of dependency models for chromosomal arm, chromosome or
 genome: \code{\link{screen.cgh.mrna}}. Dependency models
 for whole chromosome: \linkS4class{ChromosomeModels}.  Dependency models
@@ -87,6 +89,9 @@ model <- models[[1]]
 
 # Printing information of the model
 model
+
+# Latent variable Z
+getZ(model, geneExp,geneCopyNum)
 
 # Contributions of samples and variables to model
 plot(model,geneExp,geneCopyNum)

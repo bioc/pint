@@ -63,3 +63,11 @@ setMethod("getWindowSize","GeneDependencyModel",
   } 
 ) 
 
+setMethod("getZ","GeneDependencyModel",
+  function(model, X, Y) {
+    if (missing(X) || missing(Y)) stop("Original data sets are needed as parameters")
+    window <- fixed.window(X,Y,which(rownames(X$data) == getGeneName(model)),getWindowSize(model))   
+    return(z.expectation(model,window$X,window$Y)) 
+  }
+)
+
