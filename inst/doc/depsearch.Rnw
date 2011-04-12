@@ -2,9 +2,11 @@
 %The above line is needed to remove a warning in R CMD check
 \documentclass[a4paper]{article}
 
-\title{pint:\\Pairwise integration of functional genomics data}
+\title{pint:\\probabilistic data integration for functional genomics}
 
-\author{Olli-Pekka Huovilainen$^1$\footnote{ohuovila@gmail.com}\  and Leo Lahti$^{1,2}$\\(1) Information and Computer Science, Aalto University, Finland\\(2) Veterinary Biosciences, University of Helsinki, Finland}
+\author{Olli-Pekka Huovilainen$^1$\footnote{ohuovila@gmail.com}\  and
+Leo Lahti$^{1,2}$\\(1) Dpt. Information and Computer Science, Aalto
+University, Finland\\(2) Dpt. Veterinary Bioscience, University of Helsinki, Finland}
 
 \usepackage{Sweave}
 \usepackage{float}
@@ -28,32 +30,34 @@
 
 \section{Introduction}
 
-Multiple types of genomic observations from the same patients are
-increasingly available in biomedical studies, including measurements
-of gene- and micro-RNA expression levels, DNA copy number, and
-methylation status.  By investigating the dependencies between the
-various functional layers of the genome it is possible to discover
-mechanisms and interactions that are not seen in the individual data
-sets. For instance, integration of gene expression and DNA copy number
-can reveal cancer-associated chromosomal regions and associated genes
-with potential diagnostic, prognostic and clinical impact
+Multiple genomic observations from the same samples are increasingly
+available in biomedical studies, including measurements of gene- and
+micro-RNA expression levels, DNA copy number, and methylation status.
+By investigating dependencies between different functional layers of
+the genome it is possible to discover mechanisms and interactions that
+are not seen in the individual measurement sources. For instance,
+integration of gene expression and DNA copy number can reveal
+cancer-associated chromosomal regions and associated genes with
+potential diagnostic, prognostic and clinical impact
 \cite{Lahti09mlsp}.
 
-We demonstrate how to integrate gene or micro-RNA expression with DNA
-copy number (aCGH) measurements to discover functionally active
-chromosomal aberrations and to visualize the affected genes and
-samples. The methods are applicable also to other types of biomedical
-data, including epigenetic modifications, SNPs, alternative splicing
-and transcription factor binding, or in other application fields.
+This package implements probabilistic models for integrative analysis
+of mRNA expression levels with DNA copy number (aCGH) measurements to
+discover functionally active chromosomal alterations. The algorithms
+can be used to discover functionally altered chromosomal regions and
+to visualize the affected genes and samples. The algorithms can be
+applied also to other types of biomedical data, including epigenetic
+modifications, SNPs, alternative splicing and transcription factor
+binding, or in other application fields.
 
 The methods are based on latent variable models including
 probabilistic canonical correlation analysis \cite{Bach05} and related
 extensions \cite{Archambeau06,Klami08,Lahti09mlsp}, implemented in the
-\Rpackage{dmt} package in CRAN \cite{Lahti10dmt,
-  Huovilainen10}. Probabilistic formulation deals rigorously with
-uncertainty associated with small sample sizes common in biomedical
-studies and provides tools to guide dependency modeling through
-Bayesian priors \cite{Lahti09mlsp}.
+\Rpackage{dmt} package in CRAN \cite{Lahti10dmt, Huovilainen10}.
+Probabilistic formulation deals rigorously with uncertainty associated
+with small sample sizes common in biomedical studies and provides
+tools to guide dependency modeling through Bayesian priors
+\cite{Lahti09mlsp}.
 
 
 \section{Examples}
@@ -70,26 +74,23 @@ Our example data set contains matched observations of gene expression
 and copy number from a set of gastric cancer patients
 \cite{Myllykangas08jc}. Load the package and example data with:
 
-<<>>=
+<<results=hide>>=
 library(pint)
 data(chromosome17)
 @
 
-The example data contains ($geneExp$ and $geneCopyNum$) objects. Each
-of them is a list with two elements: $data$ and $info$:
+The example data contains ($geneExp$ and $geneCopyNum$) objects. These
+lists contain two elements: 
 
-\begin{itemize}
-\item $data$ data matrix with gene expression or gene copy number
-  data. Genes are in rows and samples in columns and rows and columns
-  should be named. The current implementation assumes that the probes
-  and samples are matched between gene expression and gene copy number
-  data.
+\begin{itemize} \item $data$ matrix with gene expression or gene copy
+  number data. Genes are in rows and samples in columns and rows and
+  columns should be named and the probes and samples are matched
+  between the two data sets.
 
-\item $info$ data frame with additional information about genes; in
-  particular, $loc$ indicates the genomic location of each probe in
-  base pairs (numeric); $chr$ and $arm$ indicate the chromosome and
-  chromosomal arm of the probe.
-\end{itemize}
+\item $info$ data frame with additional information about the genes in
+the $data$ object; in particular, $loc$ indicates the genomic location
+of each probe in base pairs; $chr$ and $arm$ indicate the chromosome
+and chromosomal arm of the probe. \end{itemize}
   
 The models assume {\it approximately} Gaussian distributed
 observations. With microarray data sets, this is typically obtained by
@@ -160,15 +161,15 @@ topGenes(models, 5)
 
 It is also possible investigate the contribution of individual
 patients or probes on the overall dependency based on the model
-parameters \(W\) and the latent variable \(z\) that are easily
+parameters \(W\) and the latent variable \(\z\) that are easily
 retrieved from the learned dependency model
 (Fig. ~\ref{fig:modelplot}). In 1-dimensional case the interpretation
-is straightforward: \(z\) will indicate the shared signal strength in
+is straightforward: \(\z\) will indicate the shared signal strength in
 each sample and \(W\) describes how the shared signal is reflected in
-each data source. With multi-dimensional \(W\) and \(z\), the
+each data source. With multi-dimensional \(W\) and \(\z\), the
 variable- and sample effects are approximated (for visualization
 purposes) by the loadings and projection scores corresponding of the
-first principal component of \(Wz\) is used to summarize the shared
+first principal component of \(W\z\) is used to summarize the shared
 signal in each data set. 
 
 
@@ -191,12 +192,14 @@ plot(model, geneExp, geneCopyNum)
 
 Detailed description of the model parameters and available dependency
 detection methods is provided with the {\it dmt} package in CRAN
-\cite{Lahti10dmt}. In summary, the shared signal between two
-(multivariate) observations \(X, Y\) is modeled with a shared latent
-variable $Z$. This can have different manifestation in each data set,
-which is described by linear transformations \(W_x\) and \(W_y\).
-Standard multivariate normal distribution for the shared latent
-variable and data set-specific effects gives the following model:
+\cite{Lahti10dmt}. The models are based on probabilistic canonical
+correlation analysis and related extensions \cite{Bach05,
+Lahti09mlsp}. In summary, the shared signal between two (multivariate)
+observations \(X, Y\) is modeled with a shared latent variable $\z$.
+This can have different manifestation in each data set, which is
+described by linear transformations \(W_x\) and \(W_y\). Standard
+multivariate normal distribution for the shared latent variable and
+data set-specific effects gives the following model:
 
 \begin{equation}\label{eq:model}             
 \begin{aligned}

@@ -1,8 +1,8 @@
 Package: pint
 Type: Package
 Title: Pairwise INTegration of functional genomics data
-Version: 1.3.85
-Date: 2011-04-11
+Version: 1.3.87
+Date: 2011-04-13
 Author: Olli-Pekka Huovilainen <ohuovila@gmail.com> and Leo Lahti <leo.lahti@iki.fi>
 Maintainer: Olli-Pekka Huovilainen <ohuovila@gmail.com>
 Description: Pairwise data integration for functional genomics. In particular, tools to screen functionally active chromosomal aberrations from paired copy number, gene expression and miRNA measurements from the same patients.
