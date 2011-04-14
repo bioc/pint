@@ -64,10 +64,8 @@ setMethod("topGenes",signature("GenomeModels"),
             scores <- vector()
             genes <- vector()
             for(i in 1:24){
-              scores <- c(scores, getScore(getQArm(model[[i]])))
-              scores <- c(scores, getScore(getPArm(model[[i]])))
-              genes <- c(genes, getGeneName(getQArm(model[[i]])))
-              genes <- c(genes, getGeneName(getPArm(model[[i]])))
+              scores <- c(scores, getScore(model[[i]]))
+              genes <- c(genes, getGeneName(model[[i]]))
             }
             data = data.frame(scores,genes)
             if (is.na(num)){
@@ -84,29 +82,21 @@ setMethod("topGenes",signature("GenomeModels"),
           )
 
 setMethod("topModels","GenomeModels",
-          function(model,num = 1) {
-            
+          function(model,num = 1) {        
             scores <- vector()
-            arm <- vector()
             chr <- vector()
             indices <- vector()
+  
             for(i in 1:24){
-              armpscores <- getScore(getPArm(model[[i]]))
-              if (length(armpscores > 0)){
-                arm <- c(arm,rep('p',length(armpscores)))
-                indices <- c(indices,1:length(armpscores))
-                chr <- c(chr, rep(i,length(armpscores)))
-              }		
-              armqscores <- getScore(getQArm(model[[i]]))
-              if (length(armqscores > 0)){
-                arm <- c(arm,rep('q',length(armqscores)))
-                indices <- c(indices,1:length(armqscores))
-                chr <- c(chr, rep(i,length(armqscores)))
-              }
-              scores <- c(scores, armpscores, armqscores)
+              score <- getScore(model[[i]])
+              if (length(score > 0)){
+                indices <- c(indices,1:length(score))
+                chr <- c(chr, rep(i,length(score)))
+              }	
+              scores <- c(scores, score)	
             }
             
-            data <- data.frame(scores,indices,arm,chr)
+            data <- data.frame(scores,indices,chr)
                                         #Order dataframe
             data <- data[order(scores,decreasing=TRUE),]
             returnList = list()
@@ -117,10 +107,7 @@ setMethod("topModels","GenomeModels",
             }
 
             for (i in 1:num) {
-              if (data$arm[i] == 'p')
-                returnList = c(returnList,getPArm(model[[data$chr[i]]])[[data$indices[i]]])
-              else
-                returnList = c(returnList,getQArm(model[[data$chr[i]]])[[data$indices[i]]])               
+                returnList = c(returnList,model[[data$chr[i]]][[data$indices[i]]])          
             }
             return(returnList)
           }
@@ -143,10 +130,8 @@ setMethod("orderGenes","GenomeModels",
     scores <- vector()
     genes <- vector()
     for(i in 1:24){
-      scores <- c(scores, getScore(getQArm(model[[i]])))
-      scores <- c(scores, getScore(getPArm(model[[i]])))
-      genes <- c(genes, getGeneName(getQArm(model[[i]])))
-      genes <- c(genes, getGeneName(getPArm(model[[i]])))
+      scores <- c(scores, getScore(model[[i]]))
+      genes <- c(genes, getGeneName(model[[i]]))
     }
     data <- data.frame(scores,genes,stringsAsFactors=FALSE)
     return(data[order(scores,decreasing=TRUE),])
@@ -157,12 +142,9 @@ setMethod("findModel","GenomeModels",
   function(model, name){
 
    for (i in 1:24){
-     pIndex <- which(getGeneName(getPArm(model[[i]])) == name)
-     if(length(pIndex) > 0) 
-       return(getPArm(model[[i]])[[pIndex[1]]])
-     qIndex <- which(getGeneName(getQArm(model[[i]])) == name)
-     if(length(qIndex) > 0) 
-       return(getQArm(model[[i]])[[qIndex[1]]])
+     index <- which(getGeneName(model[[i]]) == name)
+     if(length(index) > 0) 
+       return(model[[i]][[index[1]]])
    }   
    stop("No model found")
   }
