@@ -128,19 +128,19 @@ setMethod("getArm","ChromosomeModels",
 )
 	
 setMethod("topModels","ChromosomeModels",
-  function(model,num = 1) {
+  function(model, num = 1) {
     scores <- getScore(model)
     genes <- getGeneName(model)        
     data <- data.frame(scores, genes)
     indices <- seq_along(scores)
-
     data <- data.frame(scores,indices)
+
     #Order dataframe
-    data <- data[order(scores,decreasing=TRUE),]
-    returnList = list()
+    data <- data[order(scores, decreasing = TRUE), ]
+    returnList <- list()
     if (num > 1){
       for (i in 1:num) {
-          returnList = c(returnList,model[[data$indices[i]]])
+          returnList <- c(returnList,model[[data$indices[i]]])
       }
       return(returnList)
     } else {

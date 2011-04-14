@@ -1,6 +1,6 @@
-plot.GeneDependencyModel <- function(x, X, Y = NULL, ann.types = NULL, ann.cols = NULL, legend.x = 0, legend.y = 1, 
-                                 legend.xjust = 0, legend.yjust = 1, order=FALSE, cex.z = 0.6, 
-                                 cex.WX = 0.6, cex.WY = 0.6,...){
+plot.GeneDependencyModel <- function(x, X, Y = NULL, ann.types = NULL, ann.cols = NULL, legend.x = 0, legend.y = 1, legend.xjust = 0, legend.yjust = 1, order=FALSE, cex.z = 0.6, cex.WX = 0.6, cex.WY = 0.6,...){
+                                 
+#X <- geneExp; Y <- geneCopyNum; ann.types = NULL; ann.cols = NULL; legend.x = 0; legend.y = 1; legend.xjust = 0; legend.yjust = 1; order=FALSE; cex.z = 0.6; cex.WX = 0.6; cex.WY = 0.6
 
   model <- x
   
@@ -9,17 +9,15 @@ plot.GeneDependencyModel <- function(x, X, Y = NULL, ann.types = NULL, ann.cols 
     if (missing(X) || missing(Y)) {
       stop("Original data needed as 'X' and 'Y' arguments")
     }
-  }
-  # Check that data set is given for models from 1 data set
-  else {
+  } else {   # Check that data set is given for models from 1 data set
     if (missing(X)) {
       stop("Original data needed as 'X' argument")
     }
   }
-  z <- z.effects(model,X,Y)[,1]
-  W <- W.effects(model,X,Y)
+  z <- z.effects(model, X, Y)[, 1]
+  W <- W.effects(model, X, Y)
 
-  if (order){
+  if ( order ){
     z.order <- order(z)
     z <- z[as.numeric(z.order)]
   }
@@ -63,9 +61,7 @@ plot.GeneDependencyModel <- function(x, X, Y = NULL, ann.types = NULL, ann.cols 
     else {
       layout(matrix(c(1,1,2,3), 2, 2, byrow = TRUE), c(2,2),c(8,6))
     }
-  }
-  # For models from 1 data set
-  else {
+  } else { # For models from 1 data set
     layout(matrix(c(1,2),2,1,byrow = TRUE), 1,c(8,6))
   }
 

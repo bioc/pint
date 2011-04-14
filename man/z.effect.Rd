@@ -81,13 +81,13 @@ depmodel <- fit.dependency.model(window$X, window$Y)
 depmodel <- as(depmodel,"GeneDependencyModel")
 setGeneName(depmodel) <- window$geneName
 setLoc(depmodel) <- window$loc
-barplot(z.effects(depmodel, geneExp, geneCopyNum))
+barplot(t(z.effects(depmodel, geneExp, geneCopyNum)))
 
 ## Plot the contribution of each genes to the model. Only the X component is plotted
 ## here since Wx = Wy (in SimCCA) 
 barplot(W.effects(depmodel, geneExp, geneCopyNum)$X)
 
-## plot.DpenendencyModel shows also sample and variable effects
-plot(depmodel,geneExp,geneCopyNum)
+## plot.DependencyModel shows also sample and variable effects
+plot(depmodel, geneExp, geneCopyNum)
 }
 \keyword{math}

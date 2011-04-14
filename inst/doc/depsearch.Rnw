@@ -74,7 +74,7 @@ Our example data set contains matched observations of gene expression
 and copy number from a set of gastric cancer patients
 \cite{Myllykangas08jc}. Load the package and example data with:
 
-<<results=hide>>=
+<<loading, results=hide>>=
 library(pint)
 data(chromosome17)
 @
@@ -109,7 +109,7 @@ between the two data sources. A sliding window over the genome is used
 to quantify dependency within each region. Here we show a brief example on
 chromosome arm 17q:
 
-<<>>=
+<<screen.cgh.mrna>>=
 models <- screen.cgh.mrna(geneExp, geneCopyNum, windowSize = 10, chr = 17, arm = 'q')
 @
 
@@ -140,7 +140,7 @@ dependency between gene expression and copy number changes:
 
 \begin{figure}[H]
 \begin{center}
-<<fig = true>>=
+<<plot, fig = true>>=
 plot(models, showTop = 10)
 @
 \end{center}
@@ -155,7 +155,7 @@ location in megabasepairs while location is provided in basepairs. The
 top-5 genes with the highest dependency in their chromosomal
 neighborghood can be retrieved with:
 
-<<>>=
+<<topg>>=
 topGenes(models, 5)
 @
 
@@ -175,7 +175,7 @@ signal in each data set.
 
 \begin{figure}[H]
 \begin{center}
-<<fig=true>>=
+<<topmod, fig=true>>=
 model <- topModels(models)
 plot(model, geneExp, geneCopyNum)
 @

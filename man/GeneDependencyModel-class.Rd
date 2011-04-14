@@ -81,20 +81,23 @@ scores see \link{dependency score plotting}.
 
 }
 \examples{
+library(pint)
 data(chromosome17)
 
 # First genomic dependency model from screening chromosomal arm
-models <- screen.cgh.mrna(geneExp, geneCopyNum, 10, chr=17, arm='p')
+models <- screen.cgh.mrna(geneExp, geneCopyNum, 10, chr = 17, arm='p')
 model <- models[[1]]
 
 # Printing information of the model
 model
 
+# FIXME
 # Latent variable Z
-getZ(model, geneExp,geneCopyNum)
+getZ(model, geneExp, geneCopyNum)
 
 # Contributions of samples and variables to model
-plot(model,geneExp,geneCopyNum)
+plot(model, geneExp, geneCopyNum)
+
 }
 \keyword{classes}
 

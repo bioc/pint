@@ -51,7 +51,7 @@ setReplaceMethod(f="[[",signature("GenomeModels"),
 
 setMethod("getWindowSize","GenomeModels", 
           function(model) {
-            for(i in 1:24) {
+            for(i in 1:length(model@chromosomeModels)) {
               if(getModelNumbers(model[[i]]) > 0)
               return(getWindowSize(model[[i]]))
             }
@@ -63,7 +63,7 @@ setMethod("topGenes",signature("GenomeModels"),
           function(model,num = NA) {
             scores <- vector()
             genes <- vector()
-            for(i in 1:24){
+            for(i in 1:length(model@chromosomeModels)){
               scores <- c(scores, getScore(getQArm(model[[i]])))
               scores <- c(scores, getScore(getPArm(model[[i]])))
               genes <- c(genes, getGeneName(getQArm(model[[i]])))
@@ -74,7 +74,7 @@ setMethod("topGenes",signature("GenomeModels"),
               num = length(scores)
             }
             
-                                        #order dataframe and take num names of genes with highest scores 
+            #order dataframe and take num names of genes with highest scores 
             if (num > getModelNumbers(model)){
               warning("Attempted to get more genes than there are models. Returning the genes from all models")
               num <- getModelNumbers(model)
@@ -90,7 +90,7 @@ setMethod("topModels","GenomeModels",
             arm <- vector()
             chr <- vector()
             indices <- vector()
-            for(i in 1:24){
+            for(i in 1:length(model@chromosomeModels)){
               armpscores <- getScore(getPArm(model[[i]]))
               if (length(armpscores > 0)){
                 arm <- c(arm,rep('p',length(armpscores)))
@@ -129,7 +129,7 @@ setMethod("topModels","GenomeModels",
 setMethod("getModelNumbers","GenomeModels",
   function(model){
     num <- 0
-    for (i in 1:24){
+    for (i in 1:length(model@chromosomeModels)){
       num <- num + getModelNumbers(model[[i]])
     }
     return(num)
@@ -142,7 +142,7 @@ setMethod("orderGenes","GenomeModels",
 
     scores <- vector()
     genes <- vector()
-    for(i in 1:24){
+    for(i in 1:length(model@chromosomeModels)){
       scores <- c(scores, getScore(getQArm(model[[i]])))
       scores <- c(scores, getScore(getPArm(model[[i]])))
       genes <- c(genes, getGeneName(getQArm(model[[i]])))
@@ -156,7 +156,7 @@ setMethod("orderGenes","GenomeModels",
 setMethod("findModel","GenomeModels",
   function(model, name){
 
-   for (i in 1:24){
+   for (i in 1:length(model@chromosomeModels)){
      pIndex <- which(getGeneName(getPArm(model[[i]])) == name)
      if(length(pIndex) > 0) 
        return(getPArm(model[[i]])[[pIndex[1]]])
@@ -172,7 +172,7 @@ setMethod("as.data.frame","GenomeModels",
           function(x, ...){
     df <- data.frame(geneName = NULL, dependencyScore = NULL, chr = NULL,
                     arm = NULL, loc = NULL)
-    for (i in 1:24){
+    for (i in 1:length(model@chromosomeModels)){
       df <- rbind(df, as.data.frame(x[[i]]))   
     }
     return(df)

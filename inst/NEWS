@@ -1,3 +1,13 @@
+CHANGES IN VERSION 1.5.02 (2011-04-14)
+
+  o fixed.window corrected such that windows cannot exceed borders of
+  chromosomal arms. Removed calls for fixed.window from
+  GeneDependencyModel-accessors.R, W.effects.R, z.effects.R
+  
+  o in GenomeModelAccessors replaced 24 with
+  length(model@chromosomeModels) to enable chr numbering for any
+  organism
+
 CHANGES IN VERSION 1.3.85 (2011-04-11)
 
   o Added a method to get the latent variable Z for particular model
