@@ -18,7 +18,13 @@ function (X, Y, middleIndex, windowSize){
   # last window that fits (all windows must have same size, and it is
   # safer not to exclude any gene since it is in the ends of the arms)  
   #inds <- (middleIndex - (trunc((windowSize - 1)/2))) : (middleIndex + (trunc(windowSize/2)))	
-  arminds <- which(X$info$chr == chr & X$info$arm == arm)
+
+  if (is.null(arm)) {
+    arminds <- which(X$info$chr == chr)
+  } else {
+    arminds <- which(X$info$chr == chr & X$info$arm == arm)
+  }
+
   nmin <- min(arminds)
   nmax <- max(arminds)
   if ((nmax - nmin + 1) < windowSize) {stop(paste("windowSize cannot exceed number of genes on chromosomal arm ", chr, arm, sep = ""))}

@@ -1,6 +1,8 @@
 screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "pSimCCA", params = list(), max.dist = 1e7, 
                             outputType = "models", useSegmentedData = FALSE, segmented = FALSE, regularized = FALSE)
 {
+
+#X <- ge; Y <- cn.raw; windowSize = NULL; method = "pSimCCA"; params = list(); max.dist = 1e7; outputType = "models"; useSegmentedData = FALSE; segmented = FALSE; regularized = FALSE 
     
   if (is.null(windowSize)) {
     windowSize <- min(floor(ncol(X$data)/3),15)

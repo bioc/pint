@@ -25,10 +25,9 @@ calculate.arm <- function(X, Y, windowSize, chromosome, arm = NULL, method =
   k <- 1
 	
  if (length(Ym$info$loc) > 0) {                           
-     for (n in seq_along(Ym$info$loc)) {       
-        message(chromosome, arm, "; window ", n, "/", length(Ym$info$loc))                  
-        # Assuming Y is the copy number data (important when segmented= TRUE)                                                                   
-                                                                      
+   for (n in seq_along(Ym$info$loc)) {       
+     message(chromosome, arm, "; window ", n, "/", length(Ym$info$loc))                  
+     # Assuming Y is the copy number data (important when segmented= TRUE)                                                              
         # Get window to dependency modeling                                
         if (!segmented) {                          
 	  #message("Using fixed chromosomal window size.")       
