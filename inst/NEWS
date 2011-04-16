@@ -1,3 +1,7 @@
+CHANGES IN VERSION 1.5.04 (2011-04-16)
+
+  o added interpretation tools in report.R
+
 CHANGES IN VERSION 1.4.02 (2011-04-16)
 
   o still correcting critical bug in fixed.window and associated

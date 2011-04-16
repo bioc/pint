@@ -59,6 +59,10 @@ with small sample sizes common in biomedical studies and provides
 tools to guide dependency modeling through Bayesian priors
 \cite{Lahti09mlsp}.
 
+\subsubsection{Dependencies}
+
+The CRAN packages \Rpackage{dmt} and \Rpackage{mvtnorm} are required
+for installation. 
 
 \section{Examples}
 
@@ -133,7 +137,10 @@ current functions can be used to screen for dependency between any
 pair of genomic (or other) data sources.
 
 
-\subsection{Visualizing the results}
+
+\section{Summarization and interpretation}
+
+\subsection{Visualization}
 
 Dependency plots will reveals chromosomal regions with the strongest
 dependency between gene expression and copy number changes:
@@ -187,8 +194,18 @@ plot(model, geneExp, geneCopyNum)
 \label{fig:modelplot}
 \end{figure}
 
+\subsection{Summarization}
 
-\subsection{Quantifying dependency between two data sources}
+Other useful functions for summarizing and investigating the results include:
+\begin{itemize}
+\item {\it join.top.regions}: merge overlapping models that exceed the
+  threshold; gives a list of distinct, continuous regions detected by the models.
+\item {\it summarize.region.parameters}: provides a summary of sample
+  and probe effects over partially overlapping models
+\end{itemize}
+
+
+\section{The dependency modeling framework}
 
 Detailed description of the model parameters and available dependency
 detection methods is provided with the {\it dmt} package in CRAN
@@ -217,8 +234,6 @@ set-specific signal (see '?dependency.score'), calculated as
 \begin{equation}\label{depscore}
   \frac{Tr(WW^T)}{Tr(\Psi)}
 \end{equation}
-
-
 \section{Details}
                     
 \begin{itemize}                                     

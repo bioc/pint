@@ -1,13 +1,13 @@
 Package: pint
 Type: Package
 Title: Pairwise INTegration of functional genomics data
-Version: 1.5.03
+Version: 1.5.04
 Date: 2011-04-16
 Author: Olli-Pekka Huovilainen <ohuovila@gmail.com> and Leo Lahti <leo.lahti@iki.fi>
 Maintainer: Olli-Pekka Huovilainen <ohuovila@gmail.com>
 Description: Pairwise data integration for functional genomics. In particular, tools to screen functionally active chromosomal aberrations from paired copy number, gene expression and miRNA measurements from the same patients.
 License: FreeBSD
-Collate: AllClasses.R AllGenerics.R GeneDependencyModel-accessors.R ChromosomeModels-accessors.R GenomeModels-accessors.R imputation.R show-methods.R plot-methods.R screen.cgh.mrna.R screen.cgh.mir.R calculate.genome.R calculate.chr.R calculate.arm.R pick.chr.arm.R fixed.window.R iterative.window.R z.effects.R W.effects.R fit.cgh.mrna.byname.R fit.cgh.mir.byname.R sparse.window.R calculate.arm.sparse.R calculate.chr.sparse.R calculate.genome.sparse.R pint.data.R pint.match.R firstlib.R test.segmented.R centerData.R
+Collate: AllClasses.R AllGenerics.R GeneDependencyModel-accessors.R ChromosomeModels-accessors.R GenomeModels-accessors.R imputation.R show-methods.R plot-methods.R screen.cgh.mrna.R screen.cgh.mir.R calculate.genome.R calculate.chr.R calculate.arm.R pick.chr.arm.R fixed.window.R iterative.window.R z.effects.R W.effects.R fit.cgh.mrna.byname.R fit.cgh.mir.byname.R report.R sparse.window.R calculate.arm.sparse.R calculate.chr.sparse.R calculate.genome.sparse.R pint.data.R pint.match.R firstlib.R test.segmented.R centerData.R
 LazyLoad: yes
 Depends: mvtnorm, methods, graphics, Matrix, dmt
 biocViews: aCGH, GeneExpression, Genetics, DifferentialExpression, Microarray
