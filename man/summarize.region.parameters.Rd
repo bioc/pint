@@ -3,9 +3,12 @@
 \title{Summarize overlapping models.}
 \description{Given a chromosomal region, summarize the model parameters
   from overlapping models. This heuristics gives a brief summary on
-  average sample and probe effects within the region and aids interpretation.}
+  average sample and probe effects within the region and aids
+  interpretation. If multiple alteration profiles are detected within
+  the region, the models are grouped and summarization is applied
+  separately for each group containing overlapping models with high similarity.}
 \usage{
-summarize.region.parameters(region.genes, model, X, Y)
+summarize.region.parameters(region.genes, model, X, Y, grouping.th = 0.7)
 }
 
 \arguments{
@@ -14,13 +17,13 @@ summarize.region.parameters(region.genes, model, X, Y)
   \item{X}{Data object. See help(screen.cgh.mrna). For instance, geneExp
   from our example data set.}
   \item{Y}{Data object. See help(screen.cgh.mrna). For instance, geneCopyNum
-  from our example data set.}
+    from our example data set.}
+  \item{grouping.th}{Similarity threshold for joining neighboring
+  models.}
 }
-\details{If the partially overlapping models capture very different
-  dependency structures, for instance when two close-by regions have
-  different copy number / expression alteration profiles, this summary
-  may give misleading results but it is useful for obtaining brief first
-  overview on the results.}
+\details{Grouping of the models is based on heuristics where highly
+  correlating models (>grouping.th) are merged. Will be improved
+  later.}
 \value{
   \item{z}{Mean sample effects, averaged over the overlapping models for
     each sample.}

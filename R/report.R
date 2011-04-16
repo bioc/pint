@@ -58,10 +58,11 @@ join.top.regions <- function (model, feature.info, quantile.th = 0.95, augment =
 }
 
 
-summarize.region.parameters <- function (region.genes, model, X, Y) {
+summarize.region.parameters <- function (region.genes, model, X, Y, grouping.th = 0.7) {
 
   # Take average of the Zs and Ws over the overlapping models
   # Useful for interpretation.
+  # region.genes <- top.regs[[i]]; X <- ge; Y <- cn; grouping.th = 0.8
   
   zs <- array(NA, dim = c(ncol(X$data), length(region.genes)))
   wxs <- wys <- array(NA, dim = c(length(region.genes), length(region.genes)))
@@ -95,12 +96,35 @@ summarize.region.parameters <- function (region.genes, model, X, Y) {
     
   }
 
-  # FIXME: add some check that wxs (and wys) mostly give very similar results
-  # otherwise misinterpretations will occur
-  #sort(cor(wxs, use = "pairwise.complete.obs")[1,])
+  
+  wxs <- wxs[,!apply(wxs, 2, function(x){all(is.na(x))})]
+  wys <- wys[,!apply(wys, 2, function(x){all(is.na(x))})]
+  zs <- zs[,!apply(zs, 2, function(x){all(is.na(x))})]  
+    
+  
+  # Now it is possible that the region contains multiple different alteration regions
+  # go through zs and detect groups of neighboring and highly correlated models
+  cors <- (cor(zs) > grouping.th)
+  k <- 1
+  groups <- list()
+  while (length(cors)>0) {
+    inds <- which(cors[1, ])
+    groups[[k]] <- names(inds)
+    k <- k+1
+    cors <- cors[-inds, -inds, drop = FALSE]
+  }
+  
+  # take means within each group
+  summaries <- list()
+  for (k in 1:length(groups)) {
+    gs <- groups[[k]]
+    W <- list(X = rowMeans(matrix(wxs[,gs], nrow(wxs)), na.rm = TRUE), Y = rowMeans(matrix(wys[,gs], nrow(wys)), na.rm = TRUE))
+    Z <- rowMeans(matrix(zs[,gs], nrow(zs)), na.rm = TRUE)
+    names(Z) <- rownames(zs)
+    summaries[[k]] <- list(z = Z, W = W )
+  }
 
-  W <- list(X = rowMeans(wxs, na.rm = TRUE), Y = rowMeans(wys, na.rm = TRUE))
-  list(z = rowMeans((as.data.frame(zs)), na.rm = TRUE), W = W )
+  summaries
   
 }
 
@@ -108,6 +132,9 @@ summarize.region.parameters <- function (region.genes, model, X, Y) {
 
 order.feature.info <- function (feature.info) {
 
+  feature.info$chr <- as.character(feature.info$chr)
+  feature.info$arm <- as.character(feature.info$arm)
+  
   # Remove genes with no location information from the annotations
   nainds <- is.na(feature.info$chr) | (is.na(feature.info$chr) | is.na(feature.info$arm))
   if (sum(nainds) > 0) {
@@ -115,12 +142,14 @@ order.feature.info <- function (feature.info) {
   }
   
   # Order by chromosomal locations
-  if ("X" %in% as.character(feature.info$chr)) {
-    feature.info$chr[as.character(feature.info$chr) == "X"] <- 23
+  if ("X" %in% feature.info$chr) {
+    feature.info$chr[feature.info$chr == "X"] <- "23"
   }
-  if ("Y" %in% as.character(feature.info$chr)) {
-    feature.info$chr[as.character(feature.info$chr) == "Y"] <- 24
+  if ("Y" %in% feature.info$chr) {
+    feature.info$chr[feature.info$chr == "Y"] <- "24"
   }  
+
+  feature.info$chr <- as.numeric(feature.info$chr)
   
   feature.info.ordered <- NULL
   chrs <- sort(unique(feature.info$chr))
@@ -129,12 +158,15 @@ order.feature.info <- function (feature.info) {
     if (!is.null(arms)) {
       for (arm in arms) {
         #arm.info <- subset(feature.info, chr == chr & arm == arm)
-        arm.info <- feature.info[feature.info$chr == chr & feature.info$arm == arm,]
-        o <- order(arm.info$loc)
-        feature.info.ordered <- rbind(feature.info.ordered, arm.info[o, ])
+        inds <- (feature.info$chr == chr & feature.info$arm == arm)
+        arm.info <- feature.info[inds,,drop=FALSE]
+        if (nrow(arm.info) > 0) {
+          o <- order(arm.info$loc)
+          feature.info.ordered <- rbind(feature.info.ordered, arm.info[o, ])
+        }
       }
     } else {
-      arm.info <- feature.info[feature.info$chr == chr,]      
+      arm.info <- feature.info[feature.info$chr == chr,,drop=FALSE]      
       o <- order(arm.info$loc)
       feature.info.ordered <- rbind(feature.info.ordered, arm.info[o, ])
     }
