@@ -13,7 +13,6 @@ model or dependency model fitting scores of chromosome
 or genome.
 }
 \usage{
-
 plot.GeneDependencyModel(x, X, Y, ann.types = NULL, ann.cols = NULL, legend.x = 0, 
         legend.y = 1, legend.xjust = 0, legend.yjust = 1, order = FALSE, 
         cex.z = 0.6, cex.WX = 0.6, cex.WY = 0.6, ...)
@@ -153,8 +152,8 @@ model <- models17ppSimCCA[[50]]
 
 ## example annnotation types
 ann.types <- factor(c(rep("Samples 1 - 10", 10), rep("Samples 11 - 51", 41)))
-#plot(model, geneExp, geneCopyNum, ann.types, legend.x = 40, legend.y = -4,
-#     order = TRUE)
+plot(model, geneExp, geneCopyNum, ann.types, legend.x = 40, legend.y = -4,
+     order = TRUE)
 
 
 }
