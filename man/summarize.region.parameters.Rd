@@ -8,7 +8,7 @@
   the region, the models are grouped and summarization is applied
   separately for each group containing overlapping models with high similarity.}
 \usage{
-summarize.region.parameters(region.genes, model, X, Y, grouping.th = 0.7)
+summarize.region.parameters(region.genes, model, X, Y, grouping.th = 0.9, rm.na = TRUE)
 }
 
 \arguments{
@@ -19,7 +19,8 @@ summarize.region.parameters(region.genes, model, X, Y, grouping.th = 0.7)
   \item{Y}{Data object. See help(screen.cgh.mrna). For instance, geneCopyNum
     from our example data set.}
   \item{grouping.th}{Similarity threshold for joining neighboring
-  models.}
+    models.}
+  \item{rm.na}{Remove genes with NA values from the output.}
 }
 \details{Grouping of the models is based on heuristics where highly
   correlating models (>grouping.th) are merged. Will be improved

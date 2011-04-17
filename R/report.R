@@ -58,7 +58,7 @@ join.top.regions <- function (model, feature.info, quantile.th = 0.95, augment =
 }
 
 
-summarize.region.parameters <- function (region.genes, model, X, Y, grouping.th = 0.7) {
+summarize.region.parameters <- function (region.genes, model, X, Y, grouping.th = 0.9, rm.na = TRUE) {
 
   # Take average of the Zs and Ws over the overlapping models
   # Useful for interpretation.
@@ -118,7 +118,17 @@ summarize.region.parameters <- function (region.genes, model, X, Y, grouping.th 
   summaries <- list()
   for (k in 1:length(groups)) {
     gs <- groups[[k]]
-    W <- list(X = rowMeans(matrix(wxs[,gs], nrow(wxs)), na.rm = TRUE), Y = rowMeans(matrix(wys[,gs], nrow(wys)), na.rm = TRUE))
+    wx.tmp <- rowMeans(matrix(wxs[,gs], nrow(wxs)), na.rm = TRUE)
+    names(wx.tmp) <- rownames(wxs)
+    wy.tmp <- rowMeans(matrix(wys[,gs], nrow(wys)), na.rm = TRUE)
+    names(wy.tmp) <- rownames(wys)
+
+    if (rm.na) {
+      wx.tmp <- wx.tmp[!is.na(wx.tmp)]
+      wy.tmp <- wy.tmp[!is.na(wy.tmp)]
+    }
+    
+    W <- list(X = wx.tmp, Y = wy.tmp)
     Z <- rowMeans(matrix(zs[,gs], nrow(zs)), na.rm = TRUE)
     names(Z) <- rownames(zs)
     summaries[[k]] <- list(z = Z, W = W )
@@ -128,6 +138,8 @@ summarize.region.parameters <- function (region.genes, model, X, Y, grouping.th 
   
 }
 
+
+  
 
 
 order.feature.info <- function (feature.info) {
