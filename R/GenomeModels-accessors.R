@@ -172,7 +172,7 @@ setMethod("as.data.frame","GenomeModels",
           function(x, ...){
     df <- data.frame(geneName = NULL, dependencyScore = NULL, chr = NULL,
                     arm = NULL, loc = NULL)
-    for (i in 1:length(model@chromosomeModels)){
+    for (i in 1:length(x@chromosomeModels)){
       df <- rbind(df, as.data.frame(x[[i]]))   
     }
     return(df)
