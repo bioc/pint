@@ -7,5 +7,5 @@ test.segmented <- function(X){
   # Number of identical values in the same column in adjacent rows 
   identicals = (X[1:(nrow(X)-1),] == X[2:nrow(X),])
 
-  return(sum(identicals) > threshold)
+  return(sum(identicals,na.rm=TRUE) > threshold)
 }
