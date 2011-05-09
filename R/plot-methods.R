@@ -115,69 +115,59 @@ function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FAL
   if(isEmpty(models)) 
     return()
 
-
-  pArm <- getPArm(models)
-  qArm <- getQArm(models)
-  chr <- getChromosome(pArm)
-	
-  pscores <- getScore(pArm)
-  plocs <- getLoc(pArm)
-  #p Arm to negative side
-  #plocs = -plocs
-  pgeneNames <- getGeneName(pArm)
-	
-  qscores <- getScore(qArm)
-  qlocs <- getLoc(qArm)
-  qgeneNames <- getGeneName(qArm)
-
-  if (length(qscores) == 0 && length(pscores) == 0){
-    return()
-  } else if (length(pscores) == 0) {
-    if (all(is.na(ylim))){
-      ylim <- c(0,max(qscores))	
-    }
-    if (all(is.na(xlim))){
-      xlim <- c(min(qlocs/1e6),max(qlocs/1e6))
-    }	        
-  } else if (length(qscores) == 0) {
-    if (all(is.na(ylim))){
-      ylim <- c(0,max(pscores))	
-    }
-    if (all(is.na(xlim))){
-      xlim <- c(min(plocs/1e6),max(plocs/1e6))
-    }	        
+  chr <- getChromosome(models)
+  arms <- getArm(models)
+  scores <- getScore(models)
+  locs <- getLoc(models)
+  geneNames <- getGeneName(models) 
+  if (!any(arms == "")){  
+    #scores, locations and gene names for separate arms
+    qArm <- models[['q']]
+    pArm <- models[['p']]
+    qscores <- getScore(qArm)
+    qlocs <- getLoc(qArm)
+    pscores <- getScore(pArm)
+    plocs <- getLoc(pArm)
+    #limits for plotting area
+    ylim <- c(0,max(max(pscores),max(qscores)))	
+    xlim <- c(min(min(plocs/1e6),min(qlocs/1e6)),max(max(qlocs/1e6),max(plocs/1e6)))
   } else {
-    if (all(is.na(ylim))){
-      ylim <- c(0,max(max(pscores),max(qscores)))	
-    }
-    if (all(is.na(xlim))){
-      xlim <- c(min(min(plocs/1e6),min(qlocs/1e6)),max(max(qlocs/1e6),max(plocs/1e6)))
-    }
-  }	
+    #limits for plotting area
+    ylim <- c(0,max(scores))	
+    xlim <- c(min(locs/1e6),max(locs/1e6))
+  }
 
   # Text for plot
   if (is.null(main)) {
     main <- paste('Dependency score for chromosome ', chr, sep = '')
-    if (length(qscores) == 0) main <- paste(main, 'p', sep='')
-    if (length(pscores) == 0) main <- paste(main, 'q', sep='')
+    if (all(arms == 'p')) main <- paste(main, 'p', sep='')
+    if (all(arms == 'q')) main <- paste(main, 'q', sep='')
   }    
 
-  #p Arm plot
-  pl <- plot((plocs/1e6), pscores, type = type, xlab = xlab, xlim = xlim,
-             ylab = ylab, main = main, ylim = ylim, ...)
+  # Plotting dep scores
+
+  if (any(arms == "")){  
+    # The whole chromosome
+    pl <- plot((locs/1e6), scores, type = type, xlab = xlab, xlim = xlim,
+               ylab = ylab, main = main, ylim = ylim, ...)
+  } else {
+    # Plotting both arms separately
+
+    #p Arm plot
+    pl <- plot((plocs/1e6), pscores, type = type, xlab = xlab, xlim = xlim,
+               ylab = ylab, main = main, ylim = ylim, ...)
 	
-  pl <- par(new = TRUE)
+    pl <- par(new = TRUE)
 	
-  #q Arm plot
-  pl <- plot((qlocs/1e6), qscores, type = type, xlab = xlab, xlim = xlim,
-             ylab = ylab, main = main, ylim = ylim, ...)
+    #q Arm plot
+    pl <- plot((qlocs/1e6), qscores, type = type, xlab = xlab, xlim = xlim,
+               ylab = ylab, main = main, ylim = ylim, ...)
 	
-  pl <- par(new = FALSE)
-	
+    pl <- par(new = FALSE)
+
+	}
   if(showTop > 0){
 		
-    scores=c(pscores,qscores)
-    locs=c(plocs,qlocs)
     d <- data.frame(scores,locs)
     d <- d[order(scores,decreasing=TRUE),]
 		
@@ -197,29 +187,14 @@ function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FAL
 	
   if (!is.null(hilightGenes)){
 
-    #indices of cancer genes in p arm
-    pMatches <- match(hilightGenes, pgeneNames)
-    #print(pMatches)
-    points(plocs[pMatches]/1e6,pscores[pMatches],pch=pch,cex=cex)
-
-    #indices of cancer genes in q arm
-    qMatches <- match(hilightGenes, qgeneNames)
-    #print(qMatches)
-    points(qlocs[qMatches]/1e6,qscores[qMatches],pch=pch,cex=cex)
-
+    matches <- match(hilightGenes, geneNames)
+    points(locs[matches]/1e6,scores[matches],pch=pch,cex=cex)
   }
   #lines to bottom to show gene density
   if(showDensity){
     heightCoefficient <- 100
-    if (length(plocs) > 0){
-      for(i in 1:length(plocs)){
-        lines( c((plocs[i]/1e6) , (plocs[i]/1e6)) , c(0,ylim[2]/heightCoefficient))
-      }
-    }
-    if (length(qlocs) > 0){
-      for(i in 1:length(qlocs)){
-        lines( c((qlocs[i]/1e6) , (qlocs[i]/1e6)) , c(0,ylim[2]/heightCoefficient))
-      }
+    for(i in 1:length(locs)){
+      lines( c((locs[i]/1e6) , (locs[i]/1e6)) , c(0,ylim[2]/heightCoefficient))
     }
   }
 }
