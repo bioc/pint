@@ -1,5 +1,5 @@
 calculate.arm <- function(X, Y, windowSize, chromosome, arm = NULL, method =
-"pSimCCA", params = list(), segmented = FALSE, priors = NULL, regularized = FALSE){
+"pSimCCA", params = list(), match.probes = FALSE, priors = NULL, regularized = FALSE){
 
   # Get Indices to X and Y for chosen chromosome and arm
   Xm <- pick.chr.arm(X, chromosome, arm)
@@ -27,9 +27,9 @@ calculate.arm <- function(X, Y, windowSize, chromosome, arm = NULL, method =
  if (length(Ym$info$loc) > 0) {                           
    for (n in seq_along(Ym$info$loc)) {       
      message(chromosome, arm, "; window ", n, "/", length(Ym$info$loc))                  
-     # Assuming Y is the copy number data (important when segmented= TRUE)                                                              
+     # Assuming Y is the copy number data (important when match.probes= TRUE)                                                              
         # Get window to dependency modeling                                
-        if (!segmented) {                          
+        if (!match.probes) {                          
 	  #message("Using fixed chromosomal window size.")       
 	  window <- fixed.window(Xm, Ym, n, windowSize)
 	} else {                           
@@ -45,7 +45,7 @@ calculate.arm <- function(X, Y, windowSize, chromosome, arm = NULL, method =
 	# Skip windows that overlaps chromosome arms                    
        if (!window$fail){                     
    
-           if (!segmented && !regularized) {               
+           if (!match.probes && !regularized) {               
 	     #print(c("no-segment", "no-regu"))         
 	     # still ensure that no regularization used here:                 
              priors$W <- NULL                           
@@ -57,14 +57,13 @@ calculate.arm <- function(X, Y, windowSize, chromosome, arm = NULL, method =
                                            Nm.wxwy.sigma = params$sigmas),includeData = FALSE, calculateZ = FALSE)                                     
     
   
-             } else if (!segmented && regularized) {                     
+             } else if (!match.probes && regularized) {                     
 	           #print(c("no-segment", "yes-regu"))             
 		   # 1-dimensional cca (in general, Wx != Wy) with nonnegative W                 
                    # assuming matched probes                                
                model <- fit.dependency.model(window$X, window$Y, priors = priors)                 
                                                                  
-            } else if (segmented) {            
-              #print("yes-segment")                            
+            } else if (match.probes) {            
 	      message("Note: regularization is used with segmented data.")                 
               regularized <- TRUE                          
 	      # always use positive prior for W here     

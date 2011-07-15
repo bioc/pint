@@ -1,8 +1,8 @@
 screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "pSimCCA", params = list(), max.dist = 1e7, 
-                            outputType = "models", useSegmentedData = FALSE, segmented = FALSE, regularized = FALSE)
+                            outputType = "models", useSegmentedData = FALSE, match.probes = FALSE, regularized = FALSE)
 {
 
-#X <- ge; Y <- cn.raw; windowSize = NULL; method = "pSimCCA"; params = list(); max.dist = 1e7; outputType = "models"; useSegmentedData = FALSE; segmented = FALSE; regularized = FALSE 
+#X <- ge; Y <- cn; windowSize = NULL; method = "pSimCCA"; params = list(); max.dist = 1e7; outputType = "models"; useSegmentedData = FALSE; match.probes = FALSE; regularized = FALSE 
     
   if (is.null(windowSize)) {
     windowSize <- min(floor(ncol(X$data)/3),15)
@@ -36,7 +36,7 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
     }
   }
 
-  if (!segmented) {    
+  if (match.probes) {   # FIXME: change name to match.probes or something 
       # Match probes
       tmp <- pint.match(X, Y, max.dist)
       X <- tmp$X
@@ -132,14 +132,14 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
   }
 
   if (missing(chromosome)) {
-    models <- calculate.genome(X, Y, windowSize, method, params, segmented = segmented, priors = priors, regularized = regularized)
+    models <- calculate.genome(X, Y, windowSize, method, params, match.probes = match.probes, priors = priors, regularized = regularized)
   } else if (missing(arm) || is.null(arm)) {
-    models <- calculate.chr(X, Y, windowSize, chromosome, method, params, segmented = segmented, priors = priors, regularized = regularized)
+    models <- calculate.chr(X, Y, windowSize, chromosome, method, params, match.probes = match.probes, priors = priors, regularized = regularized)
   } else {
-    models <- calculate.arm(X, Y, windowSize, chromosome, arm, method, params, segmented = segmented, priors = priors, regularized = regularized)
+    models <- calculate.arm(X, Y, windowSize, chromosome, arm, method, params, match.probes = match.probes, priors = priors, regularized = regularized)
   }
 
-  # TODO: move this when segmented method is fully implemented (option 'segmented')
+  # TODO: move this when segmented method is fully implemented (option 'match.probes')
   models@params <- c(models@params, segmentedData = useSegmentedData)
 
   if(outputType == "data.frame"){

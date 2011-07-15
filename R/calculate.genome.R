@@ -1,12 +1,9 @@
-calculate.genome <- function(X, Y, windowSize, method = "pSimCCA", params = list(), segmented, priors, regularized){
+calculate.genome <- function(X, Y, windowSize, method = "pSimCCA", params = list(), match.probes, priors, regularized){
 
   chromosomeModelList <- list()
   for (i in 1:24) {
-    chromosomeModelList[i] <- calculate.chr(X, Y, windowSize, i, method, params, segmented, priors, regularized)
+    chromosomeModelList[i] <- calculate.chr(X, Y, windowSize, i, method, params, match.probes, priors, regularized)
   }
-
-  #chromosomeModelList[23] <- calculate.chr(X, Y, windowSize, 'X', method, params, segmented, priors, regularized)
-  #chromosomeModelList[24] <- calculate.chr(X, Y, windowSize, 'Y', method, params, segmented, priors, regularized)
 
   return(new("GenomeModels", chromosomeModels = chromosomeModelList, method = method, params = params))
 

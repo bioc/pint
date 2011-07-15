@@ -13,7 +13,7 @@ depending on arguments with chosen window size between two data sets.
 screen.cgh.mrna(X, Y, windowSize = NULL, chromosome, arm, method =
 "pSimCCA", params =
 list(), max.dist = 1e7, outputType = "models", useSegmentedData =
-FALSE, segmented = FALSE, regularized = FALSE)
+FALSE, match.probes = FALSE, regularized = FALSE)
 
 screen.cgh.mir(X, Y, windowSize, chromosome, arm, method = "", params = list(),
 outputType = "models")
@@ -99,7 +99,7 @@ outputType = "models")
   \item{useSegmentedData}{Logical. Determines the useage of the method 
   for segmented data}
 
-  \item{segmented}{To be used with segmented data, or nonmatched probes in general. Using nonmatched features (probes) between the data
+  \item{match.probes}{To be used with segmented data, or nonmatched probes in general. Using nonmatched features (probes) between the data
 sets. Development feature, to be documented later.}
   \item{regularized}{Regularization by nonnegativity constraints on the projections. Development feature, to be documented later.}
 
