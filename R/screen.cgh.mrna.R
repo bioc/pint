@@ -1,5 +1,13 @@
-screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "pSimCCA", params = list(), max.dist = 1e7, 
-                            outputType = "models", useSegmentedData = FALSE, match.probes = FALSE, regularized = FALSE)
+screen.cgh.mrna <- function(X, Y, windowSize = NULL,
+                            chromosome,
+                            arm,
+                            method = "pSimCCA",
+                            params = list(),
+                            max.dist = 1e7, 
+                            outputType = "models",
+                            useSegmentedData = FALSE,
+                            match.probes = FALSE,
+                            regularized = FALSE)
 {
 
 #X <- ge; Y <- cn; windowSize = NULL; method = "pSimCCA"; params = list(); max.dist = 1e7; outputType = "models"; useSegmentedData = FALSE; match.probes = FALSE; regularized = FALSE 
@@ -41,6 +49,7 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
       tmp <- pint.match(X, Y, max.dist)
       X <- tmp$X
       Y <- tmp$Y
+      match.probes <- FALSE # now the probes are matched.
   }
 		       
   # Remove probes where observations are not available in either data set
@@ -132,6 +141,7 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
   }
 
   if (missing(chromosome)) {
+    # message("Genome scan..")
     models <- calculate.genome(X, Y, windowSize, method, params, match.probes = match.probes, priors = priors, regularized = regularized)
   } else if (missing(arm) || is.null(arm)) {
     models <- calculate.chr(X, Y, windowSize, chromosome, method, params, match.probes = match.probes, priors = priors, regularized = regularized)
@@ -143,6 +153,7 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL, chromosome, arm, method = "
   models@params <- c(models@params, segmentedData = useSegmentedData)
 
   if(outputType == "data.frame"){
+    message("Convert model to data.frame")
     return(as.data.frame(models))
   }
   else {

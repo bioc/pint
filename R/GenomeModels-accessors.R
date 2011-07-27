@@ -138,6 +138,7 @@ setMethod("getModelNumbers","GenomeModels",
 
 
 setMethod("orderGenes","GenomeModels",
+
   function(model){
 
     scores <- vector()
@@ -150,7 +151,9 @@ setMethod("orderGenes","GenomeModels",
     }
     data <- data.frame(scores,genes,stringsAsFactors=FALSE)
     return(data[order(scores,decreasing=TRUE),])
+
   }	
+
 )
 
 setMethod("findModel","GenomeModels",
