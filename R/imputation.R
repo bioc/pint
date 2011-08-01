@@ -3,7 +3,7 @@ imputation <- function (X) {
   # Impute missing values from a Gaussian as a
   # standard simple imputation approach.
 
-  nas <- (is.na(X) | is.nan(X))      # indices of missing values
+  nas <- (is.na(X) | is.nan(as.matrix(X)))      # indices of missing values
 
   if (sum(nas)>0) {
     for (i in 1:ncol(X)) {
