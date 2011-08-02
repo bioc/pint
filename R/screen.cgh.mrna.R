@@ -11,7 +11,25 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL,
 {
 
 #X <- ge; Y <- cn; windowSize = NULL; method = "pSimCCA"; params = list(); max.dist = 1e7; outputType = "models"; useSegmentedData = FALSE; match.probes = FALSE; regularized = FALSE 
-    
+
+  # FIXME: quick hack - later modify genomeModels class
+  if (is.null(X$info$arm) && is.null(Y$info$arm)) {
+    warning("Arm information missing, artificially adding p arm for all probes.")
+    X$info$arm <- rep("p", nrow(X$info))
+    Y$info$arm <- rep("p", nrow(Y$info))
+  }
+
+  if (is.null(X$info$arm) && !is.null(Y$info$arm) && nrow(X$info) == nrow(Y$info)) {
+    warning("Arm information missing from X data, borrowing the arm info from Y data.")
+    X$info$arm <- Y$info$arm
+  }
+
+  if (!is.null(X$info$arm) && is.null(Y$info$arm) && nrow(X$info) == nrow(Y$info)) {
+    warning("Arm information missing from Y data, borrowing the arm info from X data.")
+    Y$info$arm <- X$info$arm
+  }    
+
+  
   if (is.null(windowSize)) {
     windowSize <- min(floor(ncol(X$data)/3),15)
       if (windowSize == 15){
