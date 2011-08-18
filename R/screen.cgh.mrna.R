@@ -5,8 +5,8 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL,
                             params = list(),
                             max.dist = 1e7, 
                             outputType = "models",
-                            useSegmentedData = FALSE,
-                            match.probes = FALSE,
+                            useSegmentedData = TRUE,
+                            match.probes = TRUE,
                             regularized = FALSE)
 {
 
@@ -29,21 +29,17 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL,
     Y$info$arm <- X$info$arm
   }    
 
-  
   if (is.null(windowSize)) {
     windowSize <- min(floor(ncol(X$data)/3),15)
-      if (windowSize == 15){
-        cat("Chromosomal window (windowSize) not specified. Using default size 15.\n")
-      } else {
-        cat("Chromosomal window (windowSize) not specified. Using default ratio of 1/3 between features and samples.\n")	
-      }
+    cat(paste("Chromosomal window (windowSize) not specified. Using default ratio of 1/3 between features and samples (with max window size 15 probes). Using window size ", windowSize,"\n"))
   }
-
+      
   #FIXME: move all preprocessing stuff to dedicated preprocessing functions
-
+  # pint.data and pint.match
+  
   # Check ordering of samples
   if (any(colnames(X$data) != colnames(Y$data))) {
-    warning("Samples not in the same order in the two data sets. Using samples that are found in both data sets and reordering the samples..\n")
+    warning("Samples not in the same order in the two data sets. Using samples that are found in both data sets and reordering the samples.\n")
 
     commons <- intersect(colnames(X$data), colnames(Y$data))
     if (length(commons) > 1) {
@@ -54,7 +50,8 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL,
     }
   }
 
-  ## Checks that segmented data is not used when not implicitely indicated by argument
+  ## Checks that segmented data is not used when not implicitely
+  ## indicated by argument
   ## FIXME: this is independent of 'segmented' option, join these later
   if (!useSegmentedData){
     if (test.segmented(X$data) || test.segmented(Y$data)){
@@ -63,13 +60,21 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL,
   }
 
   if (match.probes) {   # FIXME: change name to match.probes or something 
-      # Match probes
-      tmp <- pint.match(X, Y, max.dist)
-      X <- tmp$X
-      Y <- tmp$Y
-      match.probes <- FALSE # now the probes are matched.
+    # Match probes
+    tmp <- pint.match(X, Y, max.dist, useSegmentedData = useSegmentedData)
+    X <- tmp$X
+    Y <- tmp$Y
+    match.probes <- FALSE # now the probes are matched.
+  } else {
+    # If user claims that no matching is needed
+    # this will implicate that matching has already been
+    # performed. Verify: the number of probes should be
+    # identical in ge and cn data sets
+    if (!nrow(X$data) == nrow(Y$data)) {
+      stop("If match.probes == FALSE then the number of probes in ge and cn data sets (X$data, Y$data) need to match!")      
+    }  
   }
-		       
+  
   # Remove probes where observations are not available in either data set
   # TODO
 
@@ -91,7 +96,6 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL,
 	      
   if (regularized) {priors$W <- 1e-3} # W>=0 prior
 		  
-
   ###########################################################################
 
   if (method == "pSimCCA") {
@@ -126,10 +130,6 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL,
   }
   if (is.null(params$zDimension))
     params$zDimension <- 1
-  #if (is.null(params$covLimit))
-  #  params$covLimit <- 0
-  #if (is.null(params$mySeed))
-  #  params$mySeed <- 566
   if (!is.null(params$H) && any(is.na(params$H))) {
     if (params$marginalCovariances == "full")
       method = "pCCA"
@@ -147,9 +147,6 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL,
   if (!missing(chromosome)){
     if (chromosome == 23) chromosome <- "X"
     if (chromosome == 24) chromosome <- "Y"
-  #  chromosome = factor(chromosome, levels = c(1:22, "X", "Y"))
-  #  if (is.na(chromosome))
-  #    stop("Incorrect chromosome given.")
   }
 
   # give warning if arm param given and no arm data is available
@@ -159,7 +156,6 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL,
   }
 
   if (missing(chromosome)) {
-    # message("Genome scan..")
     models <- calculate.genome(X, Y, windowSize, method, params, match.probes = match.probes, priors = priors, regularized = regularized)
   } else if (missing(arm) || is.null(arm)) {
     models <- calculate.chr(X, Y, windowSize, chromosome, method, params, match.probes = match.probes, priors = priors, regularized = regularized)

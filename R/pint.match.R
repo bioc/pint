@@ -8,17 +8,12 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData = FAL
   # Impute missing values, replace infinite values etc.
   X <- pint.data(X$data, X$info, impute, replace.inf, remove.duplicates = !useSegmentedData)
   Y <- pint.data(Y$data, Y$info, impute, replace.inf, remove.duplicates = !useSegmentedData)
-
+  
   # Find unique chromosome names present in the data
   # First order chromosomes 1...24, then chromosomes with other names
   if (is.null(chrs)) {
     chrs <- 1:24
   }
-  #  default.chrs <- as.character(1:24)
-  #  chrs <- c(default.chrs, sort(setdiff(unique(X$info[["chr"]]), default.chrs)))
-  #} else {
-  #  chrs <- as.character(chrs)
-  #}
 
   message("Matching probes between the data sets..")
   xindices <- yindices <- vector()

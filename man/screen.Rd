@@ -13,7 +13,7 @@ depending on arguments with chosen window size between two data sets.
 screen.cgh.mrna(X, Y, windowSize = NULL, chromosome, arm, method =
 "pSimCCA", params =
 list(), max.dist = 1e7, outputType = "models", useSegmentedData =
-FALSE, match.probes = FALSE, regularized = FALSE)
+TRUE, match.probes = TRUE, regularized = FALSE)
 
 screen.cgh.mir(X, Y, windowSize, chromosome, arm, method = "", params = list(),
 outputType = "models")
@@ -21,7 +21,10 @@ outputType = "models")
 
 \arguments{
   \item{X,Y}{
-    Data sets. Lists containing the following items:
+    Data sets.
+    It is recommended to place gene/mirna expression data in X and copy number
+    data in Y.
+    Each is a list with the following items:
     \describe{
       \item{\code{data}}{ Data in a matrix form. Genes are in rows
 	and samples in columnss. e.g. gene copy number.}
