@@ -71,9 +71,8 @@ pint.data <- function(data, info, impute = TRUE, replace.inf = TRUE, remove.dupl
   }
   
   # Replace infinite values by highest possible seen in the data
-  inds <- is.infinite(data)
-  if (replace.inf && any(inds)) {
-     message("Replacing infinite values with highest non-infinite values seen in the data")
+  inds <- is.infinite(as.matrix(data))
+  if (replace.inf && any(inds)) {     message("Replacing infinite values with highest non-infinite values  in the data")
      data[inds] <- sign(data[inds])*max(abs(data[!inds])) # note the sign
      message(paste("...", 100*mean(inds), "percent of the values replaced."))
   }
