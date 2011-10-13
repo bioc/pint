@@ -129,8 +129,8 @@ function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FAL
     pscores <- getScore(pArm)
     plocs <- getLoc(pArm)
     #limits for plotting area
-    ylim <- c(0,max(max(pscores),max(qscores)))	
-    xlim <- c(min(min(plocs/1e6),min(qlocs/1e6)),max(max(qlocs/1e6),max(plocs/1e6)))
+    ylim <- c(0,max(c(pscores,qscores)))	
+    xlim <- c(min(c(plocs/1e6,qlocs/1e6)),max(c(qlocs/1e6,plocs/1e6)))
   } else {
     #limits for plotting area
     ylim <- c(0,max(scores))	
