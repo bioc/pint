@@ -1,4 +1,8 @@
-pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData = FALSE, impute = TRUE, replace.inf = TRUE){
+pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL,
+useSegmentedData = FALSE, impute = TRUE, replace.inf = TRUE, remove.duplicates = TRUE){
+
+  # X <- ge; Y <- cn; useSegmentedData = FALSE; impute = TRUE; replace.inf = TRUE
+  # X <- geneExp; Y <- geneCopyNum; max.dist <- 1e7; impute = TRUE; replace.inf = TRUE
 
   # Match genes/probes/clones in X/Y data sets based on location information
   
@@ -11,15 +15,13 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData = FAL
   
   # Find unique chromosome names present in the data
   # First order chromosomes 1...24, then chromosomes with other names
-  if (is.null(chrs)) {
-    chrs <- 1:24
-  }
+  if ( is.null(chrs) ) { chrs <- 1:24 }
 
   message("Matching probes between the data sets..")
   xindices <- yindices <- vector()
-  for (chr in chrs){
+  for ( chr in chrs ){
     # Note: chromosome arm information is used in the matching if it is available
-    tmp <- get.neighboring.probes(X, Y, chr, max.dist)
+    tmp <- get.neighboring.probes(X, Y, chr, max.dist, remove.duplicates = remove.duplicates)
     xindices <- c(xindices, tmp$xinds)
     yindices <- c(yindices, tmp$yinds)
   }
@@ -35,12 +37,6 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData = FAL
     ydat <- ydat[, !nainds]
     warning(paste("Samples ", colnames(X$data)[nainds], " contained exclusively NA's; removed."))
   }
-  
-  #X$info$chr = factor(X$info$chr, levels = c(1:22, "X", "Y"))
-  #Y$info$chr = factor(Y$info$chr, levels = c(1:22, "X", "Y"))
-
-  #X$info$chr = factor(X$info$chr, levels = c(1:24))
-  #Y$info$chr = factor(Y$info$chr, levels = c(1:24))
 
   newX <- list(data = xdat, info = X$info[xindices,])
   newY <- list(data = ydat, info = Y$info[yindices,])
@@ -53,7 +49,7 @@ pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData = FAL
 
 closest <- function(a, vec){which.min(abs(a - vec))}
 
-get.neighboring.probes <- function (X, Y, chr, max.dist, control.arms = TRUE) {
+get.neighboring.probes <- function (X, Y, chr, max.dist, control.arms = TRUE, remove.duplicates = TRUE) {
 
   xinds <- yinds <- c()
   
@@ -63,7 +59,7 @@ get.neighboring.probes <- function (X, Y, chr, max.dist, control.arms = TRUE) {
       # Investigate specified arm
       xchrinds <- which(as.character(X$info$chr) == chr & X$info$arm == arm)
       ychrinds <- which(as.character(Y$info$chr) == chr & Y$info$arm == arm)
-      inds <- get.neighs(X, Y, xchrinds, ychrinds, max.dist)
+      inds <- get.neighs(X, Y, xchrinds, ychrinds, max.dist, remove.duplicates)
       xinds <- c(xinds, inds$xinds)
       yinds <- c(yinds, inds$yinds)
     }
@@ -71,7 +67,7 @@ get.neighboring.probes <- function (X, Y, chr, max.dist, control.arms = TRUE) {
     # Investigate the whole chromosome
     xchrinds <- which(as.character(X$info$chr) == chr)
     ychrinds <- which(as.character(Y$info$chr) == chr)
-    inds <- get.neighs(X, Y, xchrinds, ychrinds, max.dist)
+    inds <- get.neighs(X, Y, xchrinds, ychrinds, max.dist, remove.duplicates)
     xinds <- c(xinds, inds$xinds)
     yinds <- c(yinds, inds$yinds)
   }
@@ -82,7 +78,7 @@ get.neighboring.probes <- function (X, Y, chr, max.dist, control.arms = TRUE) {
 }
 
 
-get.neighs <- function (X, Y, xchrinds, ychrinds, max.dist) {
+get.neighs <- function (X, Y, xchrinds, ychrinds, max.dist, remove.duplicates = TRUE) {
 
   xinds <- yinds <- NULL
 
@@ -93,10 +89,12 @@ get.neighs <- function (X, Y, xchrinds, ychrinds, max.dist) {
     yi <- sapply(as.numeric(as.character(X$info$loc[xchrinds])), closest, vec = as.numeric(as.character(Y$info$loc[ychrinds])))
 
     # Remove duplicates
-    keep <- !duplicated(yi)
-    xi <- xi[keep]
-    yi <- yi[keep]
-      
+    if (remove.duplicates) {
+      keep <- !duplicated(yi)
+      xi <- xi[keep]
+      yi <- yi[keep]
+    }
+    
     # Corresponding indices between X and Y
     xinds <- xchrinds[xi]
     yinds <- ychrinds[yi]

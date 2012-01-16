@@ -12,7 +12,7 @@ Pairs samples in two data sets.
 \usage{
 pint.data(data, info, impute = TRUE, replace.inf = TRUE, remove.duplicates)
 pint.match(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData =
-FALSE, impute = TRUE, replace.inf = TRUE)
+FALSE, impute = TRUE, replace.inf = TRUE, remove.duplicates = TRUE)
 }
 \arguments{
   \item{data}{
@@ -36,7 +36,8 @@ FALSE, impute = TRUE, replace.inf = TRUE)
     identical data are removed (option for pint.match)}
 
   \item{remove.duplicates}{Logical. If \code{TRUE}, rows with identical
-			  data are removed (option for pint.data)}
+			  data are removed (in pint.data), or
+duplicate signals from many-to-one matches are removed (in pint.match)}
   
   \item{impute}{Logical. If \code{TRUE}, missing values are imputed by
 		replacing them with random samples from a Gaussian

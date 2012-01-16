@@ -13,8 +13,16 @@ pint.data <- function(data, info, impute = TRUE, replace.inf = TRUE, remove.dupl
     rownames(data) <- as.character(1:nrow(data))
   }  
 
-  dimnames(data2) <- dimnames(data) 
-  dimnames(info2) <- dimnames(info)
+  colnames(data2) <- colnames(data) 
+  colnames(info2) <- colnames(info)
+  
+  if (any(duplicated(rownames(data)))) {
+    apply(cbind(rownames(data), 1:nrow(data)), 1, function (x) {paste(x, collapse = "-row")})
+  }
+  
+  if (any(duplicated(rownames(info)))) {
+    apply(cbind(rownames(data), 1:nrow(data)), 1, function (x) {paste(x, collapse = "-row")})
+  }
   
   data <- data2
   info <- info2

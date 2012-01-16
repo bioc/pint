@@ -31,7 +31,9 @@ screen.cgh.mrna <- function(X, Y, windowSize = NULL,
 
   if (is.null(windowSize)) {
     windowSize <- min(floor(ncol(X$data)/3),15)
-    cat(paste("Chromosomal window (windowSize) not specified. Using default ratio of 1/3 between features and samples (with max window size 15 probes). Using window size ", windowSize,"\n"))
+    cat(paste("Chromosomal window (windowSize) not specified. Using
+default ratio of 1/3 between features and samples (with max window
+size 15 probes). Using window size ", windowSize,"\n"))
   }
       
   #FIXME: move all preprocessing stuff to dedicated preprocessing functions
