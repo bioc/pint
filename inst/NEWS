@@ -1,3 +1,7 @@
+CHANGES IN VERSION 1.7.02 (2012-03-22)
+
+  o fixed missing documentations
+
 CHANGES IN VERSION 1.7.01 (2012-01-16)
 
   o added remove.duplicates option to pint.match

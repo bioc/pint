@@ -1,5 +1,4 @@
-pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL,
-useSegmentedData = FALSE, impute = TRUE, replace.inf = TRUE, remove.duplicates = TRUE){
+pint.match <- function(X, Y, max.dist = 1e7, chrs = NULL, useSegmentedData = FALSE, impute = TRUE, replace.inf = TRUE, remove.duplicates = TRUE){
 
   # X <- ge; Y <- cn; useSegmentedData = FALSE; impute = TRUE; replace.inf = TRUE
   # X <- geneExp; Y <- geneCopyNum; max.dist <- 1e7; impute = TRUE; replace.inf = TRUE
