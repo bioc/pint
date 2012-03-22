@@ -13,16 +13,17 @@ model or dependency model fitting scores of chromosome
 or genome.
 }
 \usage{
-plot.GeneDependencyModel(x, X, Y, ann.types = NULL, ann.cols = NULL, legend.x = 0, 
+\method{plot}{GeneDependencyModel}(x, X, Y, ann.types = NULL, ann.cols = NULL, legend.x = 0, 
         legend.y = 1, legend.xjust = 0, legend.yjust = 1, order = FALSE, 
         cex.z = 0.6, cex.WX = 0.6, cex.WY = 0.6, ...)
 
-plot.ChromosomeModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
+
+\method{plot}{ChromosomeModels}(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0,
 	topName = FALSE, type = 'l', xlab = 'gene location', ylab = 'dependency score',
 	main = NULL,
 	pch = 20, cex = 0.75, tpch = 3, tcex = 1, xlim = NA, ylim = NA,...)
 
-plot.GenomeModels(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, 
+\method{plot}{GenomeModels}(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, 
 	topName = FALSE, onePlot = FALSE, type = 'l', ylab = "Dependency Scores", 
 	xlab = "Gene location (chromosome)", main = "Dependency Scores in All Chromosomes",
 	pch = 20, cex = 0.75, tpch = 20, tcex = 0.7, mfrow = c(5,5), mar = c(3,2.5,1.3,0.5), 
