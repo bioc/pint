@@ -307,7 +307,7 @@ function(x, hilightGenes = NULL, showDensity = FALSE, showTop = 0, topName = FAL
     #plot((drawLoc/1e6), drawScore, type = type, xlab=xlab,
     #    ylab=ylab, main=main, ylim = ylim, xaxt = 'n',...)
 
-    axis(1,at=tickLocs,label=tickMarks,cex.axis=0.7,tick=FALSE)
+    axis(1,at=tickLocs,labels=tickMarks,cex.axis=0.7,tick=FALSE)
   
     if(showTop > 0){
    
