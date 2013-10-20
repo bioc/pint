@@ -12,21 +12,6 @@ setMethod("getParams","GenomeModels",
 	} 
 )	
 
-#setReplaceMethod(f="setSegmentedData", signature("GenomeModels"),
-#                 definition=(function(model,value) {
-#      if (!is.logical(value)){
-#        stop("Incorrect value given. Use TRUE or FALSE")
-#      }
-#      if (is.null(model@params$segmentedData)){
-#        model@params <- c(model@params, segmentedData = value)
-#      }
-#      else {
-#        model@params$segmentedData <- value 
-#      }
-#      return(model)
-#    }
-#))
-
 setMethod(f="[[", signature("GenomeModels"),
           definition=(function(x,i,j,drop) {
             if(i == 'X') 
@@ -161,13 +146,8 @@ setMethod("findModel","GenomeModels",
    for (i in 1:length(model@chromosomeModels)){
      index <- which(getGeneName(model[[i]]) == name)
      if(length(index) > 0) 
-       return(getPArm(model[[i]])[[pIndex[1]]])
-     #pIndex <- which(getGeneName(getPArm(model[[i]])) == name)
-     #if(length(pIndex) > 0) 
-     #  return(getPArm(model[[i]])[[pIndex[1]]])
-     #qIndex <- which(getGeneName(getQArm(model[[i]])) == name)
-     #if(length(qIndex) > 0) 
-     #  return(getQArm(model[[i]])[[qIndex[1]]])
+       #return(getPArm(model[[i]])[[pIndex[1]]])
+       return(getPArm(model[[i]])[[1]]) # FIXME - was as above?
    }   
    stop("No model found")
   }
