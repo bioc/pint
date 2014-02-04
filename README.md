@@ -26,6 +26,7 @@ Probabilistic formulation deals rigorously with uncertainty associated
 with small sample sizes common in biomedical studies and provides
 tools to guide dependency modeling through Bayesian priors.
 
-For further details and examples, see the package vignette.
+For further details and examples, see the package
+[vignette](vignettes/depsearch.Rnw).
 
 
