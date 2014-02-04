@@ -1,9 +1,13 @@
 pint
 ====
 
-Probabilistic dependency analysis for mRNA and aCGH data.
+Probabilistic dependency analysis for functional genomics.
+In particular, tools for integrative screening
+of genome-wide RNA and DNA profiling data for cancer gene discovery 
+and functional analysis of chromosomal aberrations ([Lahti et al. MLSP
+2009](http://www.roihu.info/publications/preprints/mlsp09_preprint.pdf)).
 
-This package implements probabilistic models for integrative analysis
+The package implements probabilistic models for integrative analysis
 of mRNA expression levels with DNA copy number (aCGH) measurements to
 discover functionally active chromosomal alterations. The algorithms
 can be used to discover functionally altered chromosomal regions and
@@ -26,7 +30,12 @@ Probabilistic formulation deals rigorously with uncertainty associated
 with small sample sizes common in biomedical studies and provides
 tools to guide dependency modeling through Bayesian priors.
 
+This is the development version of the package. For a stable release
+version, see
+[Bioconductor](http://bioconductor.org/packages/release/bioc/html/pint.html).
 For further details and examples, see the package
 [vignette](vignettes/depsearch.Rnw).
+
+
 
 
