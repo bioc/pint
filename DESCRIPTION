@@ -1,7 +1,7 @@
 Package: pint
 Type: Package
 Title: Pairwise INTegration of functional genomics data
-Version: 1.18.0
+Version: 1.19.0
 Date: 2014-09-14
 Author: Olli-Pekka Huovilainen <ohuovila@gmail.com> and Leo Lahti <leo.lahti@iki.fi>
 Maintainer: Olli-Pekka Huovilainen <ohuovila@gmail.com>
